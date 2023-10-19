@@ -1,1 +1,41 @@
+.grid-container {
+    padding: 15px;
+    border: 1px solid #18bc9c;
+}
 
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grid-stack-item {
+    border: 0;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: none;
+}
+
+section {
+    padding: 0 15px 0 15px;
+}
+
+.grid-stack-item-removing {
+    opacity: 0.8;
+    filter: blur(5px);
+}
+
+#trash {
+    background-color: #cc6857;
+}
+
+.newWidget>.grid-stack-item-content {
+    background-color: #18bc9c;
+}
