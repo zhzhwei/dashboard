@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-// declare let d3: any;
 
 @Component({
-    selector: 'barchart',
+    selector: 'app-barchart',
     templateUrl: './barchart.component.html',
     styleUrls: ['./barchart.component.css'],
 })
@@ -29,14 +28,13 @@ export class BarChartComponent implements OnInit {
     }
 
     private createSvg(): void {
-        this.svg = d3.select("figure#bar")
+        this.svg = d3.select("#bar")
             .append("svg")
             .attr("width", this.width + (this.margin * 2))
             .attr("height", this.height + (this.margin * 2))
             .append("g")
             .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
     }
-
 
     private drawBars(data: any[]): void {
         // Create the X-axis band scale
