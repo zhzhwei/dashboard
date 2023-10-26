@@ -9,24 +9,28 @@ import 'gridstack/dist/h5/gridstack-dd-native';
     styleUrls: ['./gridstack.component.css']
 })
 export class GridStackComponent implements OnInit {
+
+    constructor() { }
+
     private grid: GridStack;
     private serializedData: any[] = []
     private svg: any;
     private margin = 50;
+    private contEl: any;
+    private itemEl: any;
+    private barEL: any;
+    private x: any;
+    private y: any;
 
     private data = [
-        { "Framework": "Vue", "Stars": "166443", "Released": "2014" },
-        { "Framework": "React", "Stars": "150793", "Released": "2013" },
-        { "Framework": "Angular", "Stars": "62342", "Released": "2016" },
-        { "Framework": "Backbone", "Stars": "27647", "Released": "2010" },
-        { "Framework": "Ember", "Stars": "21471", "Released": "2011" },
+        { 'Framework': 'Vue', 'Stars': '166443', 'Released': '2014' },
+        { 'Framework': 'React', 'Stars': '150793', 'Released': '2013' },
+        { 'Framework': 'Angular', 'Stars': '62342', 'Released': '2016' },
+        { 'Framework': 'Backbone', 'Stars': '27647', 'Released': '2010' },
+        { 'Framework': 'Ember', 'Stars': '21471', 'Released': '2011' },
     ];
 
-    constructor() { }
-
-    ngOnInit(): void { }
-
-    ngAfterViewInit(): void {
+    ngOnInit(): void {
         const options = {
             margin: 5,
             column: 12,
@@ -34,15 +38,12 @@ export class GridStackComponent implements OnInit {
             acceptWidgets: true,
             removable: '#trash',
             removeTimeout: 100,
-            // resizable: {
-            //     handles: 'e, n, w, s'
-            // }
+            scroll: false,
         };
 
         GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
 
-        const grids = GridStack.initAll(options);
-        this.grid = grids[0];
+        this.grid = GridStack.init(options);
 
         this.serializedData = [
             { x: 0, y: 0, w: 2, h: 2, name: 'star plot' },
@@ -57,111 +58,86 @@ export class GridStackComponent implements OnInit {
 
         // Load the serialized data into the grid
         this.serializedData.forEach(item => {
-            const itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
-            const itemEl = this.grid.getGridItems()[itemIndex];
-            // console.log(itemEl);
-
-            // Add the id attribute to the grid-stack-item-content element
-            const contEl = itemEl.querySelector('.grid-stack-item-content');
-            contEl.setAttribute('id', 'bar');
-            // const width = itemEl.clientWidth;
-            // const height = itemEl.clientHeight;
-            // console.log(contEl.clientWidth, contEl.clientHeight);
-
-            // contEl.setAttribute('style', `width: ${width}px; height: ${height}px;`);
+            var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
+            this.itemEl = this.grid.getGridItems()[itemIndex];
+            this.contEl = this.itemEl.querySelector('.grid-stack-item-content');
+            this.contEl.setAttribute('id', 'bar');
         });
-
         this.drawBars(this.data);
     }
 
+    ngAfterViewInit(): void {
+        // Create a new ResizeObserver
+        const resizeObserver = new ResizeObserver(entries => {
+            console.log('Resize observed', this.barEL.clientWidth, this.barEL.clientHeight);
+            // Update the SVG element size
+            this.svg.attr('width', this.barEL.clientWidth)
+                .attr('height', this.barEL.clientHeight);
+            console.log(this.svg.attr('width'), this.svg.attr('height'));
+            
+            // Update the X-axis scale range
+            this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+
+            // Redraw the X-axis on the DOM
+            this.svg.select('g')
+                .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+                .call(d3.axisBottom(this.x))
+                .selectAll('text')
+                .attr('transform', 'translate(-10,0)rotate(-45)')
+                .style('text-anchor', 'end');
+
+            // Redraw the bars on the DOM
+            this.svg.selectAll('rect')
+                .attr('x', (d: any) => this.x(d.Framework))
+                .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars));
+        });
+
+        // Observe the element for size changes
+        resizeObserver.observe(this.itemEl);
+    }
 
     private drawBars(data: any[]): void {
-        const barEl = document.getElementById('bar');
-        console.log(barEl.clientWidth, barEl.clientHeight);
-        this.svg = d3.select("#bar")
-            .append("svg")
-            .attr("width", barEl.clientWidth)
-            .attr("height", barEl.clientHeight)
-            .append("g")
-            .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
+        this.barEL = document.getElementById('bar');
+        console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+        this.svg = d3.select('#bar')
+            .append('svg')
+            .attr('width', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientWidth)
+            // .append('g')
+            .attr('transform', 'translate(' + this.margin + ',' + this.margin + ')');
 
         // Create the X-axis band scale
-        const x = d3.scaleBand()
-            .range([0, barEl.clientWidth - this.margin * 2])
+        this.x = d3.scaleBand()
+            .range([0, this.barEL.clientWidth - this.margin * 2])
             .domain(data.map(d => d.Framework))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
-        this.svg.append("g")
-            .attr("transform", "translate(0," + (barEl.clientHeight - this.margin * 2) + ")")
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
+        this.svg.append('g')
+            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(this.x))
+            .selectAll('text')
+            .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        const y = d3.scaleLinear()
-            .domain([0, 200000])
-            .range([barEl.clientHeight - this.margin * 2, 0]);
+        this.y = d3.scaleLinear()
+            .domain([0, 180000])
+            .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
-        this.svg.append("g")
-            .call(d3.axisLeft(y));
+        this.svg.append('g')
+            .call(d3.axisLeft(this.y));
 
         // Create and fill the bars
-        this.svg.selectAll("bars")
+        this.svg.selectAll('bars')
             .data(data)
             .enter()
-            .append("rect")
-            .attr("x", (d: any) => x(d.Framework))
-            .attr("y", (d: any) => y(d.Stars))
-            .attr("width", x.bandwidth())
-            .attr("height", (d: any) => barEl.clientHeight - this.margin * 2 - y(d.Stars))
-            .attr("fill", "steelblue")
-        // .on('mouseover', function (d, i) {
-        //     // Create a tooltip element and set its text content to the values of the corresponding data point
-        //     const tooltip = d3.select(this)
-        //         .style('fill', 'orange')
-        //         .append('text')
-        //         .attr('class', 'tooltip')
-        //         .text(`${d.Framework}: ${d.Stars} stars, released on ${d.Released}`);
-        //     console.log(`${d.Framework}: ${d.Stars} stars, released on ${d.Released}`)
-
-        //     // Position the tooltip element relative to the mouse cursor
-        //     const [x, y] = d3.mouse(this);
-        //     tooltip.attr('x', x + 10)
-        //         .attr('y', y - 10);
-        // })
-        // .on('mouseout', function (d, i) {
-        //     // Remove the tooltip element
-        //     d3.select(this)
-        //         .style('fill', 'steelblue');
-        // });
-        // const legend = this.svg.append("g")
-        //     .attr("class", "legend")
-        //     .attr("transform", `translate(${barEl.clientWidth - 100}, 20)`);
-
-        // // Create a group element for each legend item
-        // const legendItems = legend.selectAll(".legend-item")
-        //     .data(data)
-        //     .enter()
-        //     .append("g")
-        //     .attr("class", "legend-item")
-        //     .attr("transform", (d, i) => `translate(0, ${i * 20})`);
-
-        // // Append a rectangle element to each group element to represent the legend item
-        // legendItems.append("rect")
-        //     .attr("x", 0)
-        //     .attr("y", 0)
-        //     .attr("width", 10)
-        //     .attr("height", 10)
-        //     .attr("fill", "steelblue");
-
-        // // Append a text element to each group element to represent the legend item
-        // legendItems.append("text")
-        //     .attr("x", 20)
-        //     .attr("y", 10)
-        //     .text((d: any) => d.Framework);
+            .append('rect')
+            .attr('x', (d: any) => this.x(d.Framework))
+            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('width', this.x.bandwidth())
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars))
+            .attr('fill', 'steelblue')
     }
-
 }
