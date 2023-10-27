@@ -23,11 +23,11 @@ export class GridStackComponent implements OnInit {
     private y: any;
 
     private data = [
-        { 'Framework': 'Vue', 'Stars': '166443', 'Released': '2014' },
-        { 'Framework': 'React', 'Stars': '150793', 'Released': '2013' },
-        { 'Framework': 'Angular', 'Stars': '62342', 'Released': '2016' },
-        { 'Framework': 'Backbone', 'Stars': '27647', 'Released': '2010' },
-        { 'Framework': 'Ember', 'Stars': '21471', 'Released': '2011' },
+        { 'Framework': 'Vue', 'Stars': '186443', 'Released': '2014' },
+        { 'Framework': 'React', 'Stars': '160793', 'Released': '2013' },
+        { 'Framework': 'Angular', 'Stars': '82342', 'Released': '2016' },
+        { 'Framework': 'Backbone', 'Stars': '57647', 'Released': '2010' },
+        { 'Framework': 'Ember', 'Stars': '31471', 'Released': '2011' },
     ];
 
     ngOnInit(): void {
@@ -68,7 +68,7 @@ export class GridStackComponent implements OnInit {
     ngAfterViewInit(): void {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
-            this.updateBars(this.data);
+            this.updateBars();
         });
 
         // Observe the element for size changes
@@ -78,12 +78,14 @@ export class GridStackComponent implements OnInit {
     private drawBars(data: any[]): void {
         this.barEL = document.getElementById('bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+
         this.svg = d3.select('#bar')
             .append('svg')
-            .attr('width', this.barEL.clientWidth - this.margin)
-            .attr('height', this.barEL.clientWidth - this.margin)
-            // .append('g') 
-            .attr('transform', 'translate(' + this.margin + ',' + this.margin + ')');
+            .attr('width', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientWidth)
+        
+        var g = this.svg.append('g') 
+            .attr('transform', 'translate(' + (this.margin + 20) + ',' + this.margin + ')');
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
@@ -92,7 +94,7 @@ export class GridStackComponent implements OnInit {
             .padding(0.2);
 
         // Draw the X-axis on the DOM
-        this.svg.append('g')
+        g.append('g')
             .attr('class', 'x-axis')
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x))
@@ -102,16 +104,16 @@ export class GridStackComponent implements OnInit {
 
         // Create the Y-axis band scale
         this.y = d3.scaleLinear()
-            .domain([0, 180000])
+            .domain([0, 200000])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
-        this.svg.append('g')
+        g.append('g')
             .attr('class', 'y-axis')
             .call(d3.axisLeft(this.y))
 
         // Create and fill the bars
-        this.svg.selectAll('bars')
+        g.selectAll('bars')
             .data(data)
             .enter()
             .append('rect')
@@ -122,12 +124,11 @@ export class GridStackComponent implements OnInit {
             .attr('fill', 'steelblue')
     }
 
-    private updateBars(data: any[]): void {
+    private updateBars(): void {
         // Update the SVG element size
-        this.svg.attr('width', this.barEL.clientWidth - this.margin)
-            .attr('height', this.barEL.clientHeight - this.margin);
+        this.svg.attr('width', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientHeight);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
-        console.log(this.svg.attr('width'), this.svg.attr('height'));
 
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
