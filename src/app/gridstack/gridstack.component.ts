@@ -68,53 +68,23 @@ export class GridStackComponent implements OnInit {
     ngAfterViewInit(): void {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
-            // Update the SVG element size
-            this.svg.attr('width', this.barEL.clientWidth)
-                .attr('height', this.barEL.clientHeight);
-            console.log(this.svg.attr('width'), this.svg.attr('height'));
-            
-            // Update the X-axis scale range
-            this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
-
-            // Redraw the X-axis on the DOM
-            this.svg.select('g.x-axis')
-                .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
-                .call(d3.axisBottom(this.x))
-                .selectAll('text')
-                .attr('transform', 'translate(-10,0)rotate(-45)')
-                .style('text-anchor', 'end');
-
-            // Update the Y-axis scale range
-            this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);
-
-            // Redraw the Y-axis on the DOM
-            this.svg.select('g.y-axis')
-                .call(d3.axisLeft(this.y));
-
-            // Redraw the bars on the DOM
-            this.svg.selectAll('rect')
-                .attr('x', (d: any) => this.x(d.Framework))
-                .attr('y', (d: any) => this.y(d.Stars))
-                .attr('width', this.x.bandwidth())
-                .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars));
+            this.updateBars(this.data);
         });
 
         // Observe the element for size changes
-        resizeObserver.observe(this.itemEl);
+        resizeObserver.observe(this.contEl);
     }
 
     private drawBars(data: any[]): void {
         this.barEL = document.getElementById('bar');
-        console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         this.svg = d3.select('#bar')
             .append('svg')
-            .attr('width', this.barEL.clientWidth)
-            .attr('height', this.barEL.clientWidth)
-            // .append('g')
+            .attr('width', this.barEL.clientWidth - this.margin)
+            .attr('height', this.barEL.clientWidth - this.margin)
+            // .append('g') 
             .attr('transform', 'translate(' + this.margin + ',' + this.margin + ')');
-        console.log(this.svg.attr('width'), this.svg.attr('height'));
-        // console.log(this.svg.attr('g.width'), this.svg.attr('g.height'));
-        
+
         // Create the X-axis band scale
         this.x = d3.scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
@@ -138,7 +108,7 @@ export class GridStackComponent implements OnInit {
         // Draw the Y-axis on the DOM
         this.svg.append('g')
             .attr('class', 'y-axis')
-            .call(d3.axisLeft(this.y));
+            .call(d3.axisLeft(this.y))
 
         // Create and fill the bars
         this.svg.selectAll('bars')
@@ -150,5 +120,38 @@ export class GridStackComponent implements OnInit {
             .attr('width', this.x.bandwidth())
             .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars))
             .attr('fill', 'steelblue')
+    }
+
+    private updateBars(data: any[]): void {
+        // Update the SVG element size
+        this.svg.attr('width', this.barEL.clientWidth - this.margin)
+            .attr('height', this.barEL.clientHeight - this.margin);
+        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+        console.log(this.svg.attr('width'), this.svg.attr('height'));
+
+        // Update the X-axis scale range
+        this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+
+        // Redraw the X-axis on the DOM
+        this.svg.select('g.x-axis')
+            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(this.x))
+            .selectAll('text')
+            .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'end');
+
+        // Update the Y-axis scale range
+        this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);
+
+        // Redraw the Y-axis on the DOM
+        this.svg.select('g.y-axis')
+            .call(d3.axisLeft(this.y));
+
+        // Redraw the bars on the DOM
+        this.svg.selectAll('rect')
+            .attr('x', (d: any) => this.x(d.Framework))
+            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('width', this.x.bandwidth())
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars));
     }
 }
