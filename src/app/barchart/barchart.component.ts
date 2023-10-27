@@ -8,68 +8,98 @@ import * as d3 from 'd3';
 })
 
 export class BarChartComponent implements OnInit {
-    private data = [
-        { "Framework": "Vue", "Stars": "166443", "Released": "2014" },
-        { "Framework": "React", "Stars": "150793", "Released": "2013" },
-        { "Framework": "Angular", "Stars": "62342", "Released": "2016" },
-        { "Framework": "Backbone", "Stars": "27647", "Released": "2010" },
-        { "Framework": "Ember", "Stars": "21471", "Released": "2011" },
-    ];
-    private svg: any;
-    private margin = 50;
-    private width = 750 - (this.margin * 2);
-    private height = 400 - (this.margin * 2);
 
     constructor() { }
 
+    private svg: any;
+    private margin = 50;
+    private barEL: any;
+    private x: any;
+    private y: any;
+
     ngOnInit(): void {
-        this.createSvg();
-        this.drawBars(this.data);
+
     }
 
-    private createSvg(): void {
-        this.svg = d3.select("#bar")
-            .append("svg")
-            .attr("width", this.width + (this.margin * 2))
-            .attr("height", this.height + (this.margin * 2))
-            .append("g")
-            .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
-    }
+    public drawBars(data: any[]): void {
+        this.barEL = document.getElementById('bar');
+        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
-    private drawBars(data: any[]): void {
+        this.svg = d3.select('#bar')
+            .append('svg')
+            .attr('width', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientWidth)
+        
+        var g = this.svg.append('g') 
+            .attr('transform', 'translate(' + (this.margin + 20) + ',' + this.margin + ')');
+
         // Create the X-axis band scale
-        const x = d3.scaleBand()
-            .range([0, this.width])
+        this.x = d3.scaleBand()
+            .range([0, this.barEL.clientWidth - this.margin * 2])
             .domain(data.map(d => d.Framework))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
-        this.svg.append("g")
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
+        g.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(this.x))
+            .selectAll('text')
+            .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        const y = d3.scaleLinear()
+        this.y = d3.scaleLinear()
             .domain([0, 200000])
-            .range([this.height, 0]);
+            .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
-        this.svg.append("g")
-            .call(d3.axisLeft(y));
+        g.append('g')
+            .attr('class', 'y-axis')
+            .call(d3.axisLeft(this.y))
 
         // Create and fill the bars
-        this.svg.selectAll("bars")
+        g.selectAll('bars')
             .data(data)
             .enter()
-            .append("rect")
-            .attr("x", (d: any) => x(d.Framework))
-            .attr("y", (d: any) => y(d.Stars))
-            .attr("width", x.bandwidth())
-            .attr("height", (d: any) => this.height - y(d.Stars))
-            .attr("fill", "#d04a35");
+            .append('rect')
+            .attr('x', (d: any) => this.x(d.Framework))
+            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('width', this.x.bandwidth())
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars))
+            .attr('fill', 'steelblue')
+    }
+
+    public updateBars(): void {
+        // Update the SVG element size
+        this.svg.attr('width', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientHeight);
+        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+
+        // Update the X-axis scale range
+        this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+
+        // Redraw the X-axis on the DOM
+        this.svg.select('g.x-axis')
+            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(this.x))
+            .selectAll('text')
+            .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'end');
+
+        // Update the Y-axis scale range
+        this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);
+
+        // Redraw the Y-axis on the DOM
+        this.svg.select('g.y-axis')
+            .call(d3.axisLeft(this.y));
+
+        // Redraw the bars on the DOM
+        this.svg.selectAll('rect')
+            .attr('x', (d: any) => this.x(d.Framework))
+            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('width', this.x.bandwidth())
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars));
     }
 
 }
