@@ -29,8 +29,8 @@ export class BarChartComponent implements OnInit {
             .append('svg')
             .attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientWidth)
-        
-        var g = this.svg.append('g') 
+
+        var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 20) + ',' + this.margin + ')');
 
         // Create the X-axis band scale
@@ -68,6 +68,50 @@ export class BarChartComponent implements OnInit {
             .attr('width', this.x.bandwidth())
             .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars))
             .attr('fill', 'steelblue')
+            .on('mouseover', (d, i, nodes) => {
+                // Get the current bar element
+                const bar = d3.select(nodes[i]);
+
+                // Create the tooltip element
+                const tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background-color', 'white')
+                    .style('border', 'solid')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '10px')
+                    .style('opacity', 0)
+                    .text(`${d.Framework}: ${d.Stars} stars, released on ${d.Released}`);
+                
+                // Show the tooltip element
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 1);
+
+                // Change the color of the bar
+                bar.style('fill', 'orange');
+
+                // Add a mousemove event listener to update the position of the tooltip element
+                d3.select('body')
+                    .on('mousemove', () => {
+                        const [x, y] = d3.mouse(nodes[i]);
+                        // console.log(x, y);
+                        tooltip.style('left', `${x + 800}px`)
+                            .style('top', `${y + 80}px`);
+                    });
+            })
+            .on('mouseout', (d, i, nodes) => {
+                // Get the current bar element
+                const bar = d3.select(nodes[i]);
+
+                // Hide the tooltip element
+                d3.select('.tooltip').remove();
+
+                // Change the color of the bar back to the original color
+                bar.style('fill', 'steelblue');
+            });
     }
 
     public updateBars(): void {
