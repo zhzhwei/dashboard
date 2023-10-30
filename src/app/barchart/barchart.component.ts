@@ -12,10 +12,18 @@ export class BarChartComponent implements OnInit {
     constructor() { }
 
     private svg: any;
-    private margin = 50;
+    private margin = 80;
     private barEL: any;
     private x: any;
     private y: any;
+
+    public Data = [
+        { 'Fertigkeiten': 'Gesamt', 'Vaules': '19' },
+        { 'Fertigkeiten': 'Polymechaniker', 'Vaules': '16' },
+        { 'Fertigkeiten': 'Teamfähigkeit', 'Vaules': '8'  },
+        { 'Fertigkeiten': 'Flexibilität', 'Vaules': '5'  },
+        { 'Fertigkeiten': 'Motivation', 'Vaules': '3' }
+    ];
 
     ngOnInit(): void {
 
@@ -36,7 +44,7 @@ export class BarChartComponent implements OnInit {
         // Create the X-axis band scale
         this.x = d3.scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(data.map(d => d.Framework))
+            .domain(data.map(d => d.Fertigkeiten))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
@@ -50,7 +58,7 @@ export class BarChartComponent implements OnInit {
 
         // Create the Y-axis band scale
         this.y = d3.scaleLinear()
-            .domain([0, 200000])
+            .domain([0, 20])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
@@ -63,10 +71,10 @@ export class BarChartComponent implements OnInit {
             .data(data)
             .enter()
             .append('rect')
-            .attr('x', (d: any) => this.x(d.Framework))
-            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('x', (d: any) => this.x(d.Fertigkeiten))
+            .attr('y', (d: any) => this.y(d.Vaules))
             .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars))
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Vaules))
             .attr('fill', 'steelblue')
             .on('mouseover', (d, i, nodes) => {
                 // Get the current bar element
@@ -83,7 +91,7 @@ export class BarChartComponent implements OnInit {
                     .style('border-radius', '5px')
                     .style('padding', '10px')
                     .style('opacity', 0)
-                    .text(`${d.Framework}: ${d.Stars} stars, released on ${d.Released}`);
+                    .text(`${d.Fertigkeiten}: ${d.Vaules}`);
                 
                 // Show the tooltip element
                 tooltip.transition()
@@ -140,10 +148,10 @@ export class BarChartComponent implements OnInit {
 
         // Redraw the bars on the DOM
         this.svg.selectAll('rect')
-            .attr('x', (d: any) => this.x(d.Framework))
-            .attr('y', (d: any) => this.y(d.Stars))
+            .attr('x', (d: any) => this.x(d.Fertigkeiten))
+            .attr('y', (d: any) => this.y(d.Vaules))
             .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Stars));
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Vaules));
     }
 
 }

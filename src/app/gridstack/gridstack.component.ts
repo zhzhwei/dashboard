@@ -19,14 +19,6 @@ export class GridStackComponent implements OnInit {
     private itemEl: any;
     private barChart: BarChartComponent;
 
-    private data = [
-        { 'Framework': 'Vue', 'Stars': '186443', 'Released': '2014' },
-        { 'Framework': 'React', 'Stars': '160793', 'Released': '2013' },
-        { 'Framework': 'Angular', 'Stars': '82342', 'Released': '2016' },
-        { 'Framework': 'Backbone', 'Stars': '57647', 'Released': '2010' },
-        { 'Framework': 'Ember', 'Stars': '31471', 'Released': '2011' },
-    ];
-
     ngOnInit(): void {
         const options = {
             margin: 5,
@@ -60,7 +52,7 @@ export class GridStackComponent implements OnInit {
         });
 
         this.barChart = new BarChartComponent();
-        this.barChart.drawBars(this.data);
+        this.barChart.drawBars(this.barChart.Data);
     }
 
     ngAfterViewInit(): void {

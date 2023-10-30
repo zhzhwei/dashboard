@@ -14,7 +14,6 @@ export class RdfDataService {
 
     public queryData(): Promise<any> {
         const query = `
-            PREFIX ex: <http://example.org/>
             SELECT ?s ?p ?o
             WHERE {
                 ?s ?p ?o .
