@@ -16,11 +16,11 @@ export class StackedBarChartComponent implements OnInit {
     private y: any;
 
     public data = [
-        { type: "Gesamt", nitrogen: 13, normal: 8, stress: 4 },
-        { type: "Polymechaniker", nitrogen: 10, normal: 10, stress: 9 },
-        { type: "Teamfähigkeit", nitrogen: 12, normal: 5, stress: 6 },
-        { type: "Flexibilität", nitrogen: 4, normal: 6, stress: 10 },
-        { type: 'Motivation',   nitrogen: 3,  normal: 2,  stress: 3}
+        { type: "Gesamt", Werkzeugmacher: 19, Feinwerkmechaniker: 10 },
+        { type: "Polymechaniker", Werkzeugmacher: 7, Feinwerkmechaniker: 3 },
+        { type: "Teamfähigkeit", Werkzeugmacher: 4, Feinwerkmechaniker: 4 },
+        { type: "Flexibilität", Werkzeugmacher: 5, Feinwerkmechaniker: 2 },
+        { type: 'Motivation',   Werkzeugmacher: 3,  Feinwerkmechaniker: 1 }
     ];
 
     ngOnInit(): void {
@@ -45,7 +45,7 @@ export class StackedBarChartComponent implements OnInit {
             .style("font-size", "16px")
             .text("Stellenausschreibungen - Fertigkeiten");
 
-        const groups = ["nitrogen", "normal", "stress"];
+        const groups = ["Werkzeugmacher", "Feinwerkmechaniker"];
         const subgroups = ["Gesamt", "Polymechaniker", "Teamfähigkeit", "Flexibilität", "Motivation"];
 
         // // Create the X-axis band scale.
@@ -76,7 +76,7 @@ export class StackedBarChartComponent implements OnInit {
         // color palette = one color per subgroup
         var color = d3.scaleOrdinal()
             .domain(groups)
-            .range(['#C7EFCF', '#FE5F55', '#EEF5DB', '#F0DDAA'])
+            .range(['steelblue', 'darkorange'])
 
         // stack the data per subgroup
         var stackedData = d3.stack()

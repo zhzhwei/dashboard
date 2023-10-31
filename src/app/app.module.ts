@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 import { GridStackModule } from './gridstack/gridstack.module';
 import { BarChartComponent } from './barchart/barchart.component';
 import { StackedBarChartComponent } from './stackbarchart/stackbarchart.component';
+import { StarplotComponent } from './starplot/starplot.component';
 
 @NgModule({
     imports: [BrowserModule, GridStackModule, HttpClientModule],
-    declarations: [AppComponent, BarChartComponent, StackedBarChartComponent],
+    declarations: [AppComponent, BarChartComponent, StackedBarChartComponent, StarplotComponent],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

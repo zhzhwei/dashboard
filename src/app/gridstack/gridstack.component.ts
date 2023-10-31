@@ -17,6 +17,7 @@ export class GridStackComponent implements OnInit {
     private serializedData: any[] = []
     private barContEl: any;
     private stackedContEl: any;
+    private barPlotEl: any;
     private boxContEl: any;
     private starContEl: any;
     private itemEl: any;
@@ -38,10 +39,10 @@ export class GridStackComponent implements OnInit {
         this.grid = GridStack.init(options);
 
         this.serializedData = [
-            { x: 0, y: 0, w: 4, h: 2, name: 'star plot' },
+            { x: 0, y: 0, w: 4, h: 3, name: 'bar plot' },
             { x: 4, y: 0, w: 4, h: 6, name: 'stacked bar chart' },
             { x: 8, y: 0, w: 4, h: 4, name: 'box plot' },
-            { x: 0, y: 2, w: 4, h: 4, name: 'bar chart' },
+            { x: 0, y: 2, w: 4, h: 3, name: 'bar chart' },
             { x: 8, y: 4, w: 4, h: 2, name: 'scatter plot' },
         ];
 
@@ -56,12 +57,22 @@ export class GridStackComponent implements OnInit {
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.barContEl.setAttribute('id', 'bar');
+                    this.barChart = new BarChartComponent();
+                    this.barChart.drawBars(this.barChart.werkzeugData, 'bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.stackedContEl.setAttribute('id', 'stacked');
+                    break;
+                case 'bar plot':
+                    var itemIndex = this.serializedData.findIndex(item => item.name === 'bar plot');
+                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.barPlotEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.barPlotEl.setAttribute('id', 'plot');
+                    this.barChart = new BarChartComponent();
+                    this.barChart.drawBars(this.barChart.feinwerkData, 'plot');
                     break;
                 case 'box plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'box plot');
@@ -77,9 +88,6 @@ export class GridStackComponent implements OnInit {
                     break;
             }
         });
-
-        this.barChart = new BarChartComponent();
-        this.barChart.drawBars(this.barChart.data);
 
         this.stackedBarChart = new StackedBarChartComponent();
         this.stackedBarChart.drawBars(this.stackedBarChart.data);
