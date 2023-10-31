@@ -16,8 +16,8 @@ export class StackedBarChartComponent implements OnInit {
     private y: any;
 
     public data = [
-        { type: "Gesamt", Werkzeugmacher: 19, Feinwerkmechaniker: 10 },
-        { type: "Polymechaniker", Werkzeugmacher: 7, Feinwerkmechaniker: 3 },
+        { type: "Gesamt", Werkzeugmacher: 13, Feinwerkmechaniker: 10 },
+        { type: "Polymechaniker", Werkzeugmacher: 1, Feinwerkmechaniker: 3 },
         { type: "Teamfähigkeit", Werkzeugmacher: 4, Feinwerkmechaniker: 4 },
         { type: "Flexibilität", Werkzeugmacher: 5, Feinwerkmechaniker: 2 },
         { type: 'Motivation',   Werkzeugmacher: 3,  Feinwerkmechaniker: 1 }
@@ -65,7 +65,7 @@ export class StackedBarChartComponent implements OnInit {
 
         // // Add Y axis
         this.y = d3.scaleLinear()
-            .domain([0, 30])
+            .domain([0, 24])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM

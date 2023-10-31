@@ -18,8 +18,8 @@ export class BarChartComponent implements OnInit {
     private y: any;
 
     public werkzeugData = [
-        { 'Fertigkeit': 'Gesamt', 'Häufigkeit': 19 },
-        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 7 },
+        { 'Fertigkeit': 'Gesamt', 'Häufigkeit': 13 },
+        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 1 },
         { 'Fertigkeit': 'Teamfähigkeit', 'Häufigkeit': 4 },
         { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 5 },
         { 'Fertigkeit': 'Motivation', 'Häufigkeit': 3 }

@@ -41,7 +41,7 @@ export class GridStackComponent implements OnInit {
         this.serializedData = [
             { x: 0, y: 0, w: 4, h: 3, name: 'bar plot' },
             { x: 4, y: 0, w: 4, h: 6, name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 4, name: 'box plot' },
+            { x: 8, y: 0, w: 4, h: 4, name: 'star plot' },
             { x: 0, y: 2, w: 4, h: 3, name: 'bar chart' },
             { x: 8, y: 4, w: 4, h: 2, name: 'scatter plot' },
         ];
