@@ -15,7 +15,10 @@ export class GridStackComponent implements OnInit {
 
     private grid: GridStack;
     private serializedData: any[] = []
-    private contEl: any;
+    private barContEl: any;
+    private stackedContEl: any;
+    private boxContEl: any;
+    private starContEl: any;
     private itemEl: any;
     private barChart: BarChartComponent;
     private stackedBarChart: StackedBarChartComponent;
@@ -51,26 +54,26 @@ export class GridStackComponent implements OnInit {
                 case 'bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.contEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.contEl.setAttribute('id', 'bar');
+                    this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.barContEl.setAttribute('id', 'bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.contEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.contEl.setAttribute('id', 'stacked');
+                    this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.stackedContEl.setAttribute('id', 'stacked');
                     break;
                 case 'box plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'box plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.contEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.contEl.setAttribute('id', 'box');
+                    this.boxContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.boxContEl.setAttribute('id', 'box');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.contEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.contEl.setAttribute('id', 'star');
+                    this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.starContEl.setAttribute('id', 'star');
                     break;
             }
         });
@@ -86,10 +89,12 @@ export class GridStackComponent implements OnInit {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
             this.barChart.updateBars();
+            // this.stackedBarChart.updateBars();
         });
 
         // Observe the element for size changes
-        resizeObserver.observe(this.contEl);
+        resizeObserver.observe(this.barContEl);
+        resizeObserver.observe(this.stackedContEl);
     }
 
 }

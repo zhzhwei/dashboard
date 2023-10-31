@@ -8,53 +8,56 @@ import * as d3 from 'd3';
 })
 export class StackedBarChartComponent implements OnInit {
 
-    svg: any;
+    private svg: any;
 
-    margin = 50;
-    width = 460 - (this.margin * 2);
-    height = 400 - (this.margin * 2);
+    private margin = 50;
+    private barEL: any;
+    private x: any;
+    private y: any;
 
     public data = [
-        { type: "banana", nitrogen: 12, normal: 1, stress: 13 },
-        { type: "poacee", nitrogen: 6, normal: 6, stress: 33 },
-        { type: "sorgho", nitrogen: 11, normal: 28, stress: 12 },
-        { type: "triticum", nitrogen: 19, normal: 6, stress: 1 }
+        { type: "banana", nitrogen: 13, normal: 8, stress: 4 },
+        { type: "poacee", nitrogen: 10, normal: 10, stress: 9 },
+        { type: "sorgho", nitrogen: 12, normal: 5, stress: 6 },
+        { type: "triticum", nitrogen: 4, normal: 6, stress: 10 }
     ];
 
     ngOnInit(): void {
-        this.createSvg();
-        this.drawBars(this.data)
-    }
 
-    public createSvg(): void {
-        this.svg = d3.select("figure#stacked-bar")
-            .append("svg")
-            .attr("width", this.width + (this.margin * 3))
-            .attr("height", this.height + (this.margin * 3))
-            .append("g")
-            .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
     }
 
     public drawBars(data): void {
+        this.barEL = document.getElementById('stacked');
+
+        this.svg = d3.select("#stacked")
+            .append("svg")
+            .attr("width", this.barEL.clientWidth + (this.margin * 2))
+            .attr("height", this.barEL.clientHeight + (this.margin * 2))
+            .append("g")
+            .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
+
         const groups = ["nitrogen", "normal", "stress"];
         const subgroups = ["banana", "poacee", "sorgho", "triticum"];
 
         // Create the X-axis band scale.
-        var x = d3.scaleBand()
+        this.x = d3.scaleBand()
             .domain(subgroups)
-            .range([0, this.width])
+            .range([0, this.barEL.clientWidth - this.margin * 2])
             .padding(0.2)
 
         this.svg.append("g")
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            .attr('class', 'x-axis')
+            .attr("transform", "translate(0," + this.barEL.clientHeight + ")")
+            .call(d3.axisBottom(this.x).tickSizeOuter(0));
 
         // Add Y axis
-        var y = d3.scaleLinear()
-            .domain([0, 60])
-            .range([this.height, 0]);
+        this.y = d3.scaleLinear()
+            .domain([0, 30])
+            .range([this.barEL.clientHeight, 0]);
+
         this.svg.append("g")
-            .call(d3.axisLeft(y));
+            .attr('class', 'y-axis')
+            .call(d3.axisLeft(this.y));
 
         // color palette = one color per subgroup
         var color = d3.scaleOrdinal()
@@ -76,10 +79,40 @@ export class StackedBarChartComponent implements OnInit {
             .selectAll("rect")
             .data(d => d)
             .join("rect")
-            .attr("x", d => x(d.data.type))
-            .attr("y", d => y(d[1]))
-            .attr("height", d => y(d[0]) - y(d[1]))
-            .attr("width", x.bandwidth())
+            .attr("x", d => this.x(d.data.type))
+            .attr("y", d => this.y(d[1]))
+            .attr("height", d => this.y(d[0]) - this.y(d[1]))
+            .attr("width", this.x.bandwidth())
             .attr("stroke", "grey")
     }
+
+    public updateBars(): void {
+        // Update the SVG element size
+        this.svg.attr('width', this.barEL.clientWidth + (this.margin * 2))
+            .attr('height', this.barEL.clientHeight + (this.margin * 2));
+
+        // Update the X-axis scale range
+        this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+
+        // Redraw the X-axis on the DOM
+        this.svg.select('g.x-axis')
+            .attr('transform', 'translate(0,' + (this.barEL.clientHeight) + ')')
+            .call(d3.axisBottom(this.x).tickSizeOuter(0))
+
+        // Update the Y-axis scale range
+        this.y.range([this.barEL.clientHeight, 0]);
+
+        // Redraw the Y-axis on the DOM
+        this.svg.select('g.y-axis')
+            .call(d3.axisLeft(this.y));
+
+        // Redraw the bars on the DOM
+        this.svg.selectAll('rect')
+            .attr("x", (d: any) => this.x(d.data.type))
+            .attr("y", (d: any) => this.y(d[1]))
+            .attr("height", (d: any) => this.y(d[0]) - this.y(d[1]))
+            .attr("width", this.x.bandwidth())
+            .attr("stroke", "grey");
+    }
+
 }

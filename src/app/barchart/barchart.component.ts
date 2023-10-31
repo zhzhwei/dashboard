@@ -51,7 +51,7 @@ export class BarChartComponent implements OnInit {
         g.append('g')
             .attr('class', 'x-axis')
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
-            .call(d3.axisBottom(this.x))
+            .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
             .attr('transform', 'translate(-10,0)rotate(-45)')
             .style('text-anchor', 'end');
@@ -134,7 +134,7 @@ export class BarChartComponent implements OnInit {
         // Redraw the X-axis on the DOM
         this.svg.select('g.x-axis')
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
-            .call(d3.axisBottom(this.x))
+            .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
             .attr('transform', 'translate(-10,0)rotate(-45)')
             .style('text-anchor', 'end');
