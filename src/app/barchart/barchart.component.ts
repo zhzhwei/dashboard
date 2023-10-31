@@ -39,7 +39,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', this.barEL.clientWidth)
 
         var g = this.svg.append('g')
-            .attr('transform', 'translate(' + (this.margin + 20) + ',' + this.margin + ')');
+            .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()

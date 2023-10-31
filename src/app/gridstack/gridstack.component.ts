@@ -89,7 +89,7 @@ export class GridStackComponent implements OnInit {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
             this.barChart.updateBars();
-            // this.stackedBarChart.updateBars();
+            this.stackedBarChart.updateBars();
         });
 
         // Observe the element for size changes
