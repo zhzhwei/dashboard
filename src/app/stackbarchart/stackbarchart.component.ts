@@ -27,7 +27,7 @@ export class StackedBarChartComponent implements OnInit {
 
     }
 
-    public drawBars(data): void {
+    public createChart(data): void {
         this.barEL = document.getElementById('stacked');
 
         this.svg = d3.select("#stacked")
@@ -100,7 +100,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("stroke", "grey")
     }
 
-    public updateBars(): void {
+    public updateChart(): void {
         // Update the SVG element size
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);

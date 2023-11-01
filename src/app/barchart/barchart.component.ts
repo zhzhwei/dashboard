@@ -37,7 +37,7 @@ export class BarChartComponent implements OnInit {
 
     }
 
-    public drawBars(data: any[], name): void {
+    public createChart(data: any[], name): void {
         this.barEL = document.getElementById(name);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
@@ -218,7 +218,7 @@ export class BarChartComponent implements OnInit {
         }
     }
 
-    public updateBars(): void {
+    public updateChart(): void {
         // Update the SVG element size
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);
