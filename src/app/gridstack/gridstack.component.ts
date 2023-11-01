@@ -61,7 +61,7 @@ export class GridStackComponent implements OnInit {
                     this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.barContEl.setAttribute('id', 'bar');
                     this.barChart = new BarChartComponent();
-                    this.barChart.createChart(this.barChart.werkzeugData, 'bar');
+                    // this.barChart.createChart(this.barChart.werkzeugData, 'bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
@@ -77,7 +77,7 @@ export class GridStackComponent implements OnInit {
                     this.plotContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.plotContEl.setAttribute('id', 'plot');
                     this.plotChart = new BarChartComponent();
-                    this.plotChart.createChart(this.plotChart.feinwerkData, 'plot');
+                    // this.plotChart.createChart(this.plotChart.feinwerkData, 'plot');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
@@ -94,13 +94,13 @@ export class GridStackComponent implements OnInit {
     ngAfterViewInit(): void {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
-            this.barChart.updateChart();
+            // this.barChart.updateChart();
             this.stackedChart.updateChart();
-            this.plotChart.updateChart();
+            // this.plotChart.updateChart();
         });
 
         // Observe the element for size changes
-        resizeObserver.observe(this.barContEl);
+        // resizeObserver.observe(this.barContEl);
         resizeObserver.observe(this.stackedContEl);
         resizeObserver.observe(this.plotContEl);
         resizeObserver.observe(this.starContEl);

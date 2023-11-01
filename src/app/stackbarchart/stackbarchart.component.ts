@@ -14,12 +14,13 @@ export class StackedBarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
+    private tooltip: any;
 
     public data = [
         { type: "Kommfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 2 },
         { type: "Polymechaniker", Werkzeugmacher: 2, Feinwerkmechaniker: 3 },
         { type: "Teamfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 3 },
-        { type: "Flexibilität", Werkzeugmacher: 5, Feinwerkmechaniker: 2 },
+        { type: "Flexibilität", Werkzeugmacher: 1, Feinwerkmechaniker: 3 },
         { type: 'Motivation',   Werkzeugmacher: 3,  Feinwerkmechaniker: 1 }
     ];
 
@@ -82,6 +83,17 @@ export class StackedBarChartComponent implements OnInit {
         var stackedData = d3.stack()
             .keys(groups)
             (data)
+        console.log(stackedData);
+        this.tooltip = d3.select('body')
+            .append('div')
+            .attr('class', 'tooltip')
+            .style('position', 'absolute')
+            .style('background-color', 'white')
+            .style('border', 'solid')
+            .style('border-width', '1px')
+            .style('border-radius', '5px')
+            .style('padding', '10px')
+            .style('opacity', 0)
 
         // Create and fill the bars.
         g.append("g")
@@ -98,6 +110,37 @@ export class StackedBarChartComponent implements OnInit {
             .attr("height", d => this.y(d[0]) - this.y(d[1]))
             .attr("width", this.x.bandwidth())
             .attr("stroke", "grey")
+            .on('mouseover', (d, i, nodes) => {
+                // Create the tooltip element
+                const tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background-color', 'white')
+                    .style('border', 'solid')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '10px')
+                    .style('opacity', 0)
+                    .html(`Werkzeugmacher: ${d.data['Werkzeugmacher']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}`);
+
+                // Show the tooltip element
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 1);
+
+                // Add a mousemove event listener to update the position of the tooltip element
+                d3.select('body')
+                    .on('mousemove', () => {
+                        const [x, y] = d3.mouse(nodes[i]);
+                        tooltip.style('left', `${x + 800}px`)
+                            .style('top', `${y + 80}px`);
+                    });
+            })
+            .on('mouseout', () => {
+                // Hide the tooltip element
+                d3.select('.tooltip').remove();
+            });
     }
 
     public updateChart(): void {
