@@ -18,15 +18,15 @@ export class BarChartComponent implements OnInit {
     private y: any;
 
     public werkzeugData = [
-        { 'Fertigkeit': 'Gesamt', 'Häufigkeit': 13 },
-        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 1 },
+        { 'Fertigkeit': 'Kommfähigkeit', 'Häufigkeit': 3 },
+        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 2 },
         { 'Fertigkeit': 'Teamfähigkeit', 'Häufigkeit': 4 },
-        { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 5 },
+        { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 2 },
         { 'Fertigkeit': 'Motivation', 'Häufigkeit': 3 }
     ];
 
     public feinwerkData = [
-        { 'Fertigkeit': 'Gesamt', 'Häufigkeit': 10 },
+        { 'Fertigkeit': 'Kommfähigkeit', 'Häufigkeit': 4 },
         { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 3 },
         { 'Fertigkeit': 'Teamfähigkeit', 'Häufigkeit': 4 },
         { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 2 },
@@ -88,12 +88,12 @@ export class BarChartComponent implements OnInit {
         switch (name) {
             case 'bar':
                 this.y = d3.scaleLinear()
-                    .domain([0, this.werkzeugData[0].Häufigkeit])
+                    .domain([0, 5])
                     .range([this.barEL.clientHeight - this.margin * 2, 0]);
                 break;
             case 'plot':
                 this.y = d3.scaleLinear()
-                    .domain([0, this.feinwerkData[0].Häufigkeit])
+                    .domain([0, 5])
                     .range([this.barEL.clientHeight - this.margin * 2, 0]);
                 break;
         }

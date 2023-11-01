@@ -3,6 +3,7 @@ import { GridStack } from 'gridstack';
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../barchart/barchart.component';
 import { StackedBarChartComponent } from '../stackbarchart/stackbarchart.component';
+import { StarPlotComponent } from '../starplot/starplot.component';
 
 @Component({
     selector: 'app-gridstack',
@@ -15,14 +16,17 @@ export class GridStackComponent implements OnInit {
 
     private grid: GridStack;
     private serializedData: any[] = []
+    private itemEl: any;
+
     private barContEl: any;
     private stackedContEl: any;
-    private barPlotEl: any;
-    private boxContEl: any;
+    private plotContEl: any;
     private starContEl: any;
-    private itemEl: any;
+
     private barChart: BarChartComponent;
-    private stackedBarChart: StackedBarChartComponent;
+    private stackedChart: StackedBarChartComponent;
+    private plotChart: BarChartComponent;
+    private starPlot: StarPlotComponent;
 
     ngOnInit(): void {
         const options = {
@@ -41,9 +45,8 @@ export class GridStackComponent implements OnInit {
         this.serializedData = [
             { x: 0, y: 0, w: 4, h: 3, name: 'bar plot' },
             { x: 4, y: 0, w: 4, h: 6, name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 3, name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 3, name: 'bar chart' },
-            { x: 8, y: 4, w: 4, h: 3, name: 'scatter plot' },
+            { x: 8, y: 0, w: 4, h: 6, name: 'star plot', noResize: true },
+            { x: 0, y: 2, w: 4, h: 3, name: 'bar chart' }
         ];
 
         this.grid.load(this.serializedData);
@@ -65,44 +68,42 @@ export class GridStackComponent implements OnInit {
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.stackedContEl.setAttribute('id', 'stacked');
+                    this.stackedChart = new StackedBarChartComponent();
+                    this.stackedChart.createChart(this.stackedChart.data);
                     break;
                 case 'bar plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'bar plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.barPlotEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.barPlotEl.setAttribute('id', 'plot');
-                    this.barChart = new BarChartComponent();
-                    this.barChart.createChart(this.barChart.feinwerkData, 'plot');
-                    break;
-                case 'box plot':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'box plot');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.boxContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.boxContEl.setAttribute('id', 'box');
+                    this.plotContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.plotContEl.setAttribute('id', 'plot');
+                    this.plotChart = new BarChartComponent();
+                    this.plotChart.createChart(this.plotChart.feinwerkData, 'plot');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.starContEl.setAttribute('id', 'star');
+                    this.starPlot = new StarPlotComponent();
+                    this.starPlot.createChart();
                     break;
             }
         });
-
-        this.stackedBarChart = new StackedBarChartComponent();
-        this.stackedBarChart.createChart(this.stackedBarChart.data);
     }
 
     ngAfterViewInit(): void {
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
             this.barChart.updateChart();
-            this.stackedBarChart.updateChart();
+            this.stackedChart.updateChart();
+            this.plotChart.updateChart();
         });
 
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
         resizeObserver.observe(this.stackedContEl);
+        resizeObserver.observe(this.plotContEl);
+        resizeObserver.observe(this.starContEl);
     }
 
 }

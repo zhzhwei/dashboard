@@ -16,9 +16,9 @@ export class StackedBarChartComponent implements OnInit {
     private y: any;
 
     public data = [
-        { type: "Gesamt", Werkzeugmacher: 13, Feinwerkmechaniker: 10 },
-        { type: "Polymechaniker", Werkzeugmacher: 1, Feinwerkmechaniker: 3 },
-        { type: "Teamfähigkeit", Werkzeugmacher: 4, Feinwerkmechaniker: 4 },
+        { type: "Kommfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 2 },
+        { type: "Polymechaniker", Werkzeugmacher: 2, Feinwerkmechaniker: 3 },
+        { type: "Teamfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 3 },
         { type: "Flexibilität", Werkzeugmacher: 5, Feinwerkmechaniker: 2 },
         { type: 'Motivation',   Werkzeugmacher: 3,  Feinwerkmechaniker: 1 }
     ];
@@ -46,7 +46,7 @@ export class StackedBarChartComponent implements OnInit {
             .text("Stellenausschreibungen - Fertigkeiten");
 
         const groups = ["Werkzeugmacher", "Feinwerkmechaniker"];
-        const subgroups = ["Gesamt", "Polymechaniker", "Teamfähigkeit", "Flexibilität", "Motivation"];
+        const subgroups = ["Kommfähigkeit", "Polymechaniker", "Teamfähigkeit", "Flexibilität", "Motivation"];
 
         // // Create the X-axis band scale.
         this.x = d3.scaleBand()
@@ -65,7 +65,7 @@ export class StackedBarChartComponent implements OnInit {
 
         // // Add Y axis
         this.y = d3.scaleLinear()
-            .domain([0, 24])
+            .domain([0, 8])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
