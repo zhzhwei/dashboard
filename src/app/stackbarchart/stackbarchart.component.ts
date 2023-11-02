@@ -41,6 +41,18 @@ export class StackedBarChartComponent implements OnInit {
         var g = this.svg.append("g")
             .attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
+        // add an pen symbol editor button on the top right in the svg to edit the chart
+        this.svg.append('foreignObject')
+            .attr('x', this.barEL.clientWidth - 50)
+            .attr('y', 20)
+            .attr('width', 20)
+            .attr('height', 20)
+            .append('xhtml:body')
+            .html('<i class="fa fa-pencil"></i>')
+            .on('click', () => {
+                window.location.href = '/Edit';
+            });
+
         this.svg.append("text")
             .attr("x", (this.barEL.clientWidth / 2))
             .attr("y", this.margin / 2)
@@ -49,6 +61,7 @@ export class StackedBarChartComponent implements OnInit {
             .text("Stellenausschreibungen - Fertigkeiten");
 
         const groups = ["Werkzeugmacher", "Feinwerkmechaniker"];
+        const legendGroups = ["Feinwerkmechaniker", "Werkzeugmacher"];
         const subgroups = ["Kommfähigkeit", "Polymechaniker", "Teamfähigkeit", "Flexibilität", "Motivation"];
 
         // // Create the X-axis band scale.
@@ -86,16 +99,6 @@ export class StackedBarChartComponent implements OnInit {
             .keys(groups)
             (data)
         console.log(stackedData);
-        this.tooltip = d3.select('body')
-            .append('div')
-            .attr('class', 'tooltip')
-            .style('position', 'absolute')
-            .style('background-color', 'white')
-            .style('border', 'solid')
-            .style('border-width', '1px')
-            .style('border-radius', '5px')
-            .style('padding', '10px')
-            .style('opacity', 0)
 
         // Create and fill the bars.
         g.append("g")
@@ -114,7 +117,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("stroke", "grey")
             .on('mouseover', (d, i, nodes) => {
                 // Create the tooltip element
-                const tooltip = d3.select('body')
+                this.tooltip = d3.select('body')
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
@@ -124,10 +127,10 @@ export class StackedBarChartComponent implements OnInit {
                     .style('border-radius', '5px')
                     .style('padding', '10px')
                     .style('opacity', 0)
-                    .html(`Type: ${d.data['Type']}<br>Werkzeugmacher: ${d.data['Werkzeugmacher']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}`);
+                    .html(`Type: ${d.data['Type']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}<br>Werkzeugmacher: ${d.data['Werkzeugmacher']}`);
 
                 // Show the tooltip element
-                tooltip.transition()
+                this.tooltip.transition()
                     .duration(200)
                     .style('opacity', 1);
 
@@ -135,7 +138,7 @@ export class StackedBarChartComponent implements OnInit {
                 d3.select('body')
                     .on('mousemove', () => {
                         const [x, y] = d3.mouse(nodes[i]);
-                        tooltip.style('left', `${x + 800}px`)
+                        this.tooltip.style('left', `${x + 1000}px`)
                             .style('top', `${y + 80}px`);
                     });
             })
@@ -143,14 +146,14 @@ export class StackedBarChartComponent implements OnInit {
                 // Hide the tooltip element
                 d3.select('.tooltip').remove();
             });
-        
-         this.legend = g.append("g")
-                .attr("class", "legend")
-                .attr("transform", `translate(${this.barEL.clientWidth/4}, 0)`);
+
+        this.legend = g.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${this.barEL.clientWidth / 4}, 0)`);
 
         // Create a group element for each legend item
         this.legendItems = this.legend.selectAll(".legend-item")
-            .data(groups)
+            .data(legendGroups)
             .enter()
             .append("g")
             .attr("class", "legend-item")
@@ -174,7 +177,7 @@ export class StackedBarChartComponent implements OnInit {
         // Update the SVG element size
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);
-        
+
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
 
