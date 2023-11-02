@@ -14,14 +14,16 @@ export class StackedBarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
+    private legend: any;
+    private legendItems: any;
     private tooltip: any;
 
     public data = [
-        { type: "Kommfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 2 },
-        { type: "Polymechaniker", Werkzeugmacher: 2, Feinwerkmechaniker: 3 },
-        { type: "Teamfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 3 },
-        { type: "Flexibilität", Werkzeugmacher: 1, Feinwerkmechaniker: 3 },
-        { type: 'Motivation',   Werkzeugmacher: 3,  Feinwerkmechaniker: 1 }
+        { Type: "Kommfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 2 },
+        { Type: "Polymechaniker", Werkzeugmacher: 2, Feinwerkmechaniker: 3 },
+        { Type: "Teamfähigkeit", Werkzeugmacher: 4, Feinwerkmechaniker: 2 },
+        { Type: "Flexibilität", Werkzeugmacher: 1, Feinwerkmechaniker: 3 },
+        { Type: 'Motivation', Werkzeugmacher: 3, Feinwerkmechaniker: 1 }
     ];
 
     ngOnInit(): void {
@@ -66,7 +68,7 @@ export class StackedBarChartComponent implements OnInit {
 
         // // Add Y axis
         this.y = d3.scaleLinear()
-            .domain([0, 8])
+            .domain([0, 7])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
@@ -105,7 +107,7 @@ export class StackedBarChartComponent implements OnInit {
             .selectAll("rect")
             .data(d => d)
             .join("rect")
-            .attr("x", d => this.x(d.data.type))
+            .attr("x", d => this.x(d.data.Type))
             .attr("y", d => this.y(d[1]))
             .attr("height", d => this.y(d[0]) - this.y(d[1]))
             .attr("width", this.x.bandwidth())
@@ -122,7 +124,7 @@ export class StackedBarChartComponent implements OnInit {
                     .style('border-radius', '5px')
                     .style('padding', '10px')
                     .style('opacity', 0)
-                    .html(`Werkzeugmacher: ${d.data['Werkzeugmacher']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}`);
+                    .html(`Type: ${d.data['Type']}<br>Werkzeugmacher: ${d.data['Werkzeugmacher']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}`);
 
                 // Show the tooltip element
                 tooltip.transition()
@@ -141,6 +143,31 @@ export class StackedBarChartComponent implements OnInit {
                 // Hide the tooltip element
                 d3.select('.tooltip').remove();
             });
+        
+         this.legend = g.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${this.barEL.clientWidth/4}, 0)`);
+
+        // Create a group element for each legend item
+        this.legendItems = this.legend.selectAll(".legend-item")
+            .data(groups)
+            .enter()
+            .append("g")
+            .attr("class", "legend-item")
+            .attr("transform", (d, i) => `translate(0, ${i * 20})`);
+
+        // Append a circle element to each group element to represent the legend item
+        this.legendItems.append("circle")
+            .attr("cx", 5)
+            .attr("cy", 5)
+            .attr("r", 6)
+            .attr("fill", d => color(d));
+
+        // Append a text element to each group element to represent the legend item
+        this.legendItems.append("text")
+            .attr("x", 20)
+            .attr("y", 10)
+            .text(d => d)
     }
 
     public updateChart(): void {
@@ -165,7 +192,7 @@ export class StackedBarChartComponent implements OnInit {
 
         // Redraw the bars on the DOM
         this.svg.selectAll('rect')
-            .attr("x", (d: any) => this.x(d.data.type))
+            .attr("x", (d: any) => this.x(d.data.Type))
             .attr("y", (d: any) => this.y(d[1]))
             .attr("height", (d: any) => this.y(d[0]) - this.y(d[1]))
             .attr("width", this.x.bandwidth())
