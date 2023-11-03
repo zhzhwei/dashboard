@@ -9,7 +9,6 @@ import { GridStackModule } from './gridstack/gridstack.module';
 import { BarChartComponent } from './barchart/barchart.component';
 import { StackedBarChartComponent } from './stackbarchart/stackbarchart.component';
 import { StarPlotComponent } from './starplot/starplot.component';
-import { StackBarEditorComponent } from './edition/stackbareditor/stackbareditor.component';
 
 @NgModule({
     imports: [
@@ -22,8 +21,7 @@ import { StackBarEditorComponent } from './edition/stackbareditor/stackbareditor
         AppComponent,
         BarChartComponent,
         StackedBarChartComponent,
-        StarPlotComponent,
-        StackBarEditorComponent
+        StarPlotComponent
     ],
     bootstrap: [
         AppComponent

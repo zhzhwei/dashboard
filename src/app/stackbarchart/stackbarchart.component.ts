@@ -27,8 +27,6 @@ export class StackedBarChartComponent implements OnInit {
         { Type: 'Motivation', Werkzeugmacher: 3, Feinwerkmechaniker: 1 }
     ];
 
-    constructor(private router: Router) { }
-    
     ngOnInit(): void {
 
     }
@@ -52,7 +50,7 @@ export class StackedBarChartComponent implements OnInit {
             .append('xhtml:body')
             .html('<i class="fa fa-pencil"></i>')
             .on('click', () => {
-                this.router.navigate(['/stack']);
+                window.location.href = '/stack';
             });
 
         this.svg.append("text")
