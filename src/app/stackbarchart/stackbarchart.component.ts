@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-stacked-barchart',
@@ -26,6 +27,8 @@ export class StackedBarChartComponent implements OnInit {
         { Type: 'Motivation', Werkzeugmacher: 3, Feinwerkmechaniker: 1 }
     ];
 
+    constructor(private router: Router) { }
+    
     ngOnInit(): void {
 
     }
@@ -41,7 +44,6 @@ export class StackedBarChartComponent implements OnInit {
         var g = this.svg.append("g")
             .attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
-        // add an pen symbol editor button on the top right in the svg to edit the chart
         this.svg.append('foreignObject')
             .attr('x', this.barEL.clientWidth - 50)
             .attr('y', 20)
@@ -50,7 +52,7 @@ export class StackedBarChartComponent implements OnInit {
             .append('xhtml:body')
             .html('<i class="fa fa-pencil"></i>')
             .on('click', () => {
-                window.location.href = '/Edit';
+                this.router.navigate(['/stack']);
             });
 
         this.svg.append("text")
