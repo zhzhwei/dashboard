@@ -2,3 +2,21 @@
     color: #2c3e50;
     background-color: #6cad84;
 }
+
+.modal {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.editor_window {
+    background-color: white;
+    position:absolute;
+    top: 100px;
+    left: 100px;
+    width: 500px;
+    height: 300px;
+}
