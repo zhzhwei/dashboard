@@ -11,8 +11,10 @@ import { StarPlotComponent } from '../starplot/starplot.component';
     styleUrls: ['./gridstack.component.css']
 })
 export class GridStackComponent implements OnInit {
-
-    constructor() { }
+    @ViewChild(BarChartComponent) barChart: BarChartComponent;
+    @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
+    @ViewChild(BarChartComponent) plotChart: BarChartComponent;
+    @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -22,11 +24,6 @@ export class GridStackComponent implements OnInit {
     private stackedContEl: any;
     private plotContEl: any;
     private starContEl: any;
-
-    private barChart: BarChartComponent;
-    private stackedChart: StackedBarChartComponent;
-    private plotChart: BarChartComponent;
-    private starPlot: StarPlotComponent;
 
     ngOnInit(): void {
         const options = {
@@ -60,52 +57,47 @@ export class GridStackComponent implements OnInit {
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.barContEl.setAttribute('id', 'bar');
-                    this.barChart = new BarChartComponent();
-                    this.barChart.createChart(this.barChart.werkzeugData, 'bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.stackedContEl.setAttribute('id', 'stacked');
-                    this.stackedChart = new StackedBarChartComponent();
-                    this.stackedChart.createChart(this.stackedChart.data);
                     break;
                 case 'bar plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'bar plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.plotContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.plotContEl.setAttribute('id', 'plot');
-                    this.plotChart = new BarChartComponent();
-                    this.plotChart.createChart(this.plotChart.feinwerkData, 'plot');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.starContEl.setAttribute('id', 'star');
-                    this.starPlot = new StarPlotComponent();
-                    this.starPlot.createChart();
                     break;
             }
         });
     }
 
     ngAfterViewInit(): void {
+        console.log(this.barChart);
+        this.barChart.createChart(this.barChart.werkzeugData, 'bar');
+        this.stackedChart.createChart(this.stackedChart.data);
+        this.plotChart.createChart(this.plotChart.feinwerkData, 'plot');
+        this.starPlot.createChart();
+        
         // Create a new ResizeObserver
-        // const resizeObserver = new ResizeObserver(entries => {
-        //     this.barChart.updateChart();
-        //     this.stackedChart.updateChart();
-        //     this.plotChart.updateChart();
-        // });
+        const resizeObserver = new ResizeObserver(entries => {
+            this.barChart.updateChart();
+            this.stackedChart.updateChart();
+            this.plotChart.updateChart();
+        });
 
-        // // Observe the element for size changes
-        // // resizeObserver.observe(this.barContEl);
-        // resizeObserver.observe(this.stackedContEl);
-        // resizeObserver.observe(this.plotContEl);
-        // resizeObserver.observe(this.starContEl);
-
-        console.log(this.stackedChart);
+        // Observe the element for size changes
+        resizeObserver.observe(this.barContEl);
+        resizeObserver.observe(this.stackedContEl);
+        resizeObserver.observe(this.plotContEl);
     }
 
 }

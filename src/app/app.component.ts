@@ -18,7 +18,7 @@ export class AppComponent {
         var results = this.rdfDataService.queryData()
             .then(data => this.triples = data.results.bindings)
             .catch(error => console.error(error));
-        console.log(results);
+        // console.log(results);
     }
 
     openDialog() {

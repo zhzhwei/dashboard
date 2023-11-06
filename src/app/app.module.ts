@@ -13,9 +13,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { GridStackModule } from './gridstack/gridstack.module';
-import { BarChartComponent } from './barchart/barchart.component';
-import { StackedBarChartComponent } from './stackbarchart/stackbarchart.component';
-import { StarPlotComponent } from './starplot/starplot.component';
 
 @NgModule({
     imports: [
@@ -30,16 +27,12 @@ import { StarPlotComponent } from './starplot/starplot.component';
     ],
     declarations: [
         AppComponent,
-        BarChartComponent,
         ConfirmationDialog,
-        StackedBarChartComponent,
-        StarPlotComponent
     ],
     entryComponents: [ConfirmationDialog],
     bootstrap: [
         AppComponent
     ],
-    exports: [StackedBarChartComponent],
     providers: [{ provide: APP_BASE_HREF, useValue: '/' }]
 })
 export class AppModule { }

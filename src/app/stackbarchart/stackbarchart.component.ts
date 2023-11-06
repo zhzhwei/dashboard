@@ -103,7 +103,7 @@ export class StackedBarChartComponent implements OnInit {
         var stackedData = d3.stack()
             .keys(groups)
             (data)
-        console.log(stackedData);
+        // console.log(stackedData);
 
         // Create and fill the bars.
         g.append("g")
