@@ -1,12 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationDialog } from '../confirmation-dialog.component';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-stacked-barchart',
     templateUrl: './stackbarchart.component.html',
-    styleUrls: ['./stackbarchart.component.css']
+    styleUrls: ['./stackbarchart.component.css'],
 })
+
 export class StackedBarChartComponent implements OnInit {
 
     private svg: any;
@@ -50,7 +55,7 @@ export class StackedBarChartComponent implements OnInit {
             .append('xhtml:body')
             .html('<i class="fa fa-pencil"></i>')
             .on('click', () => {
-                window.location.href = '/stack';
+                // this.openDialog();
             });
 
         this.svg.append("text")

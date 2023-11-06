@@ -1,13 +1,10 @@
-<h1>Dashboard for Semantic Data</h1>
 <section>
+    <h1>Dashboard for Semantic Data</h1>
     <div class="row">
-        <div class="col-md-2 d-none d-md-block">
+        <div class="col-md-1 d-none d-md-block">
             <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                 <div>
                     <ion-icon name="trash" style="font-size: 400%"></ion-icon>
-                </div>
-                <div>
-                    <span>Drop here to remove widget!</span>
                 </div>
             </div>
             <div class="text-center card text-white grid-stack-item newWidget">
@@ -15,19 +12,18 @@
                     <div>
                         <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
                     </div>
-                    <div>
-                        <span>Drag me into the dashboard!</span>
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-10">
+        <div class="col-sm-12 col-md-11">
             <div class="grid-container">
                 <app-gridstack></app-gridstack>
             </div>
         </div>
     </div>
 </section>
+
+<button mat-button (click)="openDialog()">Open Dialog</button>
 <div class="container-fluid mt-2">
     <router-outlet></router-outlet>
 </div>

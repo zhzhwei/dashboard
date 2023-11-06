@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridStack } from 'gridstack';
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../barchart/barchart.component';
@@ -93,17 +93,19 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit(): void {
         // Create a new ResizeObserver
-        const resizeObserver = new ResizeObserver(entries => {
-            this.barChart.updateChart();
-            this.stackedChart.updateChart();
-            this.plotChart.updateChart();
-        });
+        // const resizeObserver = new ResizeObserver(entries => {
+        //     this.barChart.updateChart();
+        //     this.stackedChart.updateChart();
+        //     this.plotChart.updateChart();
+        // });
 
-        // Observe the element for size changes
-        // resizeObserver.observe(this.barContEl);
-        resizeObserver.observe(this.stackedContEl);
-        resizeObserver.observe(this.plotContEl);
-        resizeObserver.observe(this.starContEl);
+        // // Observe the element for size changes
+        // // resizeObserver.observe(this.barContEl);
+        // resizeObserver.observe(this.stackedContEl);
+        // resizeObserver.observe(this.plotContEl);
+        // resizeObserver.observe(this.starContEl);
+
+        console.log(this.stackedChart);
     }
 
 }
