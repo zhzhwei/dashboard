@@ -1,10 +1,8 @@
 import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialog } from '../confirmation-dialog.component';
-import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-stacked-barchart',
@@ -13,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 
 export class StackedBarChartComponent implements OnInit {
+    constructor(private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
     private svg: any;
 
@@ -36,6 +35,28 @@ export class StackedBarChartComponent implements OnInit {
 
     }
 
+    openDialog() {
+        const dialogRef = this.dialog.open(ConfirmationDialog, {
+            width: '20%',
+            height: '20%',
+            data: {
+                message: 'Are you sure to open?',
+                buttonText: {
+                    ok: 'Yes',
+                    cancel: 'No'
+                }
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+            if (confirmed) {
+                this.snackBar.open('Closing snack bar in 2 seconds', 'close', {
+                    duration: 2000,
+                });
+            }
+        });
+    }
+
     public createChart(data): void {
         this.barEL = document.getElementById('stacked');
 
@@ -55,7 +76,7 @@ export class StackedBarChartComponent implements OnInit {
             .append('xhtml:body')
             .html('<i class="fa fa-pencil"></i>')
             .on('click', () => {
-                // this.openDialog();
+                this.openDialog();
             });
 
         this.svg.append("text")

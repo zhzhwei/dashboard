@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { APP_BASE_HREF } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ConfirmationDialog } from './confirmation-dialog.component';
@@ -20,7 +18,6 @@ import { GridStackModule } from './gridstack/gridstack.module';
         BrowserAnimationsModule,
         GridStackModule,
         HttpClientModule,
-        AppRoutingModule,
         MatButtonModule,
         MatDialogModule,
         MatSnackBarModule
@@ -29,10 +26,8 @@ import { GridStackModule } from './gridstack/gridstack.module';
         AppComponent,
         ConfirmationDialog,
     ],
-    entryComponents: [ConfirmationDialog],
     bootstrap: [
         AppComponent
     ],
-    providers: [{ provide: APP_BASE_HREF, useValue: '/' }]
 })
 export class AppModule { }
