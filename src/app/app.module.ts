@@ -3,8 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ConfirmationDialog } from './confirmation-dialog.component';
-
+import { DialogContentExampleDialog } from './dialog-content-example';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -24,7 +23,7 @@ import { GridStackModule } from './gridstack/gridstack.module';
     ],
     declarations: [
         AppComponent,
-        ConfirmationDialog,
+        DialogContentExampleDialog
     ],
     bootstrap: [
         AppComponent

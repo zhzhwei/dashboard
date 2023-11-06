@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmationDialog } from '../confirmation-dialog.component';
+import { DialogContentExampleDialog } from '../dialog-content-example';
 
 @Component({
     selector: 'app-stacked-barchart',
@@ -36,24 +36,10 @@ export class StackedBarChartComponent implements OnInit {
     }
 
     openDialog() {
-        const dialogRef = this.dialog.open(ConfirmationDialog, {
-            width: '20%',
-            height: '20%',
-            data: {
-                message: 'Are you sure to open?',
-                buttonText: {
-                    ok: 'Yes',
-                    cancel: 'No'
-                }
-            }
-        });
+        const dialogRef = this.dialog.open(DialogContentExampleDialog);
 
-        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-            if (confirmed) {
-                this.snackBar.open('Closing snack bar in 2 seconds', 'close', {
-                    duration: 2000,
-                });
-            }
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog result: ${result}`);
         });
     }
 
