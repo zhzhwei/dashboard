@@ -18,11 +18,4 @@ export class AppComponent {
             .catch(error => console.error(error));
         // console.log(results);
     }
-
-    clickEvent() {
-        console.log("closing editor")
-        let modalDiv = document.getElementsByClassName("modal")[0]
-        modalDiv.setAttribute("style", "display:none;")
-    }
-    
 }

@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // components
-import { StackBarEditorComponent } from './edition/stackbareditor/stackbareditor.component';
-
+import { StackedBarEditorComponent } from './edition/stackedbareditor/stackedbareditor.component';
 const routes: Routes = [
-    { path: 'stack', component: StackBarEditorComponent },
+    { path: 'stacked', component: StackedBarEditorComponent },
 ];
 
 @NgModule({

@@ -1,17 +1,16 @@
 import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogContentExampleDialog } from '../dialog-content-example';
+import { StackedBarEditorComponent } from '../edition/stackedbareditor/stackedbareditor.component';
 
 @Component({
     selector: 'app-stacked-barchart',
-    templateUrl: './stackbarchart.component.html',
-    styleUrls: ['./stackbarchart.component.css'],
+    templateUrl: './stackedbarchart.component.html',
+    styleUrls: ['./stackedbarchart.component.css'],
 })
 
 export class StackedBarChartComponent implements OnInit {
-    constructor(private dialog: MatDialog, private snackBar: MatSnackBar) { }
+    constructor(private dialog: MatDialog) { }
 
     private svg: any;
 
@@ -36,7 +35,9 @@ export class StackedBarChartComponent implements OnInit {
     }
 
     openDialog() {
-        const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+        const dialogRef = this.dialog.open(StackedBarEditorComponent, {
+            width: '1500px',
+            height: '800px',
             backdropClass: "hello",
             autoFocus: false
         });
@@ -63,7 +64,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr('width', 20)
             .attr('height', 20)
             .append('xhtml:body')
-            .html('<i class="fa fa-pencil"></i>')
+            .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.openDialog();
             });

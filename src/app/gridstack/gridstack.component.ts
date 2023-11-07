@@ -2,14 +2,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridStack } from 'gridstack';
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../barchart/barchart.component';
-import { StackedBarChartComponent } from '../stackbarchart/stackbarchart.component';
+import { StackedBarChartComponent } from '../stackedbarchart/stackedbarchart.component';
 import { StarPlotComponent } from '../starplot/starplot.component';
+
+declare var ResizeObserver: any;
 
 @Component({
     selector: 'app-gridstack',
     templateUrl: './gridstack.component.html',
     styleUrls: ['./gridstack.component.css']
 })
+
 export class GridStackComponent implements OnInit {
     @ViewChild(BarChartComponent) barChart: BarChartComponent;
     @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
