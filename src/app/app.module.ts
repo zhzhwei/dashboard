@@ -11,6 +11,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppComponent } from './app.component';
 import { GridStackModule } from './gridstack/gridstack.module';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -19,7 +23,10 @@ import { GridStackModule } from './gridstack/gridstack.module';
         HttpClientModule,
         MatButtonModule,
         MatDialogModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        FormsModule,
+        MatNativeDateModule,
+        ReactiveFormsModule,
     ],
     declarations: [
         AppComponent,
@@ -28,5 +35,8 @@ import { GridStackModule } from './gridstack/gridstack.module';
     bootstrap: [
         AppComponent
     ],
+    providers: [
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    ]
 })
 export class AppModule { }

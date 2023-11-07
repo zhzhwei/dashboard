@@ -7,11 +7,7 @@ import { RdfDataService } from './services/rdf-data.service';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-clickEvent() {
-    console.log("closing editor")
-    let modalDiv = document.getElementsByClassName("modal")[0]
-    modalDiv.setAttribute("style", "display:none;")
-}
+    
     public triples: any[];
 
     constructor(private rdfDataService: RdfDataService) { }
@@ -23,4 +19,10 @@ clickEvent() {
         // console.log(results);
     }
 
+    clickEvent() {
+        console.log("closing editor")
+        let modalDiv = document.getElementsByClassName("modal")[0]
+        modalDiv.setAttribute("style", "display:none;")
+    }
+    
 }

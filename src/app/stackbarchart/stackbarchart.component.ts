@@ -36,9 +36,10 @@ export class StackedBarChartComponent implements OnInit {
     }
 
     openDialog() {
-        const dialogRef = this.dialog.open(DialogContentExampleDialog);
-        let modalDiv = document.getElementsByClassName("modal")[0];
-        modalDiv.setAttribute("style", "display:block;");
+        const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+            backdropClass: "hello",
+            autoFocus: false
+        });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
