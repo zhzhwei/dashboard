@@ -1,8 +1,7 @@
 import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { StackedBarEditorComponent } from '../edition/stackedbareditor/stackedbareditor.component';
-
+import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/stackedbareditor.component';
 @Component({
     selector: 'app-stacked-barchart',
     templateUrl: './stackedbarchart.component.html',
@@ -232,7 +231,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("stroke", "grey");
         
         this.svg.select("g.legend")
-            .attr("transform", `translate(${this.barEL.clientWidth / 2}, 0)`);
+            .attr("transform", 'translate(' + (this.barEL.clientWidth / 4) + ', 0)');
     }
 
 }

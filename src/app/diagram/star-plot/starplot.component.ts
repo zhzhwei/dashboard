@@ -98,4 +98,26 @@ export class StarPlotComponent implements OnInit {
             .style('stroke-opacity', 0.6)
             .style('fill-opacity', 0.6);
     }
+
+    public updateChart(): void {
+        // Update the SVG element size
+        this.svg.attr('width', this.starEL.clientWidth)
+            .attr('height', this.starEL.clientHeight);
+        
+        this.svg.select('g')
+            .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
+
+        this.svg.select("text.title")
+            .attr("x", (this.starEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+
+        // Redraw the X-axis on the DOM
+        // this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2;
+        // this.svg.selectAll('g.x-axis')
+        //     .attr('transform', d => 'rotate(' + ((this.x(d.axis) * 180 / Math.PI) - 90) + ')translate(' + this.radius + ',0)')
+        //     .attr('x2', -this.radius)
+        
+        // Update the Y-axis scale range
+        // this.y.range([0, this.radius]);
+    }
 }

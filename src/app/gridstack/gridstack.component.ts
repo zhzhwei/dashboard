@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridStack } from 'gridstack';
 import 'gridstack/dist/h5/gridstack-dd-native';
-import { BarChartComponent } from '../barchart/barchart.component';
-import { StackedBarChartComponent } from '../stackedbarchart/stackedbarchart.component';
-import { StarPlotComponent } from '../starplot/starplot.component';
-
+import { BarChartComponent } from '../diagram/bar-chart/barchart.component';
+import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stackedbarchart.component';
+import { StarPlotComponent } from '../diagram/star-plot/starplot.component';
 declare var ResizeObserver: any;
 
 @Component({
@@ -44,8 +43,8 @@ export class GridStackComponent implements OnInit {
 
         this.serializedData = [
             { x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 3, name: 'bar chart' },
-            { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 3, name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 6, name: 'star plot', noResize: true },
+            { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, name: 'stacked bar chart' },
+            { x: 8, y: 0, w: 4, h: 6, name: 'star plot' },
             { x: 0, y: 2, w: 4, h: 3, name: 'line chart' }
         ];
 
@@ -93,11 +92,13 @@ export class GridStackComponent implements OnInit {
         const resizeObserver = new ResizeObserver(entries => {
             this.barChart.updateChart();
             this.stackedChart.updateChart();
+            this.starPlot.updateChart();
         });
 
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
         resizeObserver.observe(this.stackedContEl);
+        resizeObserver.observe(this.starContEl);
     }
 
 }
