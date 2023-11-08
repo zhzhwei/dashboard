@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
-    selector: 'app-starplot',
-    templateUrl: './starplot.component.html',
-    styleUrls: ['./starplot.component.css']
+    selector: 'app-star-plot',
+    templateUrl: './star-plot.component.html',
+    styleUrls: ['./star-plot.component.css']
 })
 export class StarPlotComponent implements OnInit {
 

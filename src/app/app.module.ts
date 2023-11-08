@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stackedbareditor.component';
+import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-bar-editor.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';

@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RdfDataService } from '../../services/rdf-data.service';
 
 @Component({
-    selector: 'app-stacked-bareditor',
-    templateUrl: './stackedbareditor.component.html',
-    styleUrls: ['./stackedbareditor.component.css']
+    selector: 'app-stacked-bar-editor',
+    templateUrl: './stacked-bar-editor.component.html',
+    styleUrls: ['./stacked-bar-editor.component.css']
 })
 export class StackedBarEditorComponent {
 

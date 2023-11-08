@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
-    selector: 'app-barchart',
-    templateUrl: './barchart.component.html',
-    styleUrls: ['./barchart.component.css'],
+    selector: 'app-bar-chart',
+    templateUrl: './bar-chart.component.html',
+    styleUrls: ['./bar-chart.component.css'],
 })
 
 export class BarChartComponent implements OnInit {

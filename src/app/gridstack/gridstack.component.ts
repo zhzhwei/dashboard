@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridStack } from 'gridstack';
 import 'gridstack/dist/h5/gridstack-dd-native';
-import { BarChartComponent } from '../diagram/bar-chart/barchart.component';
-import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stackedbarchart.component';
-import { StarPlotComponent } from '../diagram/star-plot/starplot.component';
+import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
+import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
+import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 declare var ResizeObserver: any;
 
 @Component({

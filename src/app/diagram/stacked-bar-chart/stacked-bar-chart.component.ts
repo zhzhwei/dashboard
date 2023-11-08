@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/stackedbareditor.component';
+import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/stacked-bar-editor.component';
 @Component({
-    selector: 'app-stacked-barchart',
-    templateUrl: './stackedbarchart.component.html',
-    styleUrls: ['./stackedbarchart.component.css'],
+    selector: 'app-stacked-bar-chart',
+    templateUrl: './stacked-bar-chart.component.html',
+    styleUrls: ['./stacked-bar-chart.component.css'],
 })
 
 export class StackedBarChartComponent implements OnInit {
