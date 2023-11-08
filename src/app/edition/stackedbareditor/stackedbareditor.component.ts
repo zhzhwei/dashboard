@@ -1,23 +1,5 @@
 import { Component } from '@angular/core';
-
-export interface PeriodicElement {
-    subject: string;
-    predicate: number;
-    object: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-    { subject: 'Hydrogen', predicate: 1.0079, object: 'H' },
-    { subject: 'Helium', predicate: 4.0026, object: 'He' },
-    { subject: 'Lithium', predicate: 6.941, object: 'Li' },
-    { subject: 'Beryllium', predicate: 9.0122, object: 'Be' },
-    { subject: 'Boron', predicate: 10.811, object: 'B' },
-    { subject: 'Carbon', predicate: 12.0107, object: 'C' },
-    { subject: 'Nitrogen', predicate: 14.0067, object: 'N' },
-    { subject: 'Oxygen', predicate: 15.9994, object: 'O' },
-    { subject: 'Fluorine', predicate: 18.9984, object: 'F' },
-    { subject: 'Neon', predicate: 20.1797, object: 'Ne' },
-];
+import { RdfDataService } from '../../services/rdf-data.service';
 
 @Component({
     selector: 'app-stacked-bareditor',
@@ -25,18 +7,33 @@ const ELEMENT_DATA: PeriodicElement[] = [
     styleUrls: ['./stackedbareditor.component.css']
 })
 export class StackedBarEditorComponent {
-    constructor() { }
 
-    displayedColumns: string[] = ['subject', 'predicate', 'object'];
-    dataSource = ELEMENT_DATA;
+    constructor(private rdfDataService: RdfDataService) { }
 
+    public triples: any[];
+    public results: any;
+    public dataSource = Array(10).fill({});
+    public query: string;
+
+    displayColumns: string[] = ['subject', 'predicate', 'object'];
+    
     ngOnInit(): void {
-
+        this.query = `
+            SELECT ?s ?p ?o
+            WHERE {
+                ?s ?p ?o .
+            } limit 10
+        `;
+        this.rdfDataService.queryData(this.query)
+            .then(data => {
+                this.triples = data.results.bindings;
+                this.results = this.triples;
+            })
+            .catch(error => console.error(error));
     }
-
-    public backToDashboard(): void {
-        console.log("back to dashboard");
-        // go back to dashboard
-        
+    
+    public applyChanges(): void {
+        console.log(this.results);
+        this.dataSource = this.results;
     }
 }

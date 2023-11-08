@@ -12,13 +12,7 @@ export class RdfDataService {
 
     constructor(private http: HttpClient) {}
 
-    public queryData(): Promise<any> {
-        const query = `
-            SELECT ?s ?p ?o
-            WHERE {
-                ?s ?p ?o .
-            }
-        `;
+    public queryData(query): Promise<any> {
 
         const options = {
             headers: this.headers,
