@@ -41,6 +41,7 @@ export class StarPlotComponent implements OnInit {
             .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
 
         this.svg.append("text")
+            .attr("class", "title")
             .attr("x", (this.starEL.clientWidth / 2))
             .attr("y", this.margin / 2)
             .attr("text-anchor", "middle")

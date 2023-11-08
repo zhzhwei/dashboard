@@ -49,25 +49,13 @@ export class BarChartComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
-        switch (name) {
-            case 'bar':
-                this.svg.append("text")
-                    .attr("x", (this.barEL.clientWidth / 2))
-                    .attr("y", this.margin / 2)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "16px")
-                    .text("Beruf - Werkzeugmacher");
-                break;
-            case 'plot':
-                this.svg.append("text")
-                    .attr("x", (this.barEL.clientWidth / 2))
-                    .attr("y", this.margin / 2)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "16px")
-                    .text("Beruf - Feinwerkmechaniker");
-                break;
-        }
-
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Beruf - Werkzeugmacher");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
@@ -85,18 +73,9 @@ export class BarChartComponent implements OnInit {
             .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        switch (name) {
-            case 'bar':
-                this.y = d3.scaleLinear()
-                    .domain([0, 5])
-                    .range([this.barEL.clientHeight - this.margin * 2, 0]);
-                break;
-            case 'plot':
-                this.y = d3.scaleLinear()
-                    .domain([0, 5])
-                    .range([this.barEL.clientHeight - this.margin * 2, 0]);
-                break;
-        }
+        this.y = d3.scaleLinear()
+            .domain([0, 5])
+            .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
         g.append('g')
@@ -104,118 +83,60 @@ export class BarChartComponent implements OnInit {
             .call(d3.axisLeft(this.y))
 
         // Create and fill the bars
-        switch (name) {
-            case 'bar':
-                g.selectAll('bars')
-                    .data(data)
-                    .enter()
-                    .append('rect')
-                    .attr('x', (d: any) => this.x(d.Fertigkeit))
-                    .attr('y', (d: any) => this.y(d.Häufigkeit))
-                    .attr('width', this.x.bandwidth())
-                    .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Häufigkeit))
-                    .attr('fill', 'steelblue')
-                    .on('mouseover', (d, i, nodes) => {
-                        // Get the current bar element
-                        const bar = d3.select(nodes[i]);
+        g.selectAll('bars')
+            .data(data)
+            .enter()
+            .append('rect')
+            .attr('x', (d: any) => this.x(d.Fertigkeit))
+            .attr('y', (d: any) => this.y(d.Häufigkeit))
+            .attr('width', this.x.bandwidth())
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Häufigkeit))
+            .attr('fill', 'steelblue')
+            .on('mouseover', (d, i, nodes) => {
+                // Get the current bar element
+                const bar = d3.select(nodes[i]);
 
-                        // Create the tooltip element
-                        const tooltip = d3.select('body')
-                            .append('div')
-                            .attr('class', 'tooltip')
-                            .style('position', 'absolute')
-                            .style('background-color', 'white')
-                            .style('border', 'solid')
-                            .style('border-width', '1px')
-                            .style('border-radius', '5px')
-                            .style('padding', '10px')
-                            .style('opacity', 0)
-                            .text(`${d.Fertigkeit}: ${d.Häufigkeit}`);
+                // Create the tooltip element
+                const tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background-color', 'white')
+                    .style('border', 'solid')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '10px')
+                    .style('opacity', 0)
+                    .text(`${d.Fertigkeit}: ${d.Häufigkeit}`);
 
-                        // Show the tooltip element
-                        tooltip.transition()
-                            .duration(200)
-                            .style('opacity', 1);
+                // Show the tooltip element
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 1);
 
-                        // Change the color of the bar
-                        bar.style('fill', 'red');
+                // Change the color of the bar
+                bar.style('fill', 'red');
 
-                        // Add a mousemove event listener to update the position of the tooltip element
-                        d3.select('body')
-                            .on('mousemove', () => {
-                                const [x, y] = d3.mouse(nodes[i]);
-                                // console.log(x, y);
-                                tooltip.style('left', `${x + 800}px`)
-                                    .style('top', `${y + 80}px`);
-                            });
-                    })
-                    .on('mouseout', (d, i, nodes) => {
-                        // Get the current bar element
-                        const bar = d3.select(nodes[i]);
-
-                        // Hide the tooltip element
-                        d3.select('.tooltip').remove();
-
-                        // Change the color of the bar back to the original color
-                        bar.style('fill', 'steelblue');
+                // Add a mousemove event listener to update the position of the tooltip element
+                d3.select('body')
+                    .on('mousemove', () => {
+                        const [x, y] = d3.mouse(nodes[i]);
+                        // console.log(x, y);
+                        tooltip.style('left', `${x + 800}px`)
+                            .style('top', `${y + 80}px`);
                     });
-                break;
-            case 'plot':
-                g.selectAll('bars')
-                    .data(data)
-                    .enter()
-                    .append('rect')
-                    .attr('x', (d: any) => this.x(d.Fertigkeit))
-                    .attr('y', (d: any) => this.y(d.Häufigkeit))
-                    .attr('width', this.x.bandwidth())
-                    .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Häufigkeit))
-                    .attr('fill', 'darkorange')
-                    .on('mouseover', (d, i, nodes) => {
-                        // Get the current bar element
-                        const bar = d3.select(nodes[i]);
+            })
+            .on('mouseout', (d, i, nodes) => {
+                // Get the current bar element
+                const bar = d3.select(nodes[i]);
 
-                        // Create the tooltip element
-                        const tooltip = d3.select('body')
-                            .append('div')
-                            .attr('class', 'tooltip')
-                            .style('position', 'absolute')
-                            .style('background-color', 'white')
-                            .style('border', 'solid')
-                            .style('border-width', '1px')
-                            .style('border-radius', '5px')
-                            .style('padding', '10px')
-                            .style('opacity', 0)
-                            .text(`${d.Fertigkeit}: ${d.Häufigkeit}`);
+                // Hide the tooltip element
+                d3.select('.tooltip').remove();
 
-                        // Show the tooltip element
-                        tooltip.transition()
-                            .duration(200)
-                            .style('opacity', 1);
+                // Change the color of the bar back to the original color
+                bar.style('fill', 'steelblue');
+            });
 
-                        // Change the color of the bar
-                        bar.style('fill', 'red');
-
-                        // Add a mousemove event listener to update the position of the tooltip element
-                        d3.select('body')
-                            .on('mousemove', () => {
-                                const [x, y] = d3.mouse(nodes[i]);
-                                // console.log(x, y);
-                                tooltip.style('left', `${x + 800}px`)
-                                    .style('top', `${y + 80}px`);
-                            });
-                    })
-                    .on('mouseout', (d, i, nodes) => {
-                        // Get the current bar element
-                        const bar = d3.select(nodes[i]);
-
-                        // Hide the tooltip element
-                        d3.select('.tooltip').remove();
-
-                        // Change the color of the bar back to the original color
-                        bar.style('fill', 'darkorange');
-                    });
-                break;
-        }
     }
 
     public updateChart(): void {
@@ -223,6 +144,10 @@ export class BarChartComponent implements OnInit {
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+
+        this.svg.select("text.title")
+            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
 
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);

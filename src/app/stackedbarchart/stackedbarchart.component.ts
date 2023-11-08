@@ -59,17 +59,18 @@ export class StackedBarChartComponent implements OnInit {
             .attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
         this.svg.append('foreignObject')
+            .attr('class', 'edit')
             .attr('x', this.barEL.clientWidth - 50)
             .attr('y', 20)
             .attr('width', 20)
             .attr('height', 20)
-            .append('xhtml:body')
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.openDialog();
             });
 
         this.svg.append("text")
+            .attr("class", "title")
             .attr("x", (this.barEL.clientWidth / 2))
             .attr("y", this.margin / 2)
             .attr("text-anchor", "middle")
@@ -181,6 +182,11 @@ export class StackedBarChartComponent implements OnInit {
             .attr("cy", 5)
             .attr("r", 6)
             .attr("fill", d => color(d));
+            // .attr("x", 5)
+            // .attr("y", 0)
+            // .attr("width", 10)
+            // .attr("height", 10)
+            // .attr("fill", d => color(d));
 
         // Append a text element to each group element to represent the legend item
         this.legendItems.append("text")
@@ -193,6 +199,14 @@ export class StackedBarChartComponent implements OnInit {
         // Update the SVG element size
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);
+
+        this.svg.select("text.title")
+            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+        
+        this.svg.select('foreignObject.edit')
+            .attr('x', this.barEL.clientWidth - 50)
+            .attr('y', 20)
 
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
@@ -216,6 +230,9 @@ export class StackedBarChartComponent implements OnInit {
             .attr("height", (d: any) => this.y(d[0]) - this.y(d[1]))
             .attr("width", this.x.bandwidth())
             .attr("stroke", "grey");
+        
+        this.svg.select("g.legend")
+            .attr("transform", `translate(${this.barEL.clientWidth / 2}, 0)`);
     }
 
 }
