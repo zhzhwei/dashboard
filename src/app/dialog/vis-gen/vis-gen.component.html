@@ -4,7 +4,44 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            
+            <div class="card">
+                <h5>1. Select Visualization Type</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center" (click)="chartType = 'Line'; genVis()">
+                            <img src="assets/line-chart.png" width="100" height="100" alt="Line Chart">
+                            <p>Line Chart</p>
+                        </div>
+                        <div class="col-md-3 text-center" (click)="chartType = 'Bar'; genVis()">
+                            <img src="assets/bar-chart.png" width="100" height="100" alt="Bar Chart">
+                            <p>Bar Chart</p>
+                        </div>
+                        <div class="col-md-3 text-center" (click)="chartType = 'Pie'; genVis()">
+                            <img src="assets/pie-chart.png" width="100" height="100" alt="Pie Chart">
+                            <p>Pie Chart</p>
+                        </div>
+                        <div class="col-md-3 text-center" (click)="chartType = 'Star'; genVis()">
+                            <img src="assets/star-plot.png" width="100" height="100" alt="Star Plot">
+                            <p>Star Plot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h5>2. Select Dataset</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <img src="assets/database.png" width="100" height="100" alt="Database">
+                            <p>Dataset</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 text-center">
+                <button mat-raised-button class="gen-vis-btn" (click)="genVis()" cdkFocusInitial>Generate
+                    Visualization</button>
+            </div>
         </div>
     </div>
 </div>

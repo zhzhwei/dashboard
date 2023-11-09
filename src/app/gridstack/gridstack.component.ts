@@ -45,7 +45,7 @@ export class GridStackComponent implements OnInit {
             { x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 3, name: 'bar chart' },
             { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, name: 'stacked bar chart' },
             { x: 8, y: 0, w: 4, h: 6, name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 3, name: 'line chart' }
+            { x: 0, y: 2, w: 4, h: 3, name: 'pie chart' }
         ];
 
         this.grid.load(this.serializedData);
@@ -66,12 +66,6 @@ export class GridStackComponent implements OnInit {
                     this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.stackedContEl.setAttribute('id', 'stacked');
                     break;
-                case 'bar plot':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'bar plot');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.plotContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.plotContEl.setAttribute('id', 'plot');
-                    break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
@@ -84,7 +78,7 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit(): void {
         console.log(this.barChart);
-        this.barChart.createChart(this.barChart.werkzeugData, 'bar');
+        this.barChart.createChart(this.barChart.werkzeugData);
         this.stackedChart.createChart(this.stackedChart.data);
         this.starPlot.createChart();
         

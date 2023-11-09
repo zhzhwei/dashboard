@@ -37,11 +37,11 @@ export class BarChartComponent implements OnInit {
 
     }
 
-    public createChart(data: any[], name): void {
-        this.barEL = document.getElementById(name);
+    public createChart(data: any[]): void {
+        this.barEL = document.getElementById('bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
-        this.svg = d3.select('#' + name)
+        this.svg = d3.select('#bar')
             .append('svg')
             .attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientWidth)
