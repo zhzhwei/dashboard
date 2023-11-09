@@ -6,13 +6,13 @@ import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-b
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 
 @NgModule({
+    imports: [CommonModule],
     declarations: [
         GridStackComponent,
         // BarChartComponent,
         // StackedBarChartComponent,
         // StarPlotComponent
     ],
-    imports: [CommonModule],
     exports: [GridStackComponent]
 })
 export class GridStackModule { }

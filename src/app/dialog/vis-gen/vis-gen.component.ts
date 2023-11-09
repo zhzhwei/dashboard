@@ -30,14 +30,14 @@ export class VisGenComponent implements OnInit {
     }
     public genVis() {
         switch (this.chartType) {
-            case 'Bar':
+            case 'Bar Chart':
                 console.log(this);
                 this.barChart.createChart(this.barChart.werkzeugData);
                 break;
-            case 'StackedBar':
+            case 'Stacked Bar Chart':
                 this.stackedChart.createChart(this.stackedChart.data);
                 break;
-            case 'Star':
+            case 'Star Plot':
                 this.starPlot.createChart();
                 break;
             case 'Pie':

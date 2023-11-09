@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
+import { MatDialog } from '@angular/material/dialog';
+import { BarChartEditorComponent } from '../../dialog/bar-chart-editor/bar-chart-editor.component';
 
 @Component({
     selector: 'app-bar-chart',
@@ -9,7 +11,7 @@ import * as d3 from 'd3';
 
 export class BarChartComponent implements OnInit {
 
-    constructor() { }
+    constructor(private dialog: MatDialog) { }
 
     private svg: any;
     private margin = 80;
@@ -37,6 +39,19 @@ export class BarChartComponent implements OnInit {
 
     }
 
+    openDialog() {
+        const dialogRef = this.dialog.open(BarChartEditorComponent, {
+            width: '1500px',
+            height: '800px',
+            backdropClass: "hello",
+            autoFocus: false
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog result: ${result}`);
+        });
+    }
+
     public createChart(data: any[]): void {
         this.barEL = document.getElementById('bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
@@ -48,6 +63,17 @@ export class BarChartComponent implements OnInit {
 
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
+
+        this.svg.append('foreignObject')
+            .attr('class', 'edit')
+            .attr('x', this.barEL.clientWidth - 50)
+            .attr('y', 20)
+            .attr('width', 20)
+            .attr('height', 20)
+            .html('<i class="fas fa-pencil"></i>')
+            .on('click', () => {
+                this.openDialog();
+            });
 
         this.svg.append("text")
             .attr("class", "title")

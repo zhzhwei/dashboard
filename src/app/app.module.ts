@@ -1,41 +1,40 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-bar-editor.component';
+import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
-import { AppComponent } from './app.component';
-import { GridStackModule } from './gridstack/gridstack.module';
-import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
-import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
+
+import { GridStackModule } from './gridstack/gridstack.module';
+import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
+
+import { AppComponent } from './app.component';
+import { BarChartEditorComponent } from './dialog/bar-chart-editor/bar-chart-editor.component';
+import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-bar-editor.component';
 
 @NgModule({
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        GridStackModule,
-        VisGenModule,
         HttpClientModule,
         MatButtonModule,
         MatDialogModule,
         MatSnackBarModule,
         FormsModule,
-        MatNativeDateModule,
         ReactiveFormsModule,
-        MatTableModule
+        MatNativeDateModule,
+        MatTableModule,
+        GridStackModule,
+        VisGenModule,
     ],
     declarations: [
         AppComponent,
+        BarChartEditorComponent,
         StackedBarEditorComponent,
-        // VisGenComponent
     ],
     bootstrap: [
         AppComponent
