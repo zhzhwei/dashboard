@@ -28,6 +28,7 @@ export class VisGenComponent implements OnInit {
     ngAfterViewInit(): void {
     
     }
+
     public genVis() {
         switch (this.chartType) {
             case 'Bar Chart':
@@ -40,25 +41,28 @@ export class VisGenComponent implements OnInit {
             case 'Star Plot':
                 this.starPlot.createChart();
                 break;
-            case 'Pie':
+            case 'Pie Chart':
                 // this.pieChartComponent.createChart();
                 break;
             default:
                 console.log('Invalid Chart Type');
         }
+    }
 
+    public updateVis() {
         // Create a new ResizeObserver
-        // const resizeObserver = new ResizeObserver(entries => {
-        //     this.barChart.updateChart();
-        //     this.stackedChart.updateChart();
-        //     this.starPlot.updateChart();
-        // });
+        const resizeObserver = new ResizeObserver(entries => {
+            this.barChart.updateChart();
+            this.stackedChart.updateChart();
+            this.starPlot.updateChart();
+        });
 
-        // this.gridStack = new GridStackComponent();
-        // // Observe the element for size changes
-        // resizeObserver.observe(this.gridStack.barContEl);
-        // resizeObserver.observe(this.gridStack.stackedContEl);
-        // resizeObserver.observe(this.gridStack.starContEl);
+        this.gridStack = new GridStackComponent();
+        // Observe the element for size changes
+        console.log(this.gridStack);
+        resizeObserver.observe(this.gridStack.barContEl);
+        resizeObserver.observe(this.gridStack.stackedContEl);
+        resizeObserver.observe(this.gridStack.starContEl);
     }
 
 }

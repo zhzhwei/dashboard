@@ -48,7 +48,12 @@ export class StackedBarChartComponent implements OnInit {
 
     public createChart(data): void {
         this.barEL = document.getElementById('stacked');
-
+        
+        // Clear the item's content
+        while (this.barEL.firstChild) {
+            this.barEL.removeChild(this.barEL.firstChild);
+        }
+        
         this.svg = d3.select("#stacked")
             .append("svg")
             .attr("width", this.barEL.clientWidth)

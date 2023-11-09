@@ -29,9 +29,12 @@ export class StarPlotComponent implements OnInit {
         
     }
 
-    createChart() {
+    public createChart() {
         this.starEL = document.getElementById('star');
-
+        // Clear the item's content
+        while (this.starEL.firstChild) {
+            this.starEL.removeChild(this.starEL.firstChild);
+        }
         this.svg = d3.select('#star')
             .append('svg')
             .attr('width', this.starEL.clientWidth)

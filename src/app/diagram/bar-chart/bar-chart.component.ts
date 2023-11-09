@@ -55,6 +55,11 @@ export class BarChartComponent implements OnInit {
     public createChart(data: any[]): void {
         this.barEL = document.getElementById('bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+        
+        // Clear the item's content
+        while (this.barEL.firstChild) {
+            this.barEL.removeChild(this.barEL.firstChild);
+        }
 
         this.svg = d3.select('#bar')
             .append('svg')

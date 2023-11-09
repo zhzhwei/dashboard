@@ -4,6 +4,8 @@ import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
+import { VisGenComponent } from '../dialog/vis-gen/vis-gen.component';
+
 declare var ResizeObserver: any;
 
 @Component({
@@ -13,10 +15,10 @@ declare var ResizeObserver: any;
 })
 
 export class GridStackComponent implements OnInit {
-    @ViewChild(BarChartComponent) barChart: BarChartComponent;
-    @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
-    @ViewChild(BarChartComponent) plotChart: BarChartComponent;
-    @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
+    // @ViewChild(BarChartComponent) barChart: BarChartComponent;
+    // @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
+    // @ViewChild(BarChartComponent) plotChart: BarChartComponent;
+    // @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -25,6 +27,12 @@ export class GridStackComponent implements OnInit {
     public barContEl: any;
     public stackedContEl: any;
     public starContEl: any;
+
+    private barChart: BarChartComponent;
+    private stackedChart: StackedBarChartComponent;
+    private starPlot: StarPlotComponent;
+    private visGen: VisGenComponent;
+
 
     ngOnInit(): void {
         const options = {
@@ -41,10 +49,10 @@ export class GridStackComponent implements OnInit {
         this.grid = GridStack.init(options);
 
         this.serializedData = [
-            { x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 3, name: 'bar chart' },
-            { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 6, name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 3, name: 'pie chart' }
+            { x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 3, content: 'Bar Chart', name: 'bar chart' },
+            { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
+            { x: 8, y: 0, w: 4, h: 6, content: 'Star Plot', name: 'star plot' },
+            { x: 0, y: 2, w: 4, h: 3, content: 'Pie Chart', name: 'pie chart' }
         ];
 
         this.grid.load(this.serializedData);
@@ -80,8 +88,14 @@ export class GridStackComponent implements OnInit {
         // this.barChart.createChart(this.barChart.werkzeugData);
         // this.stackedChart.createChart(this.stackedChart.data);
         // this.starPlot.createChart();
-        
-        // Create a new ResizeObserver
+
+        // this.visGen = new VisGenComponent();
+        // this.barChart = this.visGen.barChart;
+        // console.log(this.barChart);
+        // this.stackedChart = this.visGen.stackedChart;
+        // this.starPlot = this.visGen.starPlot;
+
+        // // Create a new ResizeObserver
         // const resizeObserver = new ResizeObserver(entries => {
         //     this.barChart.updateChart();
         //     this.stackedChart.updateChart();
