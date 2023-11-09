@@ -26,7 +26,19 @@ export class VisGenComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
-    
+        // Create a new ResizeObserver
+        const resizeObserver = new ResizeObserver(entries => {
+            this.barChart.updateChart();
+            this.stackedChart.updateChart();
+            this.starPlot.updateChart();
+        });
+
+        this.gridStack = new GridStackComponent();
+        // Observe the element for size changes
+        console.log(this.gridStack);
+        resizeObserver.observe(this.gridStack.barContEl);
+        resizeObserver.observe(this.gridStack.stackedContEl);
+        resizeObserver.observe(this.gridStack.starContEl);
     }
 
     public genVis() {

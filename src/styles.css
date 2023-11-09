@@ -26,8 +26,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    /* text-align: center; */
     background-color: #6cad84;
     font-family: Arial, sans-serif;
-    font-size: 25px;
+    font-size: 20px;
 }

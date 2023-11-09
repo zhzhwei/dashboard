@@ -20,7 +20,8 @@ export class AppComponent {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
-            autoFocus: false
+            autoFocus: false,
+            disableClose: true
         });
 
         dialogRef.afterClosed().subscribe(result => {

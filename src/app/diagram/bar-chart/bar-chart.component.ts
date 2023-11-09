@@ -44,7 +44,8 @@ export class BarChartComponent implements OnInit {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
-            autoFocus: false
+            autoFocus: false,
+            disableClose: true
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -72,7 +73,7 @@ export class BarChartComponent implements OnInit {
         this.svg.append('foreignObject')
             .attr('class', 'edit')
             .attr('x', this.barEL.clientWidth - 50)
-            .attr('y', 20)
+            .attr('y', 40)
             .attr('width', 20)
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
@@ -83,7 +84,7 @@ export class BarChartComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.barEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
+            .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text("Beruf - Werkzeugmacher");

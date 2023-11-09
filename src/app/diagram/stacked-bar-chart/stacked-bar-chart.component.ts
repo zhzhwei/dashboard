@@ -38,7 +38,8 @@ export class StackedBarChartComponent implements OnInit {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
-            autoFocus: false
+            autoFocus: false,
+            disableClose: true
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -197,6 +198,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("x", 20)
             .attr("y", 10)
             .text(d => d)
+            .attr("font-size", "15px")
     }
 
     public updateChart(): void {
