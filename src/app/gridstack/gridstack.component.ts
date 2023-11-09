@@ -80,6 +80,7 @@ export class GridStackComponent implements OnInit {
                     break;
             }
         });
+        this.visGen = new VisGenComponent();
     }
 
     ngAfterViewInit(): void {
@@ -88,23 +89,22 @@ export class GridStackComponent implements OnInit {
         // this.stackedChart.createChart(this.stackedChart.data);
         // this.starPlot.createChart();
 
-        // this.visGen = new VisGenComponent();
-        // this.barChart = this.visGen.barChart;
-        // console.log(this.barChart);
-        // this.stackedChart = this.visGen.stackedChart;
-        // this.starPlot = this.visGen.starPlot;
+        this.barChart = this.visGen.barChart;
+        console.log(this.visGen);
+        this.stackedChart = this.visGen.stackedChart;
+        this.starPlot = this.visGen.starPlot;
 
-        // // Create a new ResizeObserver
-        // const resizeObserver = new ResizeObserver(entries => {
-        //     this.barChart.updateChart();
-        //     this.stackedChart.updateChart();
-        //     this.starPlot.updateChart();
-        // });
+        // Create a new ResizeObserver
+        const resizeObserver = new ResizeObserver(entries => {
+            this.barChart.updateChart();
+            this.stackedChart.updateChart();
+            this.starPlot.updateChart();
+        });
 
-        // // Observe the element for size changes
-        // resizeObserver.observe(this.barContEl);
-        // resizeObserver.observe(this.stackedContEl);
-        // resizeObserver.observe(this.starContEl);
+        // Observe the element for size changes
+        resizeObserver.observe(this.barContEl);
+        resizeObserver.observe(this.stackedContEl);
+        resizeObserver.observe(this.starContEl);
     }
 
 }

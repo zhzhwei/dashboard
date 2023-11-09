@@ -6,7 +6,7 @@
         <h2 mat-dialog-title align="center">Visualization Editor</h2>
     </div>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-xxl-9">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                 <ng-container matColumnDef="subject">
@@ -28,11 +28,9 @@
                 <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
             </table>
         </div>
-        <div class="col-md-3">
-            <textarea rows="20" cols="40" placeholder="Please write your Sparql Query hier ^_^"> {{query}} </textarea>
-            <mat-dialog-actions align="end">
-                <button mat-raised-button (click)="applyChanges()" cdkFocusInitial>Apply Changes</button>
-            </mat-dialog-actions>
+        <div class="col-xxl-3">
+            <textarea class="form-control" rows="20" placeholder="Please write your Sparql Query hier ^_^" [(ngModel)]="query"></textarea>
+            <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block;">Apply Changes</button>
         </div>
     </div>
 </div>
