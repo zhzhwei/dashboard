@@ -8,9 +8,9 @@ import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 @NgModule({
     declarations: [
         GridStackComponent,
-        BarChartComponent,
-        StackedBarChartComponent,
-        StarPlotComponent
+        // BarChartComponent,
+        // StackedBarChartComponent,
+        // StarPlotComponent
     ],
     imports: [CommonModule],
     exports: [GridStackComponent]

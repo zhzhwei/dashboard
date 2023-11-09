@@ -22,10 +22,9 @@ export class GridStackComponent implements OnInit {
     private serializedData: any[] = []
     private itemEl: any;
 
-    private barContEl: any;
-    private stackedContEl: any;
-    private plotContEl: any;
-    private starContEl: any;
+    public barContEl: any;
+    public stackedContEl: any;
+    public starContEl: any;
 
     ngOnInit(): void {
         const options = {
@@ -77,22 +76,22 @@ export class GridStackComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
-        console.log(this.barChart);
-        this.barChart.createChart(this.barChart.werkzeugData);
-        this.stackedChart.createChart(this.stackedChart.data);
-        this.starPlot.createChart();
+        console.log(this);
+        // this.barChart.createChart(this.barChart.werkzeugData);
+        // this.stackedChart.createChart(this.stackedChart.data);
+        // this.starPlot.createChart();
         
         // Create a new ResizeObserver
-        const resizeObserver = new ResizeObserver(entries => {
-            this.barChart.updateChart();
-            this.stackedChart.updateChart();
-            this.starPlot.updateChart();
-        });
+        // const resizeObserver = new ResizeObserver(entries => {
+        //     this.barChart.updateChart();
+        //     this.stackedChart.updateChart();
+        //     this.starPlot.updateChart();
+        // });
 
-        // Observe the element for size changes
-        resizeObserver.observe(this.barContEl);
-        resizeObserver.observe(this.stackedContEl);
-        resizeObserver.observe(this.starContEl);
+        // // Observe the element for size changes
+        // resizeObserver.observe(this.barContEl);
+        // resizeObserver.observe(this.stackedContEl);
+        // resizeObserver.observe(this.starContEl);
     }
 
 }

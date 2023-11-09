@@ -10,6 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { GridStackModule } from './gridstack/gridstack.module';
+import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -21,6 +22,7 @@ import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
         BrowserModule,
         BrowserAnimationsModule,
         GridStackModule,
+        VisGenModule,
         HttpClientModule,
         MatButtonModule,
         MatDialogModule,
@@ -33,7 +35,7 @@ import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
     declarations: [
         AppComponent,
         StackedBarEditorComponent,
-        VisGenComponent
+        // VisGenComponent
     ],
     bootstrap: [
         AppComponent
