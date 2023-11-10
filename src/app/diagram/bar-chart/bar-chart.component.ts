@@ -181,6 +181,10 @@ export class BarChartComponent implements OnInit {
             .attr("x", (this.barEL.clientWidth / 2))
             .attr("y", this.margin / 2)
 
+        this.svg.select('foreignObject.edit')
+            .attr('x', this.barEL.clientWidth - 50)
+            .attr('y', 20)
+
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
 

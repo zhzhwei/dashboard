@@ -4,8 +4,8 @@ import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
-import { VisGenComponent } from '../dialog/vis-gen/vis-gen.component';
 
+import { ChartService } from '../services/chart.service';
 declare var ResizeObserver: any;
 
 @Component({
@@ -15,10 +15,9 @@ declare var ResizeObserver: any;
 })
 
 export class GridStackComponent implements OnInit {
-    // @ViewChild(BarChartComponent) barChart: BarChartComponent;
-    // @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
-    // @ViewChild(BarChartComponent) plotChart: BarChartComponent;
-    // @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
+    @ViewChild(BarChartComponent) barChart: BarChartComponent;
+    @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
+    @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -28,10 +27,15 @@ export class GridStackComponent implements OnInit {
     public stackedContEl: any;
     public starContEl: any;
 
-    private barChart: BarChartComponent;
-    private stackedChart: StackedBarChartComponent;
-    private starPlot: StarPlotComponent;
-    private visGen: VisGenComponent;
+    private chartType: string;
+
+    constructor(private chartService: ChartService) {
+        this.chartService.currentChartType.subscribe(chartType => {
+            // console.log(chartType);
+            this.chartType = chartType;
+            this.genVis();
+        });
+    }
 
     ngOnInit(): void {
         const options = {
@@ -80,22 +84,10 @@ export class GridStackComponent implements OnInit {
                     break;
             }
         });
-        this.visGen = new VisGenComponent();
-    }
-
-    ngAfterViewInit(): void {
-        console.log(this);
-        // this.barChart.createChart(this.barChart.werkzeugData);
-        // this.stackedChart.createChart(this.stackedChart.data);
-        // this.starPlot.createChart();
-
-        this.barChart = this.visGen.barChart;
-        console.log(this.visGen);
-        this.stackedChart = this.visGen.stackedChart;
-        this.starPlot = this.visGen.starPlot;
-
+        
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
+            console.log('gridstack item content resized');
             this.barChart.updateChart();
             this.stackedChart.updateChart();
             this.starPlot.updateChart();
@@ -105,6 +97,25 @@ export class GridStackComponent implements OnInit {
         resizeObserver.observe(this.barContEl);
         resizeObserver.observe(this.stackedContEl);
         resizeObserver.observe(this.starContEl);
+    }
+
+    public genVis() {
+        switch (this.chartType) {
+            case 'Bar Chart':
+                this.barChart.createChart(this.barChart.werkzeugData);
+                break;
+            case 'Stacked Bar Chart':
+                this.stackedChart.createChart(this.stackedChart.data);
+                break;
+            case 'Star Plot':
+                this.starPlot.createChart();
+                break;
+            case 'Pie Chart':
+                // this.pieChartComponent.createChart();
+                break;
+            default:
+                console.log('Invalid Chart Type');
+        }
     }
 
 }

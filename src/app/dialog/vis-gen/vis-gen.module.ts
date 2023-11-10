@@ -11,9 +11,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 
 import { VisGenComponent } from './vis-gen.component';
-import { BarChartComponent } from '../../diagram/bar-chart/bar-chart.component';
-import { StackedBarChartComponent } from '../../diagram/stacked-bar-chart/stacked-bar-chart.component';
-import { StarPlotComponent } from '../../diagram/star-plot/star-plot.component';
 
 @NgModule({
     imports: [
@@ -31,9 +28,6 @@ import { StarPlotComponent } from '../../diagram/star-plot/star-plot.component';
     ],
     declarations: [
         VisGenComponent,
-        BarChartComponent,
-        StackedBarChartComponent,
-        StarPlotComponent
     ],
     // exports: [VisGenComponent]
 })

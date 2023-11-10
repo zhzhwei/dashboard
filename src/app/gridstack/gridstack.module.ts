@@ -9,9 +9,9 @@ import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
     imports: [CommonModule],
     declarations: [
         GridStackComponent,
-        // BarChartComponent,
-        // StackedBarChartComponent,
-        // StarPlotComponent
+        BarChartComponent,
+        StackedBarChartComponent,
+        StarPlotComponent
     ],
     exports: [GridStackComponent]
 })
