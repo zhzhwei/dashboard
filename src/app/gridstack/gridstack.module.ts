@@ -4,6 +4,7 @@ import { GridStackComponent } from './gridstack.component';
 import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
+import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 
 @NgModule({
     imports: [CommonModule],
@@ -11,7 +12,8 @@ import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
         GridStackComponent,
         BarChartComponent,
         StackedBarChartComponent,
-        StarPlotComponent
+        StarPlotComponent,
+        PieChartComponent
     ],
     exports: [GridStackComponent]
 })

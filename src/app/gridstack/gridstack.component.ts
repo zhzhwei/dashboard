@@ -4,6 +4,7 @@ import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
+import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 
 import { ChartService } from '../services/chart.service';
 declare var ResizeObserver: any;
@@ -18,6 +19,7 @@ export class GridStackComponent implements OnInit {
     @ViewChild(BarChartComponent) barChart: BarChartComponent;
     @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
     @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
+    @ViewChild(PieChartComponent) pieChart: PieChartComponent;
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -26,6 +28,7 @@ export class GridStackComponent implements OnInit {
     public barContEl: any;
     public stackedContEl: any;
     public starContEl: any;
+    public pieContEl: any;
 
     private chartType: string;
 
@@ -52,10 +55,10 @@ export class GridStackComponent implements OnInit {
         this.grid = GridStack.init(options);
 
         this.serializedData = [
-            { x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Bar Chart', name: 'bar chart' },
+            { x: 0, y: 0, w: 4, h: 3, minW: 4, minH: 3, content: 'Bar Chart', name: 'bar chart' },
             { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
             { x: 8, y: 0, w: 4, h: 6, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 2, content: 'Pie Chart', name: 'pie chart' }
+            { x: 0, y: 2, w: 4, h: 3, content: 'Pie Chart', name: 'pie chart' }
         ];
 
         this.grid.load(this.serializedData);
@@ -82,21 +85,29 @@ export class GridStackComponent implements OnInit {
                     this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.starContEl.setAttribute('id', 'star');
                     break;
+                case 'pie chart':
+                    var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
+                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.pieContEl.setAttribute('id', 'pie');
+                    break;
             }
         });
-        
+
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
-            console.log('gridstack item content resized');
+            console.log('gridstack item content was resized');
             this.barChart.updateChart();
             this.stackedChart.updateChart();
             this.starPlot.updateChart();
+            this.pieChart.updateChart();
         });
 
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
         resizeObserver.observe(this.stackedContEl);
         resizeObserver.observe(this.starContEl);
+        resizeObserver.observe(this.pieContEl);
     }
 
     public genVis() {
@@ -111,7 +122,7 @@ export class GridStackComponent implements OnInit {
                 this.starPlot.createChart();
                 break;
             case 'Pie Chart':
-                // this.pieChartComponent.createChart();
+                this.pieChart.createChart(this.pieChart.data);
                 break;
             default:
                 console.log('Invalid Chart Type');
