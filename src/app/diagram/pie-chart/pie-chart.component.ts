@@ -49,9 +49,6 @@ export class PieChartComponent implements OnInit {
             .attr('width', this.pieEl.clientWidth)
             .attr('height', this.pieEl.clientHeight)
 
-        var g = this.svg.append('g')
-            .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
-
         this.svg.append('foreignObject')
             .attr('class', 'edit')
             .attr('x', this.pieEl.clientWidth - 50)

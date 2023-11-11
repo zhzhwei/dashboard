@@ -5,6 +5,7 @@ import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
+import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 
 import { ChartService } from '../services/chart.service';
 declare var ResizeObserver: any;
@@ -20,6 +21,7 @@ export class GridStackComponent implements OnInit {
     @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
     @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
     @ViewChild(PieChartComponent) pieChart: PieChartComponent;
+    @ViewChild(DoughnutComponent) donutChart: DoughnutComponent;
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -29,6 +31,7 @@ export class GridStackComponent implements OnInit {
     public stackedBarContEl: any;
     public starContEl: any;
     public pieContEl: any;
+    public donutContEl: any;
 
     private chartType: string;
 
@@ -58,7 +61,8 @@ export class GridStackComponent implements OnInit {
             { x: 0, y: 0, w: 4, h: 3, minW: 4, minH: 3, content: 'Bar Chart', name: 'bar chart' },
             { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
             { x: 8, y: 0, w: 4, h: 6, minW: 4, minH: 5, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' }
+            { x: 0, y: 3, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
+            { x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' }
         ];
 
         this.grid.load(this.serializedData);
@@ -91,6 +95,12 @@ export class GridStackComponent implements OnInit {
                     this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.pieContEl.setAttribute('id', 'pie');
                     break;
+                case 'doughnut':
+                    var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
+                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.donutContEl.setAttribute('id', 'doughnut');
+                    break;
             }
         });
 
@@ -98,7 +108,8 @@ export class GridStackComponent implements OnInit {
             { width: this.barContEl.offsetWidth, height: this.barContEl.offsetHeight },
             { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
             { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
-            { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight }
+            { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight },
+            { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight }
         ];
 
         // Create a new ResizeObserver
@@ -130,6 +141,12 @@ export class GridStackComponent implements OnInit {
                             this.pieChart.updateChart();
                         }
                         break;
+                    case 'doughnut':
+                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
+                            console.log('gridstack item content was resized');
+                            this.donutChart.updateChart();
+                        }
+                        break;
                 }
             }
         });
@@ -139,6 +156,7 @@ export class GridStackComponent implements OnInit {
         resizeObserver.observe(this.stackedBarContEl);
         resizeObserver.observe(this.starContEl);
         resizeObserver.observe(this.pieContEl);
+        resizeObserver.observe(this.donutContEl);
     }
 
     public genVis() {
@@ -154,6 +172,9 @@ export class GridStackComponent implements OnInit {
                 break;
             case 'Pie Chart':
                 this.pieChart.createChart(this.pieChart.data);
+                break;
+            case 'Doughnut':
+                this.donutChart.createChart(this.donutChart.data);
                 break;
             default:
                 console.log('Invalid Chart Type');
