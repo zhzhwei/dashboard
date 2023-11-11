@@ -43,6 +43,17 @@ export class StarPlotComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
 
+        this.svg.append('foreignObject')
+            .attr('class', 'edit')
+            .attr('x', this.starEL.clientWidth - 50)
+            .attr('y', 20)
+            .attr('width', 20)
+            .attr('height', 20)
+            .html('<i class="fas fa-pencil"></i>')
+            .on('click', () => {
+                // this.openDialog();
+            });
+
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.starEL.clientWidth / 2))

@@ -17,11 +17,6 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.plus-circle {
-    /* color: #2c3e50; */
-    background-color: #6cad84;
-}
-
 .grid-stack-item-content {
     display: flex;
     justify-content: center;
@@ -30,4 +25,5 @@ body {
     background-color: #6cad84;
     font-family: Arial, sans-serif;
     font-size: 20px;
+    border-radius: 5px;
 }

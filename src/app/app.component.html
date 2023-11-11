@@ -1,10 +1,13 @@
 <!-- <h1>Dashboard for Semantic Data</h1> -->
-<section>
+<!-- <section>
     <div class="row">
-        <div class="col-md-1 d-none d-md-block">
+        <div class="col-md-2 d-none d-md-block">
             <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                 <div>
                     <ion-icon name="trash" style="font-size: 400%"></ion-icon>
+                </div>
+                <div>
+                    <span>Drop here to remove widget</span>
                 </div>
             </div>
             <div class="text-center card text-white grid-stack-item newWidget">
@@ -12,10 +15,71 @@
                     <div>
                         <ion-icon name="add-circle" style="font-size: 400%" (click)="openDialog()"></ion-icon>
                     </div>
+                    <div>
+                        <span>Drag me into the dashboard</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-11">
+        <div class="col-sm-12 col-md-10">
+            <div class="grid-container">
+                <app-gridstack></app-gridstack>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<section>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="text-center card text-white grid-stack-item existedWidget">
+                <div id="logo" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
+                    <div>
+                        <ion-icon name="help-buoy-outline" style="font-size: 400%"></ion-icon>
+                    </div>
+                    <div>
+                        <span>Dashboard for Semantic Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center card text-white grid-stack-item newWidget">
+                <div class="card-body plus-circle">
+                    <div>
+                        <ion-icon name="add-circle" style="font-size: 400%" (click)="openDialog()"></ion-icon>
+                    </div>
+                    <div>
+                        <span>Drag me into the dashboard</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
+                <div>
+                    <ion-icon name="trash" style="font-size: 400%"></ion-icon>
+                </div>
+                <div>
+                    <span>Drop here to remove widget</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center card text-white grid-stack-item">
+                <div id="inventory" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
+                    <div>
+                        <ion-icon name="heart" style="font-size: 400%"></ion-icon>
+                    </div>
+                    <div>
+                        <span>Drag the diagram into the inventory</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
             <div class="grid-container">
                 <app-gridstack></app-gridstack>
             </div>
