@@ -124,6 +124,10 @@ export class StarPlotComponent implements OnInit {
         this.svg.select("text.title")
             .attr("x", (this.starEL.clientWidth / 2))
             .attr("y", this.margin / 2)
+        
+        this.svg.select('foreignObject.edit')
+            .attr('x', this.starEL.clientWidth - 50)
+            .attr('y', 20)
 
         // Redraw the X-axis on the DOM
         // this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2;
