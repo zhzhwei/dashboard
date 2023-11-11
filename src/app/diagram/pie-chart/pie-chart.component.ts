@@ -22,6 +22,7 @@ export class PieChartComponent implements OnInit {
     private radius: number;
     private color: any;
     private arc: any;
+    private g: any;
 
     public data = [
         { label: 'A', value: 10 },
@@ -88,10 +89,10 @@ export class PieChartComponent implements OnInit {
             .outerRadius(this.radius);
 
         // Bind the data to the pie chart and draw the arcs
-        var g = this.svg.append('g')
+        this.g = this.svg.append('g')
             .attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
 
-        g.selectAll('path')
+        this.g.selectAll('path')
             .data(pie(data))
             .enter()
             .append('path')
@@ -113,10 +114,13 @@ export class PieChartComponent implements OnInit {
             .attr('x', this.pieEl.clientWidth - 50)
             .attr('y', 20)
 
-        this.svg.select('g')
-            .attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
-        
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
+
+        this.arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(this.radius);
+        
+        this.g.attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
 
         this.svg.selectAll('path')
             .attr('d', this.arc)

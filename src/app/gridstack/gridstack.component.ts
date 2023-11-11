@@ -57,8 +57,8 @@ export class GridStackComponent implements OnInit {
         this.serializedData = [
             { x: 0, y: 0, w: 4, h: 3, minW: 4, minH: 3, content: 'Bar Chart', name: 'bar chart' },
             { x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 6, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 2, w: 4, h: 3, content: 'Pie Chart', name: 'pie chart' }
+            { x: 8, y: 0, w: 4, h: 6, minW: 4, minH: 5, content: 'Star Plot', name: 'star plot' },
+            { x: 0, y: 2, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' }
         ];
 
         this.grid.load(this.serializedData);
