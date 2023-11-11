@@ -26,7 +26,7 @@ export class GridStackComponent implements OnInit {
     private itemEl: any;
 
     public barContEl: any;
-    public stackedContEl: any;
+    public stackedBarContEl: any;
     public starContEl: any;
     public pieContEl: any;
 
@@ -76,8 +76,8 @@ export class GridStackComponent implements OnInit {
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
-                    this.stackedContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.stackedContEl.setAttribute('id', 'stacked');
+                    this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.stackedBarContEl.setAttribute('id', 'stacked-bar');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
@@ -94,18 +94,49 @@ export class GridStackComponent implements OnInit {
             }
         });
 
+        let prevSize = [
+            { width: this.barContEl.offsetWidth, height: this.barContEl.offsetHeight },
+            { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
+            { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
+            { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight }
+        ];
+
         // Create a new ResizeObserver
         const resizeObserver = new ResizeObserver(entries => {
-            console.log('gridstack item content was resized');
-            this.barChart.updateChart();
-            this.stackedChart.updateChart();
-            this.starPlot.updateChart();
-            this.pieChart.updateChart();
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                switch (entry.target.id) {
+                    case 'bar':
+                        if (Math.abs(width - prevSize[0].width) > 10 || Math.abs(height - prevSize[0].height) > 10) {
+                            console.log('gridstack item content was resized');
+                            this.barChart.updateChart();
+                        }
+                        break;
+                    case 'stacked-bar':
+                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
+                            console.log('gridstack item content was resized');
+                            this.stackedChart.updateChart();
+                        }
+                        break;
+                    case 'star':
+                        if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
+                            console.log('gridstack item content was resized');
+                            this.starPlot.updateChart();
+                        }
+                        break;
+                    case 'pie':
+                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
+                            console.log('gridstack item content was resized');
+                            this.pieChart.updateChart();
+                        }
+                        break;
+                }
+            }
         });
 
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
-        resizeObserver.observe(this.stackedContEl);
+        resizeObserver.observe(this.stackedBarContEl);
         resizeObserver.observe(this.starContEl);
         resizeObserver.observe(this.pieContEl);
     }

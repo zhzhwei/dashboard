@@ -30,9 +30,6 @@ export class PieChartComponent implements OnInit {
         { label: 'D', value: 40 },
     ];
 
-    public data1 = { a: 9, b: 20, c: 30, d: 8, e: 12 }
-    public data2 = { a: 6, b: 16, c: 20, d: 14, e: 19, f: 12 }
-
     ngOnInit(): void {
 
     }
