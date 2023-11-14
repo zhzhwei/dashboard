@@ -10,7 +10,6 @@ export class StackedBarEditorComponent {
 
     constructor(private rdfDataService: RdfDataService) { }
 
-    public triples: any[];
     public results: any;
     public dataSource = Array(10).fill({});
     public query: string;
@@ -25,10 +24,7 @@ export class StackedBarEditorComponent {
             } limit 10
         `;
         this.rdfDataService.queryData(this.query)
-            .then(data => {
-                this.triples = data.results.bindings;
-                this.results = this.triples;
-            })
+            .then(data => this.results = data.results.bindings)
             .catch(error => console.error(error));
     }
     

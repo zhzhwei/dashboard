@@ -5,3 +5,7 @@
 .gen-vis-btn {
     margin: 20px;
 }
+
+.img-button:active {
+    transform: scale(0.95);
+}

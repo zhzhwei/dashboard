@@ -19,37 +19,15 @@ export class BarChartComponent implements OnInit {
     private x: any;
     private y: any;
 
-    public werkzeugData = [
-        { 'Fertigkeit': 'Kommfähigkeit', 'Häufigkeit': 3 },
-        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 2 },
-        { 'Fertigkeit': 'Teamfähigkeit', 'Häufigkeit': 4 },
-        { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 2 },
-        { 'Fertigkeit': 'Motivation', 'Häufigkeit': 3 }
-    ];
-
-    public feinwerkData = [
-        { 'Fertigkeit': 'Kommfähigkeit', 'Häufigkeit': 4 },
-        { 'Fertigkeit': 'Polymechaniker', 'Häufigkeit': 3 },
-        { 'Fertigkeit': 'Teamfähigkeit', 'Häufigkeit': 4 },
-        { 'Fertigkeit': 'Flexibilität', 'Häufigkeit': 2 },
-        { 'Fertigkeit': 'Motivation', 'Häufigkeit': 1 }
-    ];
-
-    ngOnInit(): void {
-
-    }
+    ngOnInit(): void { }
 
     openDialog() {
-        const dialogRef = this.dialog.open(BarChartEditorComponent, {
+        this.dialog.open(BarChartEditorComponent, {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
         });
     }
 
@@ -92,7 +70,7 @@ export class BarChartComponent implements OnInit {
         // Create the X-axis band scale
         this.x = d3.scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(data.map(d => d.Fertigkeit))
+            .domain(data.map(d => d.skill))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
@@ -119,10 +97,10 @@ export class BarChartComponent implements OnInit {
             .data(data)
             .enter()
             .append('rect')
-            .attr('x', (d: any) => this.x(d.Fertigkeit))
-            .attr('y', (d: any) => this.y(d.Häufigkeit))
+            .attr('x', (d: any) => this.x(d.skill))
+            .attr('y', (d: any) => this.y(d.skillCount))
             .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Häufigkeit))
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.skillCount))
             .attr('fill', 'steelblue')
             .on('mouseover', (d, i, nodes) => {
                 // Get the current bar element
@@ -139,7 +117,7 @@ export class BarChartComponent implements OnInit {
                     .style('border-radius', '5px')
                     .style('padding', '10px')
                     .style('opacity', 0)
-                    .text(`${d.Fertigkeit}: ${d.Häufigkeit}`);
+                    .text(`${d.skill}: ${d.skillCount}`);
 
                 // Show the tooltip element
                 tooltip.transition()
@@ -205,10 +183,10 @@ export class BarChartComponent implements OnInit {
 
         // Redraw the bars on the DOM
         this.svg.selectAll('rect')
-            .attr('x', (d: any) => this.x(d.Fertigkeit))
-            .attr('y', (d: any) => this.y(d.Häufigkeit))
+            .attr('x', (d: any) => this.x(d.skill))
+            .attr('y', (d: any) => this.y(d.skillCount))
             .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.Häufigkeit));
+            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.skillCount));
     }
 
 }

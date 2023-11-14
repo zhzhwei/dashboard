@@ -101,7 +101,6 @@ export class PieChartComponent implements OnInit {
         // Update the SVG element size
         this.svg.attr('width', this.pieEl.clientWidth)
             .attr('height', this.pieEl.clientHeight);
-        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
         this.svg.select("text.title")
             .attr("x", (this.pieEl.clientWidth / 2))

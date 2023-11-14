@@ -16,16 +16,12 @@ export class AppComponent {
     }
 
     openDialog() {
-        const dialogRef = this.dialog.open(VisGenComponent, {
+        this.dialog.open(VisGenComponent, {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
         });
     }
 }

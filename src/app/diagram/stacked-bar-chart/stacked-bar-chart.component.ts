@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/stacked-bar-editor.component';
+import { DialogService } from 'src/app/services/dialog.service';
+
 @Component({
     selector: 'app-stacked-bar-chart',
     templateUrl: './stacked-bar-chart.component.html',
@@ -9,7 +11,7 @@ import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/sta
 })
 
 export class StackedBarChartComponent implements OnInit {
-    constructor(private dialog: MatDialog) { }
+    constructor(private dialog: MatDialog, private dialogService: DialogService) { }
 
     private svg: any;
 
@@ -34,16 +36,12 @@ export class StackedBarChartComponent implements OnInit {
     }
 
     openDialog() {
-        const dialogRef = this.dialog.open(StackedBarEditorComponent, {
+        this.dialog.open(StackedBarEditorComponent, {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
         });
     }
 
@@ -71,7 +69,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                this.openDialog();
+                this.dialogService.openStackedBarChartEditor
             });
 
         this.svg.append("text")

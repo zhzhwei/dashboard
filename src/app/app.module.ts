@@ -15,6 +15,7 @@ import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
 import { AppComponent } from './app.component';
 import { BarChartEditorComponent } from './dialog/bar-chart-editor/bar-chart-editor.component';
 import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-bar-editor.component';
+import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-editor.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-b
         AppComponent,
         BarChartEditorComponent,
         StackedBarEditorComponent,
+        PieChartEditorComponent,
     ],
     bootstrap: [
         AppComponent

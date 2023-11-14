@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridStackComponent } from '../../gridstack/gridstack.component';
 
 import { ChartService } from '../../services/chart.service';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'app-vis-gen',
@@ -10,7 +11,7 @@ import { ChartService } from '../../services/chart.service';
 })
 export class VisGenComponent implements OnInit {
 
-    constructor(private chartService: ChartService) { }
+    constructor(private chartService: ChartService, private dialogService: DialogService) { }
 
     public chartType: string;
     public gridStack: GridStackComponent;
@@ -19,9 +20,22 @@ export class VisGenComponent implements OnInit {
 
     }
 
-    getChartType() {
-        console.log(this.chartType);
-        this.chartService.sourceChartType.next(this.chartType);
+    public genVis() {
+        // console.log(this.chartType);
+        this.chartService.chartType.next(this.chartType);
+        switch (this.chartType) {
+            case 'Bar Chart':
+                this.dialogService.openBarChartEditor();
+                break;
+            case 'Stacked Bar Chart':
+                this.dialogService.openStackedBarChartEditor();
+                break;
+            case 'Pie Chart':
+                this.dialogService.openPieChartEditor();
+                break;
+            default:
+                console.log('Invalid Chart Type');
+        }
     }
 
 }

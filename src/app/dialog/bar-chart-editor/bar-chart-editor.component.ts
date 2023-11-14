@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RdfDataService } from '../../services/rdf-data.service';
+import { DialogService } from '../../services/dialog.service';
+import { ChartService } from 'src/app/services/chart.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-bar-chart-editor',
@@ -8,44 +11,86 @@ import { RdfDataService } from '../../services/rdf-data.service';
 })
 export class BarChartEditorComponent implements OnInit {
 
-    constructor(private rdfDataService: RdfDataService) { }
+    constructor(private rdfDataService: RdfDataService, private chartService: ChartService, private dialog: MatDialog) { }
 
-    public triples: any[];
-    public results: any;
-    public dataSource = Array(10).fill({});
     public query: string;
+    public skills: any;
+    public results: any;
+    public list: any;
+    public checkedSkills: any;
+    public dataSource: any;
+
+    public skillQuery = `
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX edm: <http://ai4bd.com/resource/edm/>
+            select (count(?s) as ?skillCount) where { 
+                ?s rdf:type edm:JobPosting.
+                ?s edm:title ?title.
+                filter contains(?title, "Polymechaniker").
+                ?s edm:hasSkill ?skill.
+                ?skill edm:textField ?skillName.
+                filter (lang(?skillName) = "de").
+                filter (?skillName = "skillName"@de).
+            }
+        `;
+    public skillQueries: string[];
 
     displayColumns: string[] = ['subject', 'predicate', 'object'];
 
     ngOnInit(): void {
         this.query = `
-            SELECT ?s ?p ?o
-            WHERE {
-                ?s ?p ?o .
-            } limit 10
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX edm: <http://ai4bd.com/resource/edm/>
+            select distinct ?skillName where { 
+                ?s rdf:type edm:JobPosting.
+                ?s edm:title ?title.
+                filter contains(?title, "Polymechaniker").
+                ?s edm:hasSkill ?skill.
+                ?skill edm:textField ?skillName.
+                filter (lang(?skillName) = "de").
+            }
         `;
 
-        // this.query = `
-        //     PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        //     PREFIX edm: <http://ai4bd.com/resource/edm/>
-            
-        //     select ?jobposting ?p ?o where {
-        //         ?jobposting rdf:type edm:JobPosting .
-        //         ?jobposting ?p ?o .
-        //     } limit 10
-        // `;
-        
         this.rdfDataService.queryData(this.query)
             .then(data => {
-                this.triples = data.results.bindings;
-                this.results = this.triples;
+                this.results = data.results.bindings;
+                this.skills = this.results.map(item => item.skillName.value);
+                this.list = this.skills.map((item, index) => {
+                    return {
+                        id: index,
+                        title: item,
+                        checked: false,
+                    }
+                });
             })
             .catch(error => console.error(error));
     }
 
     public applyChanges(): void {
-        console.log(this.results);
-        this.dataSource = this.results;
-    }
+        this.checkedSkills = this.list.filter(item => item.checked === true);
+        this.skillQueries = this.checkedSkills.map(item => {
+            return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
+        });
+        this.dataSource = this.checkedSkills.map(item => {
+            return {
+                skill: item.title,
+            }
+        });
 
+        let promises = this.skillQueries.map((query, index) => {
+            return this.rdfDataService.queryData(query)
+                .then(data => {
+                    this.results = data.results.bindings;
+                    this.dataSource[index].skillCount = parseInt(this.results[0].skillCount.value);
+                })
+                .catch(error => console.error(error));
+        });
+        Promise.all(promises).then(() => {
+            // this.dataSource.forEach(item => {
+            //     console.log(item.skill, item.skillCount);
+            // });
+            this.chartService.dataSourceSubject.next(this.dataSource);
+        });
+        this.dialog.closeAll();
+    }
 }

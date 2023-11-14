@@ -33,13 +33,13 @@ export class GridStackComponent implements OnInit {
     public pieContEl: any;
     public donutContEl: any;
 
-    private chartType: string;
-
     constructor(private chartService: ChartService) {
         this.chartService.currentChartType.subscribe(chartType => {
-            // console.log(chartType);
-            this.chartType = chartType;
-            this.genVis();
+            this.chartService.currentDataSource.subscribe(dataSource => {
+                if (chartType && dataSource.length > 0) {
+                    this.genVis(chartType, dataSource);
+                }
+            });
         });
     }
 
@@ -155,17 +155,17 @@ export class GridStackComponent implements OnInit {
         });
 
         // Observe the element for size changes
-        resizeObserver.observe(this.barContEl);
-        resizeObserver.observe(this.stackedBarContEl);
-        resizeObserver.observe(this.starContEl);
-        resizeObserver.observe(this.pieContEl);
-        resizeObserver.observe(this.donutContEl);
+        // resizeObserver.observe(this.barContEl);
+        // resizeObserver.observe(this.stackedBarContEl);
+        // resizeObserver.observe(this.starContEl);
+        // resizeObserver.observe(this.pieContEl);
+        // resizeObserver.observe(this.donutContEl);
     }
 
-    public genVis() {
-        switch (this.chartType) {
+    public genVis(chartType: string, dataSource: any[]) {
+        switch (chartType) {
             case 'Bar Chart':
-                this.barChart.createChart(this.barChart.werkzeugData);
+                this.barChart.createChart(dataSource);
                 break;
             case 'Stacked Bar Chart':
                 this.stackedChart.createChart(this.stackedChart.data);
