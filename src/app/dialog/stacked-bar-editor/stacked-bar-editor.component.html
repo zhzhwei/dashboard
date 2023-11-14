@@ -1,38 +1,23 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <button mat-raised-button mat-dialog-close>Back to Dashboard</button>
+            <button mat-raised-button mat-dialog-close>Back to Visualization Generator</button>
         </div>
         <h2 mat-dialog-title align="center">Visualization Editor</h2>
     </div>
-    <div class="row">
-        <div class="col-md-9">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-                <ng-container matColumnDef="subject">
-                    <th mat-header-cell *matHeaderCellDef> subject </th>
-                    <td mat-cell *matCellDef="let el"> {{el.s?.value}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="predicate">
-                    <th mat-header-cell *matHeaderCellDef> predicate </th>
-                    <td mat-cell *matCellDef="let el"> {{el.p?.value}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="object">
-                    <th mat-header-cell *matHeaderCellDef> object </th>
-                    <td mat-cell *matCellDef="let el"> {{el.o?.value}} </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
-            </table>
-        </div>
-        <div class="col-md-3">
-            <textarea rows="20" cols="40" placeholder="Please write your Sparql Query hier ^_^"> {{query}} </textarea>
-            <mat-dialog-actions align="end">
-                <button mat-raised-button (click)="applyChanges()" cdkFocusInitial>Apply Changes</button>
-            </mat-dialog-actions>
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9 text-center" style="display: flex; justify-content: center; align-items: center;" (click)="chartType = 'Line Chart';">
+                    <p width="100" height="800">Stacked Bar Chart</p>
+                </div>
+                <div class="col-md-3">
+                    <div *ngFor="let item of list">
+                        <input type="checkbox" [(ngModel)]="item.checked">{{item.title}}
+                    </div>
+                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block;">Apply Changes</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

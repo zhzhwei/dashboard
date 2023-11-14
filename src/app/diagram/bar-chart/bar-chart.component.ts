@@ -5,8 +5,6 @@ import { BarChartEditorComponent } from '../../dialog/bar-chart-editor/bar-chart
 
 @Component({
     selector: 'app-bar-chart',
-    templateUrl: './bar-chart.component.html',
-    styleUrls: ['./bar-chart.component.css'],
 })
 
 export class BarChartComponent implements OnInit {
@@ -83,8 +81,9 @@ export class BarChartComponent implements OnInit {
             .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
+        const maxSkillCount = d3.max(data, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
-            .domain([0, 5])
+            .domain([0, maxSkillCount + 1]) 
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM

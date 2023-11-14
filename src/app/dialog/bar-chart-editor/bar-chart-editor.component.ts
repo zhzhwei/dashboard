@@ -19,6 +19,7 @@ export class BarChartEditorComponent implements OnInit {
     public list: any;
     public checkedSkills: any;
     public dataSource: any;
+    public allChecked = false;
 
     public skillQuery = `
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -64,6 +65,12 @@ export class BarChartEditorComponent implements OnInit {
                 });
             })
             .catch(error => console.error(error));
+    }
+
+    selectAll() {
+        for (let item of this.list) {
+            item.checked = this.allChecked;
+        }
     }
 
     public applyChanges(): void {

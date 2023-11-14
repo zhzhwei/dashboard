@@ -3,8 +3,6 @@ import * as d3 from 'd3';
 
 @Component({
     selector: 'app-star-plot',
-    templateUrl: './star-plot.component.html',
-    styleUrls: ['./star-plot.component.css']
 })
 export class StarPlotComponent implements OnInit {
 

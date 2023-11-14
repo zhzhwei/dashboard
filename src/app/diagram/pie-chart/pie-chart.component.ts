@@ -9,8 +9,6 @@ interface Datum {
 
 @Component({
     selector: 'app-pie-chart',
-    templateUrl: './pie-chart.component.html',
-    styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
 

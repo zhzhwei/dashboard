@@ -4,7 +4,6 @@ import { RdfDataService } from '../../services/rdf-data.service';
 @Component({
     selector: 'app-stacked-bar-editor',
     templateUrl: './stacked-bar-editor.component.html',
-    styleUrls: ['./stacked-bar-editor.component.css']
 })
 export class StackedBarEditorComponent {
 

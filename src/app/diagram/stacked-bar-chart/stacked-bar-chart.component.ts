@@ -6,8 +6,6 @@ import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
     selector: 'app-stacked-bar-chart',
-    templateUrl: './stacked-bar-chart.component.html',
-    styleUrls: ['./stacked-bar-chart.component.css'],
 })
 
 export class StackedBarChartComponent implements OnInit {

@@ -12,6 +12,7 @@
                     <p width="100" height="800">Bar Chart</p>
                 </div>
                 <div class="col-md-3">
+                    <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()">Select All</strong>
                     <div *ngFor="let item of list">
                         <input type="checkbox" [(ngModel)]="item.checked">{{item.title}}
                     </div>
