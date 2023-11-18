@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-import { MatDialog } from '@angular/material/dialog';
-import { BarChartEditorComponent } from '../../dialog/bar-chart-editor/bar-chart-editor.component';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
     selector: 'app-bar-chart',
@@ -9,7 +8,7 @@ import { BarChartEditorComponent } from '../../dialog/bar-chart-editor/bar-chart
 
 export class BarChartComponent implements OnInit {
 
-    constructor(private dialog: MatDialog) { }
+    constructor(private dialogService: DialogService) { }
 
     private svg: any;
     private margin = 80;
@@ -19,18 +18,8 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    openDialog() {
-        this.dialog.open(BarChartEditorComponent, {
-            width: '1500px',
-            height: '800px',
-            backdropClass: "hello",
-            autoFocus: false,
-            disableClose: true
-        });
-    }
-
     public createChart(data: any[]): void {
-        this.barEL = document.getElementById('bar');
+        this.barEL = document.getElementById('dash-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         
         // Clear the item's content
@@ -38,10 +27,10 @@ export class BarChartComponent implements OnInit {
             this.barEL.removeChild(this.barEL.firstChild);
         }
 
-        this.svg = d3.select('#bar')
+        this.svg = d3.select('#dash-bar')
             .append('svg')
             .attr('width', this.barEL.clientWidth)
-            .attr('height', this.barEL.clientWidth)
+            .attr('height', this.barEL.clientHeight)
 
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
@@ -54,7 +43,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                this.openDialog();
+                this.dialogService.openBarChartEditor();
             });
 
         this.svg.append("text")
@@ -63,7 +52,7 @@ export class BarChartComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Beruf - Werkzeugmacher");
+            .text("Beruf - Polymechaniker");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()

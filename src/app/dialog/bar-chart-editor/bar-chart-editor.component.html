@@ -1,15 +1,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <button mat-raised-button mat-dialog-close>Back to Visualization Generator</button>
+            <button mat-raised-button (click)="backToDashboard()">Back to Dashboard</button>
         </div>
         <h2 mat-dialog-title align="center">Visualization Editor</h2>
     </div>
     <div class="card" style="margin-top: 20px;">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9 text-center" style="display: flex; justify-content: center; align-items: center;" (click)="chartType = 'Line Chart';">
-                    <p width="100" height="800">Bar Chart</p>
+                <div class="col-md-9 text-center" id="editor-bar" style="display: flex; justify-content: center; align-items: center;">
+                    <p>Bar Chart</p>
                 </div>
                 <div class="col-md-3">
                     <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()">Select All</strong>

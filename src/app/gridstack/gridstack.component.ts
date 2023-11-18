@@ -77,31 +77,31 @@ export class GridStackComponent implements OnInit {
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.barContEl.setAttribute('id', 'bar');
+                    this.barContEl.setAttribute('id', 'dash-bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.stackedBarContEl.setAttribute('id', 'stacked-bar');
+                    this.stackedBarContEl.setAttribute('id', 'dash-stacked-bar');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.starContEl.setAttribute('id', 'star');
+                    this.starContEl.setAttribute('id', 'dash-star');
                     break;
                 case 'pie chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.pieContEl.setAttribute('id', 'pie');
+                    this.pieContEl.setAttribute('id', 'dash-pie');
                     break;
                 case 'doughnut':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.donutContEl.setAttribute('id', 'doughnut');
+                    this.donutContEl.setAttribute('id', 'dash-doughnut');
                     break;
             }
         });

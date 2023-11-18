@@ -35,7 +35,7 @@ export class DoughnutComponent implements OnInit {
 
     public createChart(data: any): void {
 
-        this.donutEl = document.getElementById('doughnut');
+        this.donutEl = document.getElementById('dash-doughnut');
         // console.log(this.donutEl.clientWidth, this.donutEl.clientHeight);
 
         // Clear the item's content
@@ -43,7 +43,7 @@ export class DoughnutComponent implements OnInit {
             this.donutEl.removeChild(this.donutEl.firstChild);
         }
 
-        this.svg = d3.select('#doughnut')
+        this.svg = d3.select('#dash-doughnut')
             .append('svg')
             .attr('width', this.donutEl.clientWidth)
             .attr('height', this.donutEl.clientHeight)
@@ -68,8 +68,8 @@ export class DoughnutComponent implements OnInit {
             .text("Beruf - Stellenausschreibungen");
 
         this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
-        this.innerRadius1 = this.outerRadius - 50; // adjust this value to change the thickness of the doughnut
-        this.innerRadius2 = this.outerRadius - 100;
+        this.innerRadius1 = this.outerRadius - 30; // adjust this value to change the thickness of the doughnut
+        this.innerRadius2 = this.outerRadius - 60;
 
         // Define the color scale
         this.color = d3.scaleOrdinal(d3.schemeCategory10);

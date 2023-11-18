@@ -34,7 +34,7 @@ export class PieChartComponent implements OnInit {
     }
 
     public createChart(data: any): void {
-        this.pieEl = document.getElementById('pie');
+        this.pieEl = document.getElementById('dash-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
         // Clear the item's content
@@ -42,7 +42,7 @@ export class PieChartComponent implements OnInit {
             this.pieEl.removeChild(this.pieEl.firstChild);
         }
 
-        this.svg = d3.select('#pie')
+        this.svg = d3.select('#dash-pie')
             .append('svg')
             .attr('width', this.pieEl.clientWidth)
             .attr('height', this.pieEl.clientHeight)
