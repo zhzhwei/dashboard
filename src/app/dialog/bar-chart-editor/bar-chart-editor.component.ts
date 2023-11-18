@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RdfDataService } from '../../services/rdf-data.service';
-import { BarChartComponent } from 'src/app/diagram/bar-chart/bar-chart.component';
 import { ChartService } from 'src/app/services/chart.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog.service';
 import * as d3 from 'd3';
 
 @Component({
@@ -13,11 +11,6 @@ import * as d3 from 'd3';
 })
 export class BarChartEditorComponent implements OnInit {
 
-    constructor(private rdfDataService: RdfDataService, private chartService: 
-        ChartService, private dialog: MatDialog, private dialogService: DialogService) {
-
-    }
-
     public query: string;
     public skills: any;
     public results: any;
@@ -25,6 +18,7 @@ export class BarChartEditorComponent implements OnInit {
     public checkedSkills: any;
     public dataSource: any;
     public allChecked = false;
+    public skillQueries: string[];
 
     private svg: any;
     private margin = 80;
@@ -35,19 +29,19 @@ export class BarChartEditorComponent implements OnInit {
     public skillQuery = `
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX edm: <http://ai4bd.com/resource/edm/>
-            select (count(?s) as ?skillCount) where { 
-                ?s rdf:type edm:JobPosting.
-                ?s edm:title ?title.
-                filter contains(?title, "Polymechaniker").
-                ?s edm:hasSkill ?skill.
-                ?skill edm:textField ?skillName.
-                filter (lang(?skillName) = "de").
-                filter (?skillName = "skillName"@de).
-            }
-        `;
-    public skillQueries: string[];
+        select (count(?s) as ?skillCount) where { 
+            ?s rdf:type edm:JobPosting.
+            ?s edm:title ?title.
+            filter contains(?title, "Polymechaniker").
+            ?s edm:hasSkill ?skill.
+            ?skill edm:textField ?skillName.
+            filter (lang(?skillName) = "de").
+            filter (?skillName = "skillName"@de).
+        }
+    `;
 
-    displayColumns: string[] = ['subject', 'predicate', 'object'];
+    constructor(private rdfDataService: RdfDataService, private chartService:
+        ChartService, private dialog: MatDialog) {}
 
     ngOnInit(): void {
         this.query = `
@@ -60,7 +54,7 @@ export class BarChartEditorComponent implements OnInit {
                 ?s edm:hasSkill ?skill.
                 ?skill edm:textField ?skillName.
                 filter (lang(?skillName) = "de").
-            }
+            } Order By ASC (?skillName)
         `;
 
         this.rdfDataService.queryData(this.query)
@@ -76,6 +70,10 @@ export class BarChartEditorComponent implements OnInit {
                 });
             })
             .catch(error => console.error(error));
+    }
+
+    backToDashboard(): void {
+        this.dialog.closeAll();
     }
 
     selectAll() {
@@ -99,7 +97,7 @@ export class BarChartEditorComponent implements OnInit {
             return this.rdfDataService.queryData(query)
                 .then(data => {
                     this.results = data.results.bindings;
-                    this.dataSource[index].skillCount = parseInt(this.results[0].skillCount.value);
+                    this.dataSource[index].skillCount = Number(this.results[0].skillCount.value);
                 })
                 .catch(error => console.error(error));
         });
@@ -112,14 +110,10 @@ export class BarChartEditorComponent implements OnInit {
         });
     }
 
-    private backToDashboard(): void {
-        this.dialog.closeAll();
-    }
-
     private createChart(data: any[]): void {
         this.barEL = document.getElementById('editor-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
-        
+
         while (this.barEL.firstChild) {
             this.barEL.removeChild(this.barEL.firstChild);
         }
@@ -158,7 +152,7 @@ export class BarChartEditorComponent implements OnInit {
         // Create the Y-axis band scale
         const maxSkillCount = d3.max(data, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
-            .domain([0, maxSkillCount + 1]) 
+            .domain([0, maxSkillCount + 1])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM

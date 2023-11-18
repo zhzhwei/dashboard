@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as d3 from 'd3';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogService } from 'src/app/services/dialog.service';
+import * as d3 from 'd3';
 
 interface Datum {
     label: string;
@@ -12,7 +13,7 @@ interface Datum {
 })
 export class PieChartComponent implements OnInit {
 
-    constructor() { }
+    constructor(private dialogService: DialogService) { }
 
     private svg: any;
     private margin = 80;
@@ -22,12 +23,12 @@ export class PieChartComponent implements OnInit {
     private arc: any;
     private g: any;
 
-    public data = [
-        { label: 'A', value: 10 },
-        { label: 'B', value: 20 },
-        { label: 'C', value: 30 },
-        { label: 'D', value: 40 },
-    ];
+    // public data = [
+    //     { label: 'A', value: 10 },
+    //     { label: 'B', value: 20 },
+    //     { label: 'C', value: 30 },
+    //     { label: 'D', value: 40 },
+    // ];
 
     ngOnInit(): void {
 
@@ -55,7 +56,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                // this.openDialog();
+                this.dialogService.openPieChartEditor();
             });
 
         this.svg.append("text")
@@ -64,13 +65,13 @@ export class PieChartComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Beruf - Werkzeugmacher");
+            .text("JobPosting");
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
 
         // Define the color scale
         this.color = d3.scaleOrdinal()
-            .domain(this.data.map(d => d.label))
+            .domain(data.map(d => d.label))
             .range(d3.schemeCategory10);
 
         // Define the pie function

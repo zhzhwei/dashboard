@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GridStack } from 'gridstack';
-import 'gridstack/dist/h5/gridstack-dd-native';
 import { BarChartComponent } from '../diagram/bar-chart/bar-chart.component';
 import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-bar-chart.component';
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
+import 'gridstack/dist/h5/gridstack-dd-native';
+import { GridStack } from 'gridstack';
 
 import { ChartService } from '../services/chart.service';
 declare var ResizeObserver: any;
@@ -36,6 +36,7 @@ export class GridStackComponent implements OnInit {
         this.chartService.currentChartType.subscribe(chartType => {
             this.chartService.currentDataSource.subscribe(dataSource => {
                 if (chartType && dataSource.length > 0) {
+                    console.log('chartType: ', chartType);
                     this.genVis(chartType, dataSource);
                 }
             });
@@ -119,33 +120,33 @@ export class GridStackComponent implements OnInit {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
                 switch (entry.target.id) {
-                    case 'bar':
+                    case 'dash-bar':
                         if (Math.abs(width - prevSize[0].width) > 10 || Math.abs(height - prevSize[0].height) > 10) {
-                            console.log('gridstack item content was resized');
+                            console.log('gridstack item bar content was resized');
                             this.barChart.updateChart();
                         }
                         break;
-                    case 'stacked-bar':
+                    case 'dash-stacked-bar':
                         if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
-                            console.log('gridstack item content was resized');
+                            console.log('gridstack item stacked-bar content was resized');
                             this.stackedChart.updateChart();
                         }
                         break;
-                    case 'star':
+                    case 'dash-star':
                         if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
-                            console.log('gridstack item content was resized');
+                            console.log('gridstack item star content was resized');
                             this.starPlot.updateChart();
                         }
                         break;
-                    case 'pie':
+                    case 'dash-pie':
                         if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
-                            console.log('gridstack item content was resized');
+                            console.log('gridstack item pie content was resized');
                             this.pieChart.updateChart();
                         }
                         break;
-                    case 'doughnut':
+                    case 'dash-doughnut':
                         if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
-                            console.log('gridstack item content was resized');
+                            console.log('gridstack item doughnut content was resized');
                             this.donutChart.updateChart();
                         }
                         break;
@@ -157,11 +158,11 @@ export class GridStackComponent implements OnInit {
         resizeObserver.observe(this.barContEl);
         // resizeObserver.observe(this.stackedBarContEl);
         // resizeObserver.observe(this.starContEl);
-        // resizeObserver.observe(this.pieContEl);
+        resizeObserver.observe(this.pieContEl);
         // resizeObserver.observe(this.donutContEl);
     }
 
-    public genVis(chartType: string, dataSource: any[]) {
+    private genVis(chartType: string, dataSource: any[]) {
         switch (chartType) {
             case 'Bar Chart':
                 this.barChart.createChart(dataSource);
@@ -173,7 +174,7 @@ export class GridStackComponent implements OnInit {
                 this.starPlot.createChart();
                 break;
             case 'Pie Chart':
-                this.pieChart.createChart(this.pieChart.data);
+                this.pieChart.createChart(dataSource);
                 break;
             case 'Doughnut':
                 this.donutChart.createChart(this.donutChart.data);
