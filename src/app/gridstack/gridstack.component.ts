@@ -5,6 +5,7 @@ import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 import 'gridstack/dist/h5/gridstack-dd-native';
+import { combineLatest } from 'rxjs';
 import { GridStack } from 'gridstack';
 
 import { ChartService } from '../services/chart.service';
@@ -33,14 +34,16 @@ export class GridStackComponent implements OnInit {
     public donutContEl: any;
 
     constructor(private chartService: ChartService) {
-        this.chartService.currentChartType.subscribe(chartType => {
-            this.chartService.currentDataSource.subscribe(dataSource => {
-                if (chartType && dataSource.length > 0) {
-                    console.log('chartType: ', chartType);
-                    this.genVis(chartType, dataSource);
-                }
-            });
-        });
+        combineLatest([
+            this.chartService.currentChartType,
+            this.chartService.currentDataSource
+          ]).subscribe(([chartType, dataSource]) => {
+            console.log('chartType: ', chartType);
+            console.log('dataSource: ', dataSource);
+            if (chartType && dataSource.length > 0) {
+                this.genVis(chartType, dataSource);
+            }
+          });
     }
 
     ngOnInit(): void {
