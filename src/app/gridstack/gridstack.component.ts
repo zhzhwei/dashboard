@@ -38,8 +38,8 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentChartType,
             this.chartService.currentDataSource
           ]).subscribe(([chartType, dataSource]) => {
-            console.log('chartType: ', chartType);
-            console.log('dataSource: ', dataSource);
+            // console.log('chartType: ', chartType);
+            // console.log('dataSource: ', dataSource);
             if (chartType && dataSource.length > 0) {
                 this.genVis(chartType, dataSource);
             }

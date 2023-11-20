@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-import { DialogService } from 'src/app/services/dialog.service';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'app-bar-chart',
@@ -15,6 +15,7 @@ export class BarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
+    private tooltip: any;
 
     ngOnInit(): void { }
 
@@ -70,7 +71,7 @@ export class BarChartComponent implements OnInit {
             .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        const maxSkillCount = d3.max(data, (d: any) => d.skillCount);
+        var maxSkillCount = d3.max(data, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
             .domain([0, maxSkillCount + 1]) 
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
@@ -92,10 +93,10 @@ export class BarChartComponent implements OnInit {
             .attr('fill', 'steelblue')
             .on('mouseover', (d, i, nodes) => {
                 // Get the current bar element
-                const bar = d3.select(nodes[i]);
+                var bar = d3.select(nodes[i]);
 
                 // Create the tooltip element
-                const tooltip = d3.select('body')
+                this.tooltip = d3.select('#dash-bar')
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
@@ -104,29 +105,30 @@ export class BarChartComponent implements OnInit {
                     .style('border-width', '1px')
                     .style('border-radius', '5px')
                     .style('padding', '10px')
-                    .style('opacity', 0)
-                    .text(`${d.skill}: ${d.skillCount}`);
+                    .style('opacity', 0);
 
                 // Show the tooltip element
-                tooltip.transition()
+                d3.select('.tooltip')
+                    .text(`${d.skill}: ${d.skillCount}`)
+                    .transition()
                     .duration(200)
                     .style('opacity', 1);
 
                 // Change the color of the bar
-                bar.style('fill', 'red');
+                bar.style('fill', 'orange');
 
                 // Add a mousemove event listener to update the position of the tooltip element
                 d3.select('body')
                     .on('mousemove', () => {
-                        const [x, y] = d3.mouse(nodes[i]);
+                        var [x, y] = d3.mouse(nodes[i]);
                         // console.log(x, y);
-                        tooltip.style('left', `${x + 800}px`)
-                            .style('top', `${y + 80}px`);
+                        this.tooltip.style('left', `${x + 40}px`)
+                            .style('top', `${y}px`);
                     });
             })
             .on('mouseout', (d, i, nodes) => {
                 // Get the current bar element
-                const bar = d3.select(nodes[i]);
+                var bar = d3.select(nodes[i]);
 
                 // Hide the tooltip element
                 d3.select('.tooltip').remove();
