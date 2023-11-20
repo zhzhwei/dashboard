@@ -15,7 +15,6 @@ export class BarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
-    private tooltip: any;
 
     ngOnInit(): void { }
 
@@ -96,7 +95,7 @@ export class BarChartComponent implements OnInit {
                 var bar = d3.select(nodes[i]);
 
                 // Create the tooltip element
-                this.tooltip = d3.select('#dash-bar')
+                var tooltip = d3.select('#dash-bar')
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
@@ -122,7 +121,7 @@ export class BarChartComponent implements OnInit {
                     .on('mousemove', () => {
                         var [x, y] = d3.mouse(nodes[i]);
                         // console.log(x, y);
-                        this.tooltip.style('left', `${x + 40}px`)
+                        tooltip.style('left', `${x + 40}px`)
                             .style('top', `${y}px`);
                     });
             })

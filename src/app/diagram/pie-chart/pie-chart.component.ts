@@ -23,13 +23,6 @@ export class PieChartComponent implements OnInit {
     private arc: any;
     private g: any;
 
-    // public data = [
-    //     { label: 'A', value: 10 },
-    //     { label: 'B', value: 20 },
-    //     { label: 'C', value: 30 },
-    //     { label: 'D', value: 40 },
-    // ];
-
     ngOnInit(): void {
 
     }
@@ -87,13 +80,63 @@ export class PieChartComponent implements OnInit {
         // Bind the data to the pie chart and draw the arcs
         this.g = this.svg.append('g')
             .attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
+        
+        var tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
 
         this.g.selectAll('path')
             .data(pie(data))
             .enter()
             .append('path')
             .attr('d', this.arc)
-            .attr('fill', (d) => this.color(d.data.label));
+            .attr('fill', (d) => this.color(d.data.label))
+            .on('mouseover', (d, i, nodes) => {
+                // Get the current bar element
+                var bar = d3.select(nodes[i]);
+
+                // Create the tooltip element
+                var tooltip = d3.select('#dash-pie')
+                    .append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background-color', 'white')
+                    .style('border', 'solid')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '10px')
+                    .style('opacity', 0);
+
+                // Show the tooltip element
+                d3.select('.tooltip')
+                    .text(`${d.data.label}: ${d.data.value}`)
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 1);
+
+                // Change the color of the bar
+                // bar.style('fill', 'orange');
+
+                // Add a mousemove event listener to update the position of the tooltip element
+                d3.select('body')
+                    .on('mousemove', () => {
+                        var [x, y] = d3.mouse(nodes[i]);
+                        // console.log(x, y);
+                        tooltip.style('left', `${x + 250}px`)
+                            .style('top', `${y + 200}px`);
+                    });
+            })
+            .on('mouseout', (d, i, nodes) => {
+                // Get the current bar element
+                var bar = d3.select(nodes[i]);
+
+                // Hide the tooltip element
+                d3.select('.tooltip').remove();
+
+                // Change the color of the bar back to the original color
+                bar.style('fill', this.color(d.data.label));
+            });
+
     }
 
     public updateChart(): void {
