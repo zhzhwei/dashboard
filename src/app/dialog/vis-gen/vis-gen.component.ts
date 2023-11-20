@@ -4,6 +4,8 @@ import { GridStackComponent } from '../../gridstack/gridstack.component';
 import { ChartService } from '../../services/chart.service';
 import { DialogService } from '../../services/dialog.service';
 
+import * as d3 from 'd3';
+
 @Component({
     selector: 'app-vis-gen',
     templateUrl: './vis-gen.component.html',
@@ -18,6 +20,18 @@ export class VisGenComponent implements OnInit {
 
     ngOnInit(): void {
 
+    }
+
+    onClick(event) {
+        // console.log(event.target);
+        d3.select(event.target)
+            .style('border', '3px solid gray')
+            .style('border-radius', '5px');
+        d3.selectAll('.img-button')
+            .filter(function () {
+                return this !== event.target;
+            })
+            .style('border', 'none');
     }
 
     public genVis() {

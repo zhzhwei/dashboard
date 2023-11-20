@@ -9,37 +9,37 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Line Chart';">
-                            <img src="assets/line-chart.png" class="img-button" width="100" height="100">
+                            <img src="assets/line-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Line Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Bar Chart';">
-                            <img src="assets/bar-chart.png" class="img-button" width="100" height="100">
+                            <img src="assets/bar-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Bar Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Pie Chart';">
-                            <img src="assets/pie-chart.png" class="img-button" width="100" height="100">
+                            <img src="assets/pie-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Pie Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plot';">
-                            <img src="assets/star-plot.png" class="img-button" width="100" height="100">
+                            <img src="assets/star-plot.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Star Plot</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Line Chart';">
-                            <img src="assets/line-charts.png" class="img-button" width="100" height="100">
+                            <img src="assets/line-charts.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Line Charts</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Bar Chart';">
-                            <img src="assets/stacked-bar-chart.png" class="img-button" width="100" height="100">
+                            <img src="assets/stacked-bar-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Stacked Bars</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Doughnut';">
-                            <img src="assets/doughnut.png" class="img-button" width="100" height="100">
+                            <img src="assets/doughnut.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Doughnut</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plots';">
-                            <img src="assets/star-plots.png" class="img-button" width="100" height="100">
+                            <img src="assets/star-plots.png" (click)="onClick($event)" class="img-button" width="100" height="100">
                             <p>Star Plots</p>
                         </div>
                     </div>
@@ -58,7 +58,8 @@
             </div>
             <div class="col-md-12 text-center">
                 <button mat-raised-button mat-dialog-close>Back to Dashboard</button>
-                <button mat-raised-button class="gen-vis-btn" (click)="genVis()" cdkFocusInitial>Forward to Editor</button>
+                <button mat-raised-button class="gen-vis-btn" (click)="genVis()" cdkFocusInitial>Forward to
+                    Editor</button>
             </div>
         </div>
     </div>
