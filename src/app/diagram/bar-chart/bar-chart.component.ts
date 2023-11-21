@@ -11,7 +11,7 @@ export class BarChartComponent implements OnInit {
     constructor(private dialogService: DialogService) { }
 
     private svg: any;
-    private margin = 80;
+    private margin = 125;
     private barEL: any;
     private x: any;
     private y: any;
@@ -108,7 +108,8 @@ export class BarChartComponent implements OnInit {
 
                 // Show the tooltip element
                 d3.select('.tooltip')
-                    .text(`${d.skill}: ${d.skillCount}`)
+                    // .text(`${d.skill}: ${d.skillCount}`)
+                    .html(`Fertigkeit: <br> ${d.skill} <br> Häufigkeit: ${d.skillCount}`)
                     .transition()
                     .duration(200)
                     .style('opacity', 1);

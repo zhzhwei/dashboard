@@ -9,8 +9,11 @@ export class ChartService {
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
     
-    public dataSourceSubject = new BehaviorSubject<any[]>([]);
-    currentDataSource = this.dataSourceSubject.asObservable();
+    public titleCount = new BehaviorSubject<number>(0);
+    currentTitleCount = this.titleCount.asObservable();
+    
+    public dataSource = new BehaviorSubject<any[]>([]);
+    currentDataSource = this.dataSource.asObservable();
 
     constructor() { }
 }

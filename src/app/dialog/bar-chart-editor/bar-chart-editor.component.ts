@@ -19,12 +19,23 @@ export class BarChartEditorComponent implements OnInit {
     public dataSource: any;
     public allChecked = false;
     public skillQueries: string[];
+    public titleCount: number;
 
     private svg: any;
     private margin = 80;
     private barEL: any;
     private x: any;
     private y: any;
+
+    public titleQuery = `
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX edm: <http://ai4bd.com/resource/edm/>
+        select (count(?s) as ?skillCount) where { 
+            ?s rdf:type edm:JobPosting.
+            ?s edm:title ?title.
+            filter contains(?title, "Polymechaniker").
+        }
+    `;
 
     public skillQuery = `
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -93,6 +104,14 @@ export class BarChartEditorComponent implements OnInit {
             }
         });
 
+        // 执行titleQuery，获取titleCount
+        this.rdfDataService.queryData(this.titleQuery)
+            .then(data => {
+                this.results = data.results.bindings;
+                this.titleCount = Number(this.results[0].skillCount.value);
+            })
+            .catch(error => console.error(error));
+
         let promises = this.skillQueries.map((query, index) => {
             return this.rdfDataService.queryData(query)
                 .then(data => {
@@ -105,12 +124,13 @@ export class BarChartEditorComponent implements OnInit {
             // this.dataSource.forEach(item => {
             //     console.log(item.skill, item.skillCount);
             // });
-            this.createChart(this.dataSource);
-            this.chartService.dataSourceSubject.next(this.dataSource);
+            this.createChart(this.titleCount, this.dataSource);
+            this.chartService.titleCount.next(this.titleCount);
+            this.chartService.dataSource.next(this.dataSource);
         });
     }
 
-    private createChart(data: any[]): void {
+    private createChart(titleCount: any, data: any[]): void {
         this.barEL = document.getElementById('editor-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
@@ -132,7 +152,7 @@ export class BarChartEditorComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Beruf - Polymechaniker");
+            .text("Polymechaniker --- " + `${this.titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
