@@ -26,6 +26,7 @@ export class GridStackComponent implements OnInit {
     private grid: GridStack;
     private serializedData: any[] = []
     private itemEl: any;
+    public titleCount: number;
 
     public barContEl: any;
     public stackedBarContEl: any;
@@ -40,7 +41,12 @@ export class GridStackComponent implements OnInit {
           ]).subscribe(([chartType, dataSource]) => {
             // console.log('chartType: ', chartType);
             // console.log('dataSource: ', dataSource);
-            if (chartType && dataSource.length > 0) {
+            if (chartType == 'Bar Chart' && dataSource.length > 0) {
+                this.chartService.currentTitleCount.subscribe(titleCount => {
+                    this.barChart.createChart(titleCount, dataSource);
+                });
+            }
+            else if (chartType && dataSource.length > 0) {
                 this.genVis(chartType, dataSource);
             }
           });
@@ -167,9 +173,9 @@ export class GridStackComponent implements OnInit {
 
     private genVis(chartType: string, dataSource: any[]) {
         switch (chartType) {
-            case 'Bar Chart':
-                this.barChart.createChart(dataSource);
-                break;
+            // case 'Bar Chart':
+            //     this.barChart.createChart(titleCount, dataSource);
+            //     break;
             case 'Stacked Bar Chart':
                 this.stackedChart.createChart(this.stackedChart.data);
                 break;

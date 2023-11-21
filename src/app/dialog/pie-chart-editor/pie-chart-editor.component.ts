@@ -88,7 +88,7 @@ export class PieChartEditorComponent implements OnInit {
                     }
                 }));
                 this.createChart(this.dataSource);
-                this.chartService.dataSourceSubject.next(this.dataSource);
+                this.chartService.dataSource.next(this.dataSource);
             });
         } else if (event.value === 'isLimitedJob') {
             Promise.all([
@@ -111,7 +111,7 @@ export class PieChartEditorComponent implements OnInit {
                     }
                 }));
                 this.createChart(this.dataSource);
-                this.chartService.dataSourceSubject.next(this.dataSource);
+                this.chartService.dataSource.next(this.dataSource);
             });
         }
 

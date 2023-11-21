@@ -152,7 +152,7 @@ export class BarChartEditorComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Polymechaniker --- " + `${this.titleCount}` + " Stellenangebote");
+            .text("Polymechaniker --- " + `${titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()

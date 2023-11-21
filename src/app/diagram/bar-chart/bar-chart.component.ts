@@ -18,7 +18,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public createChart(data: any[]): void {
+    public createChart(titleCount: any, data: any[]): void {
         this.barEL = document.getElementById('dash-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         
@@ -52,7 +52,7 @@ export class BarChartComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Beruf - Polymechaniker");
+            .text("Polymechaniker --- " + `${titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
