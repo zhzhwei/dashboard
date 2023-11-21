@@ -33,6 +33,16 @@ section {
     background-color: #5763cc;
 }
 
+#cloud-upload-outline {
+    border-radius: 5px;
+    background-color: #3e426f;
+}
+
+#cloud-download-outline {
+    border-radius: 5px;
+    background-color: #2c415f;
+}
+
 #trash {
     border-radius: 5px;
     background-color: #cc6857;

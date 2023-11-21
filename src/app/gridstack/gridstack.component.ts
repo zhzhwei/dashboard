@@ -38,18 +38,19 @@ export class GridStackComponent implements OnInit {
         combineLatest([
             this.chartService.currentChartType,
             this.chartService.currentDataSource
-          ]).subscribe(([chartType, dataSource]) => {
+        ]).subscribe(([chartType, dataSource]) => {
             // console.log('chartType: ', chartType);
             // console.log('dataSource: ', dataSource);
             if (chartType == 'Bar Chart' && dataSource.length > 0) {
                 this.chartService.currentTitleCount.subscribe(titleCount => {
                     this.barChart.createChart(titleCount, dataSource);
+                    this.chartService.saveChart(chartType, titleCount, dataSource);
                 });
             }
             else if (chartType && dataSource.length > 0) {
                 this.genVis(chartType, dataSource);
             }
-          });
+        });
     }
 
     ngOnInit(): void {

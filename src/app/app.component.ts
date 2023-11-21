@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
+import { ChartService } from './services/chart.service';
 
 @Component({
     selector: 'app-root',
@@ -9,7 +10,7 @@ import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
 })
 export class AppComponent {
     
-    constructor(public dialog: MatDialog) { }
+    constructor(public dialog: MatDialog, private chartService: ChartService) { }
     
     ngOnInit() {
 
@@ -23,5 +24,9 @@ export class AppComponent {
             autoFocus: false,
             disableClose: true
         });
+    }
+
+    loadDiagram() {
+        this.chartService.loadChart();
     }
 }

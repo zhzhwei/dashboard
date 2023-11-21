@@ -31,19 +31,19 @@
 
 <section>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="text-center card text-white grid-stack-item existedWidget">
                 <div id="logo" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                     <div>
                         <ion-icon name="help-buoy-outline" style="font-size: 400%"></ion-icon>
                     </div>
                     <div>
-                        <span>Dashboard for Semantic Data</span>
+                        <span>Dashboard</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="text-center card text-white grid-stack-item newWidget">
                 <div class="card-body plus-circle">
                     <div>
@@ -55,24 +55,48 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                 <div>
                     <ion-icon name="trash" style="font-size: 400%"></ion-icon>
                 </div>
                 <div>
-                    <span>Drop here to remove widget</span>
+                    <span>Click to remove widget</span>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="text-center card text-white grid-stack-item">
                 <div id="inventory" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                     <div>
                         <ion-icon name="heart" style="font-size: 400%"></ion-icon>
                     </div>
                     <div>
-                        <span>Drag the diagram into the inventory</span>
+                        <span>Click to Store in Inventory</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="text-center card text-white grid-stack-item existedWidget">
+                <div id="cloud-upload-outline" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
+                    <div>
+                        <ion-icon name="cloud-upload-outline" style="font-size: 400%" (click)="loadDiagram()"></ion-icon>
+                    </div>
+                    <div>
+                        <span>Load Diagram from Local</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="text-center card text-white grid-stack-item existedWidget">
+                <div id="cloud-download-outline" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
+                    <div>
+                        <ion-icon name="cloud-download-outline" style="font-size: 400%"></ion-icon>
+                    </div>
+                    <div>
+                        <span>Save Diagram into Local</span>
                     </div>
                 </div>
             </div>

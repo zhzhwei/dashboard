@@ -1,0 +1,66 @@
+{
+    "chartType": "Bar Chart",
+    "titleCount": 8,
+    "dataSource": [
+        {
+            "skill": "Analytische Fähigkeiten",
+            "skillCount": 4
+        },
+        {
+            "skill": "Bewerbungsmanagement",
+            "skillCount": 4
+        },
+        {
+            "skill": "CNC-Schleifen",
+            "skillCount": 4
+        },
+        {
+            "skill": "Flexibilität",
+            "skillCount": 8
+        },
+        {
+            "skill": "Kommunikationsfähigkeit",
+            "skillCount": 8
+        },
+        {
+            "skill": "Kundenorientierung",
+            "skillCount": 8
+        },
+        {
+            "skill": "Leitungsbereitschaft",
+            "skillCount": 4
+        },
+        {
+            "skill": "Organisationsfähigkeit",
+            "skillCount": 8
+        },
+        {
+            "skill": "Polymechanik",
+            "skillCount": 4
+        },
+        {
+            "skill": "Problemlösungsfähigkeit",
+            "skillCount": 4
+        },
+        {
+            "skill": "Qualitätsbewusstsein",
+            "skillCount": 4
+        },
+        {
+            "skill": "Selbstständigkeit",
+            "skillCount": 4
+        },
+        {
+            "skill": "Steuerungskenntnisse",
+            "skillCount": 4
+        },
+        {
+            "skill": "Teamfähigkeit",
+            "skillCount": 8
+        },
+        {
+            "skill": "Unternehmerisches Denken",
+            "skillCount": 4
+        }
+    ]
+}
