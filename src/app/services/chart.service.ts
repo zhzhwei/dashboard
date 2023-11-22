@@ -14,7 +14,7 @@ export class ChartService {
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public saveChart(chartType: string, titleCount: number, dataSource: any[]) {
+    public saveJsonFile(chartType: string, titleCount: number, dataSource: any[]) {
         let exportObj = {
             chartType: chartType,
             titleCount: titleCount,
@@ -29,7 +29,7 @@ export class ChartService {
         downloadAnchorNode.remove();
     }
 
-    public loadChart() {
+    public loadJsonFile() {
         var input = document.createElement('input');
         input.type = 'file';
         input.accept = 'application/json';
@@ -44,5 +44,27 @@ export class ChartService {
             reader.readAsText(event.target.files[0]);
         };
         input.click();
+    }
+
+    public savePersistence(chartType: string, titleCount: number, dataSource: any[]) {
+        const chartData = {
+            chartType: chartType,
+            titleCount: titleCount,
+            dataSource: dataSource
+        };
+        localStorage.setItem('chartData', JSON.stringify(chartData));
+    }
+
+    public loadPersistence() {
+        if (!localStorage.getItem('chartData')) {
+            console.log('No chart data in local storage.');
+            return;
+        }
+        else {
+            const chartData = JSON.parse(localStorage.getItem('chartData'));
+            this.chartType.next(chartData.chartType);
+            this.titleCount.next(chartData.titleCount);
+            this.dataSource.next(chartData.dataSource);
+        }
     }
 }

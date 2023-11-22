@@ -27,10 +27,7 @@ export class AppComponent {
     }
 
     loadDiagram() {
-        this.chartService.loadChart();
+        this.chartService.loadJsonFile();
     }
 
-    saveDiagram() {
-        // this.chartService.saveChart();
-    }
 }

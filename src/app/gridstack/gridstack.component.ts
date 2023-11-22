@@ -44,7 +44,8 @@ export class GridStackComponent implements OnInit {
             if (chartType == 'Bar Chart' && dataSource.length > 0) {
                 this.chartService.currentTitleCount.subscribe(titleCount => {
                     this.barChart.createChart(titleCount, dataSource);
-                    this.chartService.saveChart(chartType, titleCount, dataSource);
+                    // this.chartService.saveJsonFile(chartType, titleCount, dataSource);
+                    this.chartService.savePersistence(chartType, titleCount, dataSource);
                 });
             }
             else if (chartType && dataSource.length > 0) {
@@ -170,13 +171,15 @@ export class GridStackComponent implements OnInit {
         // resizeObserver.observe(this.starContEl);
         resizeObserver.observe(this.pieContEl);
         // resizeObserver.observe(this.donutContEl);
+
+    }
+
+    ngAfterViewInit() {
+        // this.chartService.loadPersistence();
     }
 
     private genVis(chartType: string, dataSource: any[]) {
         switch (chartType) {
-            // case 'Bar Chart':
-            //     this.barChart.createChart(titleCount, dataSource);
-            //     break;
             case 'Stacked Bar Chart':
                 this.stackedChart.createChart(this.stackedChart.data);
                 break;
