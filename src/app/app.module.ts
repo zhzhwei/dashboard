@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatRadioModule } from '@angular/material/radio';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { GridStackModule } from './gridstack/gridstack.module';
 import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
@@ -31,6 +32,7 @@ import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-edi
         MatNativeDateModule,
         MatTableModule,
         MatRadioModule,
+        FlexLayoutModule,
         GridStackModule,
         VisGenModule,
     ],

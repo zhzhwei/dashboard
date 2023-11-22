@@ -11,7 +11,7 @@ export class BarChartComponent implements OnInit {
     constructor(private dialogService: DialogService) { }
 
     private svg: any;
-    private margin = 125;
+    private margin = 120;
     private barEL: any;
     private x: any;
     private y: any;

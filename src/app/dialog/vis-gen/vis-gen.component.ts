@@ -47,6 +47,12 @@ export class VisGenComponent implements OnInit {
             case 'Pie Chart':
                 this.dialogService.openPieChartEditor();
                 break;
+            case 'Doughnut Chart':
+                this.dialogService.openDoughnutChartEditor();
+                break;
+            case 'Star Plot':
+                this.dialogService.openStarPlotEditor();
+                break;
             default:
                 console.log('Invalid Chart Type');
         }
