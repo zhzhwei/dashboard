@@ -12,7 +12,7 @@ export class RdfDataService {
 
     constructor(private http: HttpClient) {}
 
-    public queryData(query): Promise<any> {
+    public getQueryResults(query): Promise<any> {
 
         const options = {
             headers: this.headers,

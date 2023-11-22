@@ -5,6 +5,7 @@ import { ChartService } from '../../services/chart.service';
 import { DialogService } from '../../services/dialog.service';
 
 import * as d3 from 'd3';
+import { RdfDataService } from 'src/app/services/rdf-data.service';
 
 @Component({
     selector: 'app-vis-gen',
@@ -13,16 +14,48 @@ import * as d3 from 'd3';
 })
 export class VisGenComponent implements OnInit {
 
-    constructor(private chartService: ChartService, private dialogService: DialogService) { }
+    constructor(private chartService: ChartService, private dialogService: DialogService, 
+        private rdfDataService: RdfDataService) { }
 
     public chartType: string;
     public gridStack: GridStackComponent;
+    public barResults: any;
+
+    public barQuery = `
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX edm: <http://ai4bd.com/resource/edm/>
+        PREFIX mp: <http://ai4bd.com/resource/ddm/mp/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        select ?title where { 
+            ?s mp:isFulltimeJob "true"^^xsd:boolean.
+            ?s edm:title ?title.
+        }
+    `;
 
     ngOnInit(): void {
-
+        this.barResults = [];
     }
 
-    onClick(event) {
+    onSearch(value: string) {
+        console.log(value);
+        if (value === '') {
+            this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+                this.barResults = data.results.bindings.map((item) => {
+                    return item.title.value;
+                });
+            });
+        } else {
+            this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+                this.barResults = data.results.bindings.map((item) => {
+                    return item.title.value;
+                }).filter((item) => {
+                    return item.toLowerCase().includes(value.toLowerCase());
+                });
+            });
+        }
+    }
+
+    chartTypeSelect(event: any) {
         // console.log(event.target);
         d3.select(event.target)
             .style('border', '3px solid gray')
@@ -32,6 +65,12 @@ export class VisGenComponent implements OnInit {
                 return this !== event.target;
             })
             .style('border', 'none');
+        this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+            this.barResults = data.results.bindings.map((item) => {
+                return item.title.value;
+            });
+            // console.log(this.barResults);
+        });
     }
 
     public genVis() {

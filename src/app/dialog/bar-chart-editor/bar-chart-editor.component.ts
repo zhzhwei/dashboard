@@ -68,7 +68,7 @@ export class BarChartEditorComponent implements OnInit {
             } Order By ASC (?skillName)
         `;
 
-        this.rdfDataService.queryData(this.query)
+        this.rdfDataService.getQueryResults(this.query)
             .then(data => {
                 this.results = data.results.bindings;
                 this.skills = this.results.map(item => item.skillName.value);
@@ -104,8 +104,7 @@ export class BarChartEditorComponent implements OnInit {
             }
         });
 
-        // 执行titleQuery，获取titleCount
-        this.rdfDataService.queryData(this.titleQuery)
+        this.rdfDataService.getQueryResults(this.titleQuery)
             .then(data => {
                 this.results = data.results.bindings;
                 this.titleCount = Number(this.results[0].skillCount.value);
@@ -113,7 +112,7 @@ export class BarChartEditorComponent implements OnInit {
             .catch(error => console.error(error));
 
         let promises = this.skillQueries.map((query, index) => {
-            return this.rdfDataService.queryData(query)
+            return this.rdfDataService.getQueryResults(query)
                 .then(data => {
                     this.results = data.results.bindings;
                     this.dataSource[index].skillCount = Number(this.results[0].skillCount.value);

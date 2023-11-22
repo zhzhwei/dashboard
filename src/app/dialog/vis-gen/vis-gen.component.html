@@ -9,37 +9,37 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Line Chart';">
-                            <img src="assets/line-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/line-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Line Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Bar Chart';">
-                            <img src="assets/bar-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/bar-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Bar Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Pie Chart';">
-                            <img src="assets/pie-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/pie-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Pie Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plot';">
-                            <img src="assets/star-plot.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/star-plot.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Star Plot</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Line Chart';">
-                            <img src="assets/line-charts.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/line-charts.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Line Charts</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Bar Chart';">
-                            <img src="assets/stacked-bar-chart.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/stacked-bar-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Stacked Bars</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Doughnut';">
-                            <img src="assets/doughnut.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/doughnut.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Doughnut</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plots';">
-                            <img src="assets/star-plots.png" (click)="onClick($event)" class="img-button" width="100" height="100">
+                            <img src="assets/star-plots.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
                             <p>Star Plots</p>
                         </div>
                     </div>
@@ -48,10 +48,28 @@
             <div class="card">
                 <h5>2. Select Dataset</h5>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 text-center">
-                            <img src="assets/database.png" width="100" height="100" alt="Database">
-                            <p>Dataset</p>
+                    <div class="row" *ngIf="chartType === 'Bar Chart'">
+                        <div class="table-container" *ngIf="barResults.length > 0">
+                            <div class="form-container">
+                                <form (ngSubmit)="onSearch(searchTerm.value)">
+                                    <input type="text" placeholder="Please type the full job name" #searchTerm>
+                                </form>
+                                <button class="submit-btn" mat-stroked-button color="primary">Submit</button>
+                                <p class="result-p">Showing job titles from 1 to {{ barResults.length }}</p>
+                            </div>
+                            <table> 
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Job title</th>
+                                </tr>
+                                <tr *ngFor="let result of barResults; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{result}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-12 text-center" *ngIf="barResults.length === 0">
+                            <p>No job data found</p>
                         </div>
                     </div>
                 </div>

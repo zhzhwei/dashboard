@@ -9,3 +9,51 @@
 .img-button:active {
     transform: scale(0.95);
 }
+
+.form-container {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.submit-btn {
+    margin-right: 220px; 
+}
+
+.result-p {
+    color: rgb(68, 68, 133);
+    font-size: 20px;
+}
+
+input {
+    height: 34px;
+    border-radius: 5px;
+    border: 1px solid rgb(68, 68, 133);
+    width: 300px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    color: rgb(68, 68, 133);
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+th:last-child {
+    border-right: none;
+}
+
+/* .table-container {
+    max-height: 800px;
+    overflow-y: auto;
+} */

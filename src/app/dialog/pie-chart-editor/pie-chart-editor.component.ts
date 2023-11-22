@@ -69,9 +69,9 @@ export class PieChartEditorComponent implements OnInit {
         this.dataSource = [];
         if (event.value === 'isFulltimeJob') {
             Promise.all([
-                this.rdfDataService.queryData(this.fulltimeTrueCountQuery),
-                this.rdfDataService.queryData(this.fulltimeFalseCountQuery),
-                this.rdfDataService.queryData(this.jobCountQuery)
+                this.rdfDataService.getQueryResults(this.fulltimeTrueCountQuery),
+                this.rdfDataService.getQueryResults(this.fulltimeFalseCountQuery),
+                this.rdfDataService.getQueryResults(this.jobCountQuery)
             ]).then((data) => {
                 this.dataSource = this.dataSource.concat(data.map((item: any) => {
                     if (item && item.results && item.results.bindings[0]) {
@@ -92,9 +92,9 @@ export class PieChartEditorComponent implements OnInit {
             });
         } else if (event.value === 'isLimitedJob') {
             Promise.all([
-                this.rdfDataService.queryData(this.parttimeTrueCountQuery),
-                this.rdfDataService.queryData(this.parttimeFalseCountQuery),
-                this.rdfDataService.queryData(this.jobCountQuery)
+                this.rdfDataService.getQueryResults(this.parttimeTrueCountQuery),
+                this.rdfDataService.getQueryResults(this.parttimeFalseCountQuery),
+                this.rdfDataService.getQueryResults(this.jobCountQuery)
             ]).then((data) => {
                 this.dataSource = this.dataSource.concat(data.map((item: any) => {
                     if (item && item.results && item.results.bindings[0]) {

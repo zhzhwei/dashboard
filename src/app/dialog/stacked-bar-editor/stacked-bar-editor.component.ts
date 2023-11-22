@@ -22,7 +22,7 @@ export class StackedBarEditorComponent {
                 ?s ?p ?o .
             } limit 10
         `;
-        this.rdfDataService.queryData(this.query)
+        this.rdfDataService.getQueryResults(this.query)
             .then(data => this.results = data.results.bindings)
             .catch(error => console.error(error));
     }
