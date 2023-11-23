@@ -5,6 +5,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     providedIn: 'root'
 })
 export class RdfDataService {
+    public prefixes = `
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX edm: <http://ai4bd.com/resource/edm/>
+        PREFIX mp: <http://ai4bd.com/resource/ddm/mp/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    `;
+    
     private endpointUrl = 'https://graphdb.elevait.io/repositories/student-project';
     private headers = new HttpHeaders({
         Authorization: 'Basic ' + btoa('kp-student-project:2LhW6HaUYqVTgLTWhcW2')

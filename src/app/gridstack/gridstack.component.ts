@@ -39,19 +39,30 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentChartType,
             this.chartService.currentDataSource
         ]).subscribe(([chartType, dataSource]) => {
-            // console.log('chartType: ', chartType);
-            // console.log('dataSource: ', dataSource);
-            if (chartType == 'Bar Chart' && dataSource.length > 0) {
-                combineLatest([
-                    this.chartService.currentJobName,
-                    this.chartService.currentTitleCount
-                ]).subscribe(([jobName, titleCount]) => {
-                    console.log('jobName: ', jobName);
-                    console.log('titleCount: ', titleCount);
-                    this.barChart.createChart(jobName, dataSource, titleCount);
-                    this.chartService.saveJsonFile(chartType, jobName, dataSource, titleCount);
-                    this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
-                });
+            // console.log('chartType:', chartType);
+            // console.log('dataSource:', dataSource.length);
+            if (dataSource.length > 0) {
+                switch (chartType) {
+                    case 'Bar Chart':
+                        combineLatest([
+                            this.chartService.currentJobName,
+                            this.chartService.currentTitleCount
+                        ]).subscribe(([jobName, titleCount]) => {
+                            console.log('jobName:', jobName);
+                            console.log('titleCount:', titleCount);
+                            this.barChart.createChart(jobName, dataSource, titleCount);
+                            this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
+                        });
+                        break;
+                    case 'Pie Chart':
+                        this.pieChart.createChart(dataSource);
+                        // this.chartService.saveJsonFile(chartType, '', dataSource, 0);
+                        // this.chartService.savePersistence(chartType, '', dataSource, 0);
+                        break;
+                    default:
+                        console.log('Invalid Chart Type:');
+                        break;
+                }
             }
         });
     }
@@ -178,25 +189,6 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit() {
         this.chartService.loadPersistence();
-    }
-
-    private genVis(chartType: string, dataSource: any[]) {
-        switch (chartType) {
-            case 'Stacked Bar Chart':
-                this.stackedChart.createChart(this.stackedChart.data);
-                break;
-            case 'Star Plot':
-                this.starPlot.createChart();
-                break;
-            case 'Pie Chart':
-                this.pieChart.createChart(dataSource);
-                break;
-            case 'Doughnut':
-                this.donutChart.createChart(this.donutChart.data);
-                break;
-            default:
-                console.log('Invalid Chart Type');
-        }
     }
 
 }

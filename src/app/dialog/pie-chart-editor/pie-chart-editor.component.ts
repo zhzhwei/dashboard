@@ -31,11 +31,7 @@ export class PieChartEditorComponent implements OnInit {
     private arc: any;
     private g: any;
 
-    public jobCountQuery = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX edm: <http://ai4bd.com/resource/edm/>
-        PREFIX mp: <http://ai4bd.com/resource/ddm/mp/>
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    public jobCountQuery = this.rdfDataService.prefixes + `
         select (count(?s) as ?jobCount) where { 
             ?s rdf:type edm:JobPosting.
             ?s edm:title ?title.

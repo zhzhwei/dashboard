@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import { DialogService } from '../../services/dialog.service';
+import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
     selector: 'app-bar-chart',
@@ -8,13 +9,14 @@ import { DialogService } from '../../services/dialog.service';
 
 export class BarChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService) { }
+    constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
     private svg: any;
     private margin = 120;
     private barEL: any;
     private x: any;
     private y: any;
+    private chartType = 'Bar Chart';
 
     ngOnInit(): void { }
 
@@ -36,14 +38,47 @@ export class BarChartComponent implements OnInit {
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
         this.svg.append('foreignObject')
-            .attr('class', 'edit')
-            .attr('x', this.barEL.clientWidth - 50)
-            .attr('y', 40)
-            .attr('width', 20)
-            .attr('height', 20)
+            .attr('class', 'pencil')
+            .attr('x', this.barEL.clientWidth - 38)
+            .attr('y', 20)
+            .attr('width', 25)
+            .attr('height', 25)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.dialogService.openBarChartEditor();
+            });
+
+        this.svg.append('foreignObject')
+            .attr('class', 'cart')
+            .attr('x', this.barEL.clientWidth - 40)
+            .attr('y', 45)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-shopping-cart"></i>')
+            .on('click', () => {
+                // this.dialogService.openBarChartEditor();
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'heart')
+            .attr('x', this.barEL.clientWidth - 38)
+            .attr('y', 70)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-heart"></i>')
+            .on('click', () => {
+                this.chartService.saveJsonFile(this.chartType, jobName, dataSource, titleCount);
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'trash')
+            .attr('x', this.barEL.clientWidth - 36)
+            .attr('y', 95)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-trash"></i>')
+            .on('click', () => {
+                // this.chartService.deleteChart(this.chartType, jobName);
             });
 
         this.svg.append("text")
@@ -149,10 +184,22 @@ export class BarChartComponent implements OnInit {
             .attr("x", (this.barEL.clientWidth / 2))
             .attr("y", this.margin / 2)
 
-        this.svg.select('foreignObject.edit')
-            .attr('x', this.barEL.clientWidth - 50)
+        this.svg.select('foreignObject.pencil')
+            .attr('x', this.barEL.clientWidth - 38)
             .attr('y', 20)
 
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.barEL.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.barEL.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.barEL.clientWidth - 36)
+            .attr('y', 95)
+            
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
 

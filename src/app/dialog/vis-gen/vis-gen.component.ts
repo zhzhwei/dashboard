@@ -22,11 +22,7 @@ export class VisGenComponent implements OnInit {
     public barResults: any;
     public jobName: string;
 
-    public barQuery = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX edm: <http://ai4bd.com/resource/edm/>
-        PREFIX mp: <http://ai4bd.com/resource/ddm/mp/>
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    public barQuery = this.rdfDataService.prefixes + `
         select ?title where { 
             ?s mp:isFulltimeJob "true"^^xsd:boolean.
             ?s edm:title ?title.
@@ -53,8 +49,9 @@ export class VisGenComponent implements OnInit {
                 });
             });
         }
-        this.jobName = jobName;
-        // console.log(this.jobName);
+        if (this.chartType === 'Bar Chart') {
+            this.jobName = jobName;
+        }
     }
 
     chartTypeSelect(event: any) {
@@ -78,10 +75,10 @@ export class VisGenComponent implements OnInit {
     public genVis() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
-        this.chartService.jobName.next(this.jobName);
         switch (this.chartType) {
             case 'Bar Chart':
                 this.dialogService.openBarChartEditor();
+                this.chartService.jobName.next(this.jobName);
                 break;
             case 'Stacked Bar Chart':
                 this.dialogService.openStackedBarChartEditor();

@@ -34,14 +34,12 @@ export class BarChartEditorComponent implements OnInit {
         ChartService, private dialog: MatDialog) {
         this.chartService.currentJobName.subscribe(jobName => {
             this.jobName = jobName;
-            console.log(this.jobName);
+            // console.log(this.jobName);
         });
     }
 
     ngOnInit(): void {
-        this.query = `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX edm: <http://ai4bd.com/resource/edm/>
+        this.query = this.rdfDataService.prefixes + `
             select distinct ?skillName where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
@@ -78,9 +76,7 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     public applyChanges(): void {
-        this.skillQuery = `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX edm: <http://ai4bd.com/resource/edm/>
+        this.skillQuery = this.rdfDataService.prefixes + `
             select (count(?s) as ?skillCount) where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
@@ -92,9 +88,7 @@ export class BarChartEditorComponent implements OnInit {
             }
         `;
 
-        this.titleQuery = `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX edm: <http://ai4bd.com/resource/edm/>
+        this.titleQuery = this.rdfDataService.prefixes + `
             select (count(?s) as ?skillCount) where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
