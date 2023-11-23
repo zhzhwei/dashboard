@@ -10,6 +10,9 @@ export class ChartService {
 
     public jobName = new BehaviorSubject<string>('');
     currentJobName = this.jobName.asObservable();
+
+    public barRemove = new BehaviorSubject<boolean>(false);
+    currentBarRemove = this.barRemove.asObservable();
     
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();

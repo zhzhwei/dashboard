@@ -6,7 +6,7 @@ import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { combineLatest } from 'rxjs';
-import { GridStack } from 'gridstack';
+import { GridStack, GridStackElement } from 'gridstack';
 
 import { ChartService } from '../services/chart.service';
 declare var ResizeObserver: any;
@@ -48,10 +48,10 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentJobName,
                             this.chartService.currentTitleCount
                         ]).subscribe(([jobName, titleCount]) => {
-                            console.log('jobName:', jobName);
-                            console.log('titleCount:', titleCount);
+                            // console.log('jobName:', jobName);
+                            // console.log('titleCount:', titleCount);
                             this.barChart.createChart(jobName, dataSource, titleCount);
-                            this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
+                            // this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
                         });
                         break;
                     case 'Pie Chart':
@@ -188,7 +188,14 @@ export class GridStackComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        this.chartService.loadPersistence();
+        // this.chartService.loadPersistence();
+        this.chartService.currentBarRemove.subscribe(barRemove => {
+            if (barRemove) {
+                let element = document.getElementById('dash-bar');
+                let gridItemElement = element.closest('.grid-stack-item');
+                this.grid.removeWidget(gridItemElement as GridStackElement);
+            }
+        });
     }
 
 }
