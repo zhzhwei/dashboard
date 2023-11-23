@@ -12,7 +12,7 @@ export class BarChartComponent implements OnInit {
     constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
     private svg: any;
-    private margin = 120;
+    private margin = 70;
     private barEL: any;
     private x: any;
     private y: any;
@@ -103,8 +103,8 @@ export class BarChartComponent implements OnInit {
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
-            .attr('transform', 'translate(-10,0)rotate(-45)')
-            .style('text-anchor', 'end');
+            // .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'middle');
 
         // Create the Y-axis band scale
         var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
@@ -116,7 +116,7 @@ export class BarChartComponent implements OnInit {
         g.append('g')
             .attr('class', 'y-axis')
             .call(d3.axisLeft(this.y))
-
+        
         // Create and fill the bars
         g.selectAll('bars')
             .data(dataSource)
@@ -146,7 +146,7 @@ export class BarChartComponent implements OnInit {
                 // Show the tooltip element
                 d3.select('.tooltip')
                     // .text(`${d.skill}: ${d.skillCount}`)
-                    .html(`Fertigkeit: <br> ${d.skill} <br> Häufigkeit: ${d.skillCount}`)
+                    .html(`Fertigkeit: ${d.skill} <br> Häufigkeit: ${d.skillCount}`)
                     .transition()
                     .duration(200)
                     .style('opacity', 1);
@@ -210,7 +210,7 @@ export class BarChartComponent implements OnInit {
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
-            .attr('transform', 'translate(-10,0)rotate(-45)')
+            // .attr('transform', 'translate(-10,0)rotate(-45)')
             .style('text-anchor', 'end');
 
         // Update the Y-axis scale range

@@ -24,7 +24,7 @@ export class VisGenComponent implements OnInit {
 
     public barQuery = this.rdfDataService.prefixes + `
         select ?title where { 
-            ?s mp:isFulltimeJob "true"^^xsd:boolean.
+            ?s rdf:type edm:JobPosting.
             ?s edm:title ?title.
         }
     `;

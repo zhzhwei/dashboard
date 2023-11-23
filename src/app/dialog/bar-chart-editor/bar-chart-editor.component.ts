@@ -25,10 +25,28 @@ export class BarChartEditorComponent implements OnInit {
     public jobName: string;
 
     private svg: any;
-    private margin = 80;
+    private margin = 70;
     private barEL: any;
     private x: any;
     private y: any;
+
+    private skillAbbr = {
+        'Analytische Fähigkeiten': 'AF',
+        'Bewerbungsmanagement': 'BM',
+        'CNC-Schleifen': 'CS',
+        'Flexibilität': 'F',
+        'Kommunikationsfähigkeit': 'KF',
+        'Kundenorientierung': 'KO',
+        'Leitungsbereitschaft': 'LB',
+        'Organisationsfähigkeit': 'OF',
+        'Polymechanik': 'P',
+        'Problemlösungsfähigkeit': 'PLF',
+        'Qualitätsbewusstsein': 'QB',
+        'Selbstständigkeit': 'SS',
+        'Steuerungskenntnisse': 'SK',
+        'Teamfähigkeit': 'TF',
+        'Unternehmerisches Denken': 'UD',
+    };
 
     constructor(private rdfDataService: RdfDataService, private chartService:
         ChartService, private dialog: MatDialog) {
@@ -124,10 +142,13 @@ export class BarChartEditorComponent implements OnInit {
             // this.dataSource.forEach(item => {
             //     console.log(item.skill, item.skillCount);
             // });
-            this.createChart(this.jobName, this.dataSource, this.titleCount);
+            this.dataSource.forEach(item => {
+                item.skill = this.skillAbbr[item.skill];
+            });
             this.chartService.chartType.next('Bar Chart');
             this.chartService.titleCount.next(this.titleCount);
             this.chartService.dataSource.next(this.dataSource);
+            this.createChart(this.jobName, this.dataSource, this.titleCount);
         });
     }
 
@@ -167,8 +188,8 @@ export class BarChartEditorComponent implements OnInit {
             .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
-            .attr('transform', 'translate(-10,0)rotate(-45)')
-            .style('text-anchor', 'end');
+            // .attr('transform', 'translate(-10,0)rotate(-45)')
+            .style('text-anchor', 'middle');
 
         // Create the Y-axis band scale
         const maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
