@@ -8,20 +8,23 @@ export class ChartService {
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
 
+    public dataSource = new BehaviorSubject<any[]>([]);
+    currentDataSource = this.dataSource.asObservable();
+
     public jobName = new BehaviorSubject<string>('');
     currentJobName = this.jobName.asObservable();
+
+    public titleCount = new BehaviorSubject<number>(0);
+    currentTitleCount = this.titleCount.asObservable();
 
     public barRemove = new BehaviorSubject<boolean>(false);
     currentBarRemove = this.barRemove.asObservable();
 
+    public pieLabel = new BehaviorSubject<string>('');
+    currentPieLabel = this.pieLabel.asObservable();
+
     public pieRemove = new BehaviorSubject<boolean>(false);
     currentPieRemove = this.pieRemove.asObservable();
-    
-    public dataSource = new BehaviorSubject<any[]>([]);
-    currentDataSource = this.dataSource.asObservable();
-
-    public titleCount = new BehaviorSubject<number>(0);
-    currentTitleCount = this.titleCount.asObservable();
 
     public saveJsonFile(chartType: string, jobName: string, dataSource: any[], titleCount: number) {
         let exportObj = {

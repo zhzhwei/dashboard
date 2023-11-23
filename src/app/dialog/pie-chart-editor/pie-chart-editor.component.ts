@@ -73,19 +73,20 @@ export class PieChartEditorComponent implements OnInit {
                     if (item && item.results && item.results.bindings[0]) {
                         if (item.results.bindings[0].fulltimeTrueCount) {
                             this.fulltimeTrueCount = Number(item.results.bindings[0].fulltimeTrueCount.value)
-                            return { label: 'fulltimeTrueCount', value: this.fulltimeTrueCount }
+                            return { label: 'Fulltime=True', value: this.fulltimeTrueCount }
                         } else if (item.results.bindings[0].fulltimeFalseCount) {
                             this.fulltimeFalseCount = Number(item.results.bindings[0].fulltimeFalseCount.value)
-                            return { label: 'fulltimeFalseCount', value: this.fulltimeFalseCount }
+                            return { label: 'Fulltime=False', value: this.fulltimeFalseCount }
                         } else if (item.results.bindings[0].jobCount) {
                             this.jobCount = Number(item.results.bindings[0].jobCount.value)
-                            return { label: 'noInfomation', value: this.jobCount - this.fulltimeTrueCount - this.fulltimeFalseCount }
+                            return { label: 'No Infomation', value: this.jobCount - this.fulltimeTrueCount - this.fulltimeFalseCount }
                         } 
                     }
                 }));
-                this.createChart(this.dataSource);
+                this.createChart(this.dataSource, 'isFulltimeJob');
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
+                this.chartService.pieLabel.next('isFulltimeJob');
             });
         } else if (event.value === 'isLimitedJob') {
             Promise.all([
@@ -97,24 +98,25 @@ export class PieChartEditorComponent implements OnInit {
                     if (item && item.results && item.results.bindings[0]) {
                         if (item.results.bindings[0].parttimeTrueCount) {
                             this.parttimeTrueCount = Number(item.results.bindings[0].parttimeTrueCount.value)
-                            return { label: 'parttimeTrueCount', value: this.parttimeTrueCount }
+                            return { label: 'Parttime=True', value: this.parttimeTrueCount }
                         } else if (item.results.bindings[0].parttimeFalseCount) {
                             this.parttimeFalseCount = Number(item.results.bindings[0].parttimeFalseCount.value)
-                            return { label: 'parttimeFalseCount', value: this.parttimeFalseCount }
+                            return { label: 'Parttime=False', value: this.parttimeFalseCount }
                         } else if (item.results.bindings[0].jobCount) {
                             this.jobCount = Number(item.results.bindings[0].jobCount.value)
-                            return { label: 'noInfomation', value: this.jobCount - this.parttimeTrueCount - this.parttimeFalseCount }
+                            return { label: 'No Infomation', value: this.jobCount - this.parttimeTrueCount - this.parttimeFalseCount }
                         } 
                     }
                 }));
-                this.createChart(this.dataSource);
+                this.createChart(this.dataSource, 'isLimitedJob');
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
+                this.chartService.pieLabel.next('isLimitedJob');
             });
         }
     }
 
-    public createChart(dataSource: any): void {
+    public createChart(dataSource: any, pieLabel: string): void {
         this.pieEl = document.getElementById('editor-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -130,10 +132,10 @@ export class PieChartEditorComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2)
+            .attr("y", this.margin / 2 - 8)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("JobPosting");
+            .text("JobPosting --- " + pieLabel);
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
         // Define the color scale

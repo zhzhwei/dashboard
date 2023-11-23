@@ -17,7 +17,7 @@ export class PieChartComponent implements OnInit {
     constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
     private svg: any;
-    private margin = 80;
+    private margin = 60;
     private pieEl: any;
     private radius: number;
     private color: any;
@@ -29,7 +29,7 @@ export class PieChartComponent implements OnInit {
 
     }
 
-    public createChart(dataSource: any): void {
+    public createChart(dataSource: any, pieLabel: string): void {
         this.pieEl = document.getElementById('dash-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -42,6 +42,14 @@ export class PieChartComponent implements OnInit {
             .append('svg')
             .attr('width', this.pieEl.clientWidth)
             .attr('height', this.pieEl.clientHeight)
+        
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.pieEl.clientWidth / 2))
+            .attr("y", this.margin / 2 + 5)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("JobPosting --- " + pieLabel);
 
         this.svg.append('foreignObject')
             .attr('class', 'pencil')
@@ -88,14 +96,6 @@ export class PieChartComponent implements OnInit {
                 this.pieRemove = true;
                 this.chartService.pieRemove.next(this.pieRemove);
             });
-        
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 15)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("JobPosting");
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
 

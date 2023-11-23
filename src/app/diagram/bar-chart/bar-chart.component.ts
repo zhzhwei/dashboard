@@ -37,6 +37,14 @@ export class BarChartComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+
         this.svg.append('foreignObject')
             .attr('class', 'pencil')
             .attr('x', this.barEL.clientWidth - 38)
@@ -82,14 +90,6 @@ export class BarChartComponent implements OnInit {
                 this.barRemove = true;
                 this.chartService.barRemove.next(this.barRemove);
             });
-
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.barEL.clientWidth / 2))
-            .attr("y", this.margin / 2 + 15)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
@@ -159,7 +159,7 @@ export class BarChartComponent implements OnInit {
                     .on('mousemove', () => {
                         var [x, y] = d3.mouse(nodes[i]);
                         // console.log(x, y);
-                        tooltip.style('left', `${x + 40}px`)
+                        tooltip.style('left', `${x + 30}px`)
                             .style('top', `${y}px`);
                     });
             })
@@ -211,7 +211,7 @@ export class BarChartComponent implements OnInit {
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
             // .attr('transform', 'translate(-10,0)rotate(-45)')
-            .style('text-anchor', 'end');
+            .style('text-anchor', 'middle');
 
         // Update the Y-axis scale range
         this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);

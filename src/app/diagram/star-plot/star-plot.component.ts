@@ -41,6 +41,14 @@ export class StarPlotComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
 
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.starEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Stellenausschreibungen - Fertigkeiten");
+
         this.svg.append('foreignObject')
             .attr('class', 'edit')
             .attr('x', this.starEL.clientWidth - 50)
@@ -51,14 +59,6 @@ export class StarPlotComponent implements OnInit {
             .on('click', () => {
                 // this.openDialog();
             });
-
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.starEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("Stellenausschreibungen - Fertigkeiten");
 
         this.x = d3.scaleBand()
             .range([0, 2 * Math.PI])

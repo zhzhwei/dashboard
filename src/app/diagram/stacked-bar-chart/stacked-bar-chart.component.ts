@@ -59,6 +59,14 @@ export class StackedBarChartComponent implements OnInit {
         var g = this.svg.append("g")
             .attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("y", this.margin / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Stellenausschreibungen - Fertigkeiten");
+
         this.svg.append('foreignObject')
             .attr('class', 'edit')
             .attr('x', this.barEL.clientWidth - 50)
@@ -69,14 +77,6 @@ export class StackedBarChartComponent implements OnInit {
             .on('click', () => {
                 this.dialogService.openStackedBarChartEditor
             });
-
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.barEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("Stellenausschreibungen - Fertigkeiten");
 
         const groups = ["Werkzeugmacher", "Feinwerkmechaniker"];
         const legendGroups = ["Feinwerkmechaniker", "Werkzeugmacher"];

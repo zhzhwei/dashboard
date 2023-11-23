@@ -35,11 +35,16 @@ export class VisGenComponent implements OnInit {
 
     onSearch(jobName: string) {
         if (jobName === '') {
-            this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-                this.barResults = data.results.bindings.map((item) => {
-                    return item.title.value;
+            if (this.chartType === 'Bar Chart') {
+                this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+                    this.barResults = data.results.bindings.map((item) => {
+                        return item.title.value;
+                    });
                 });
-            });
+            }
+            else if (this.chartType === 'Pie Chart') {
+                this.forwardToEditor();
+            }
         } else {
             this.rdfDataService.getQueryResults(this.barQuery).then(data => {
                 this.barResults = data.results.bindings.map((item) => {

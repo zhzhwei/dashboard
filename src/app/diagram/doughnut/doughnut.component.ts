@@ -48,6 +48,14 @@ export class DoughnutComponent implements OnInit {
             .attr('width', this.donutEl.clientWidth)
             .attr('height', this.donutEl.clientHeight)
 
+        this.svg.append("text")
+            .attr("class", "title")
+            .attr("x", (this.donutEl.clientWidth / 2))
+            .attr("y", this.margin / 2 + 15)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Beruf - Stellenausschreibungen");
+
         this.svg.append('foreignObject')
             .attr('class', 'edit')
             .attr('x', this.donutEl.clientWidth - 50)
@@ -58,14 +66,6 @@ export class DoughnutComponent implements OnInit {
             .on('click', () => {
                 // this.openDialog();
             });
-
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.donutEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 15)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("Beruf - Stellenausschreibungen");
 
         this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
         this.innerRadius1 = this.outerRadius - 30; // adjust this value to change the thickness of the doughnut

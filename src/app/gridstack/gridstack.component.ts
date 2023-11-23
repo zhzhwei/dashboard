@@ -163,8 +163,8 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentChartType,
             this.chartService.currentDataSource
         ]).subscribe(([chartType, dataSource]) => {
-            console.log('chartType:', chartType);
-            console.log('dataSource.length:', dataSource.length);
+            // console.log('chartType:', chartType);
+            // console.log('dataSource.length:', dataSource.length);
             if (chartType && dataSource.length > 0) {
                 switch (chartType) {
                     case 'Bar Chart':
@@ -177,7 +177,10 @@ export class GridStackComponent implements OnInit {
                         });
                         break;
                     case 'Pie Chart':
-                        this.pieChart.createChart(dataSource);
+                        this.chartService.currentPieLabel.subscribe(pieLabel => {
+                            this.pieChart.createChart(dataSource, pieLabel);
+                            // this.chartService.savePersistence(chartType, '', dataSource, 0);
+                        });
                         break;
                     default:
                         console.log('Invalid Chart Type:');

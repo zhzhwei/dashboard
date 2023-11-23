@@ -25,7 +25,7 @@ export class BarChartEditorComponent implements OnInit {
     public jobName: string;
 
     private svg: any;
-    private margin = 70;
+    private margin = 60;
     private barEL: any;
     private x: any;
     private y: any;
