@@ -42,14 +42,16 @@ export class GridStackComponent implements OnInit {
             // console.log('chartType: ', chartType);
             // console.log('dataSource: ', dataSource);
             if (chartType == 'Bar Chart' && dataSource.length > 0) {
-                this.chartService.currentTitleCount.subscribe(titleCount => {
-                    this.barChart.createChart(titleCount, dataSource);
-                    // this.chartService.saveJsonFile(chartType, titleCount, dataSource);
-                    this.chartService.savePersistence(chartType, titleCount, dataSource);
+                combineLatest([
+                    this.chartService.currentJobName,
+                    this.chartService.currentTitleCount
+                ]).subscribe(([jobName, titleCount]) => {
+                    console.log('jobName: ', jobName);
+                    console.log('titleCount: ', titleCount);
+                    this.barChart.createChart(jobName, dataSource, titleCount);
+                    this.chartService.saveJsonFile(chartType, jobName, dataSource, titleCount);
+                    this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
                 });
-            }
-            else if (chartType && dataSource.length > 0) {
-                this.genVis(chartType, dataSource);
             }
         });
     }
@@ -175,7 +177,7 @@ export class GridStackComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        // this.chartService.loadPersistence();
+        this.chartService.loadPersistence();
     }
 
     private genVis(chartType: string, dataSource: any[]) {

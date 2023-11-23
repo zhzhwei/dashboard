@@ -20,6 +20,7 @@ export class VisGenComponent implements OnInit {
     public chartType: string;
     public gridStack: GridStackComponent;
     public barResults: any;
+    public jobName: string;
 
     public barQuery = `
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -36,9 +37,8 @@ export class VisGenComponent implements OnInit {
         this.barResults = [];
     }
 
-    onSearch(value: string) {
-        console.log(value);
-        if (value === '') {
+    onSearch(jobName: string) {
+        if (jobName === '') {
             this.rdfDataService.getQueryResults(this.barQuery).then(data => {
                 this.barResults = data.results.bindings.map((item) => {
                     return item.title.value;
@@ -49,10 +49,12 @@ export class VisGenComponent implements OnInit {
                 this.barResults = data.results.bindings.map((item) => {
                     return item.title.value;
                 }).filter((item) => {
-                    return item.toLowerCase().includes(value.toLowerCase());
+                    return item.includes(jobName);
                 });
             });
         }
+        this.jobName = jobName;
+        // console.log(this.jobName);
     }
 
     chartTypeSelect(event: any) {
@@ -76,6 +78,7 @@ export class VisGenComponent implements OnInit {
     public genVis() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
+        this.chartService.jobName.next(this.jobName);
         switch (this.chartType) {
             case 'Bar Chart':
                 this.dialogService.openBarChartEditor();

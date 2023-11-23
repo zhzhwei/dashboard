@@ -1,6 +1,6 @@
 {
     "chartType": "Bar Chart",
-    "titleCount": 8,
+    "jobName": "Polymechaniker",
     "dataSource": [
         {
             "skill": "Analytische Fähigkeiten",
@@ -62,5 +62,6 @@
             "skill": "Unternehmerisches Denken",
             "skillCount": 4
         }
-    ]
+    ],
+    "titleCount": 8
 }

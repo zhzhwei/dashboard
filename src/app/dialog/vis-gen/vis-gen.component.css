@@ -16,8 +16,8 @@
     justify-content: space-between;
 }
 
-.submit-btn {
-    margin-right: 220px; 
+.search-btn {
+    margin-left: 20px; 
 }
 
 .result-p {
@@ -29,7 +29,7 @@ input {
     height: 34px;
     border-radius: 5px;
     border: 1px solid rgb(68, 68, 133);
-    width: 300px;
+    width: 350px;
 }
 
 table {

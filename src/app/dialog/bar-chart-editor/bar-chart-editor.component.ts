@@ -18,8 +18,11 @@ export class BarChartEditorComponent implements OnInit {
     public checkedSkills: any;
     public dataSource: any;
     public allChecked = false;
+    public titleQuery: string;
+    public skillQuery: string;
     public skillQueries: string[];
     public titleCount: number;
+    public jobName: string;
 
     private svg: any;
     private margin = 80;
@@ -27,32 +30,13 @@ export class BarChartEditorComponent implements OnInit {
     private x: any;
     private y: any;
 
-    public titleQuery = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX edm: <http://ai4bd.com/resource/edm/>
-        select (count(?s) as ?skillCount) where { 
-            ?s rdf:type edm:JobPosting.
-            ?s edm:title ?title.
-            filter contains(?title, "Polymechaniker").
-        }
-    `;
-
-    public skillQuery = `
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX edm: <http://ai4bd.com/resource/edm/>
-        select (count(?s) as ?skillCount) where { 
-            ?s rdf:type edm:JobPosting.
-            ?s edm:title ?title.
-            filter contains(?title, "Polymechaniker").
-            ?s edm:hasSkill ?skill.
-            ?skill edm:textField ?skillName.
-            filter (lang(?skillName) = "de").
-            filter (?skillName = "skillName"@de).
-        }
-    `;
-
     constructor(private rdfDataService: RdfDataService, private chartService:
-        ChartService, private dialog: MatDialog) {}
+        ChartService, private dialog: MatDialog) {
+        this.chartService.currentJobName.subscribe(jobName => {
+            this.jobName = jobName;
+            console.log(this.jobName);
+        });
+    }
 
     ngOnInit(): void {
         this.query = `
@@ -61,7 +45,7 @@ export class BarChartEditorComponent implements OnInit {
             select distinct ?skillName where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
-                filter contains(?title, "Polymechaniker").
+                filter contains(?title, "${this.jobName}").
                 ?s edm:hasSkill ?skill.
                 ?skill edm:textField ?skillName.
                 filter (lang(?skillName) = "de").
@@ -94,6 +78,30 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     public applyChanges(): void {
+        this.skillQuery = `
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX edm: <http://ai4bd.com/resource/edm/>
+            select (count(?s) as ?skillCount) where { 
+                ?s rdf:type edm:JobPosting.
+                ?s edm:title ?title.
+                filter contains(?title, "${this.jobName}").
+                ?s edm:hasSkill ?skill.
+                ?skill edm:textField ?skillName.
+                filter (lang(?skillName) = "de").
+                filter (?skillName = "skillName"@de).
+            }
+        `;
+
+        this.titleQuery = `
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX edm: <http://ai4bd.com/resource/edm/>
+            select (count(?s) as ?skillCount) where { 
+                ?s rdf:type edm:JobPosting.
+                ?s edm:title ?title.
+                filter contains(?title, "${this.jobName}").
+            }
+        `;
+
         this.checkedSkills = this.list.filter(item => item.checked === true);
         this.skillQueries = this.checkedSkills.map(item => {
             return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
@@ -123,13 +131,13 @@ export class BarChartEditorComponent implements OnInit {
             // this.dataSource.forEach(item => {
             //     console.log(item.skill, item.skillCount);
             // });
-            this.createChart(this.titleCount, this.dataSource);
+            this.createChart(this.jobName, this.titleCount, this.dataSource);
             this.chartService.titleCount.next(this.titleCount);
             this.chartService.dataSource.next(this.dataSource);
         });
     }
 
-    private createChart(titleCount: any, data: any[]): void {
+    private createChart(jobName: string, titleCount: any, dataSource: any[]): void {
         this.barEL = document.getElementById('editor-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
@@ -151,12 +159,12 @@ export class BarChartEditorComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Polymechaniker --- " + `${titleCount}` + " Stellenangebote");
+            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(data.map(d => d.skill))
+            .domain(dataSource.map(d => d.skill))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
@@ -169,7 +177,7 @@ export class BarChartEditorComponent implements OnInit {
             .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        const maxSkillCount = d3.max(data, (d: any) => d.skillCount);
+        const maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
             .domain([0, maxSkillCount + 1])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
@@ -181,7 +189,7 @@ export class BarChartEditorComponent implements OnInit {
 
         // Create and fill the bars
         g.selectAll('bars')
-            .data(data)
+            .data(dataSource)
             .enter()
             .append('rect')
             .attr('x', (d: any) => this.x(d.skill))

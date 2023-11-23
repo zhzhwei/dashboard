@@ -18,7 +18,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public createChart(titleCount: any, data: any[]): void {
+    public createChart(jobName: string, dataSource: any[], titleCount: any): void {
         this.barEL = document.getElementById('dash-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         
@@ -52,12 +52,12 @@ export class BarChartComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("Polymechaniker --- " + `${titleCount}` + " Stellenangebote");
+            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(data.map(d => d.skill))
+            .domain(dataSource.map(d => d.skill))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
@@ -70,7 +70,7 @@ export class BarChartComponent implements OnInit {
             .style('text-anchor', 'end');
 
         // Create the Y-axis band scale
-        var maxSkillCount = d3.max(data, (d: any) => d.skillCount);
+        var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
             .domain([0, maxSkillCount + 1]) 
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
@@ -82,7 +82,7 @@ export class BarChartComponent implements OnInit {
 
         // Create and fill the bars
         g.selectAll('bars')
-            .data(data)
+            .data(dataSource)
             .enter()
             .append('rect')
             .attr('x', (d: any) => this.x(d.skill))
