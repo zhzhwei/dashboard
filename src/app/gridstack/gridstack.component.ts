@@ -196,6 +196,13 @@ export class GridStackComponent implements OnInit {
                 this.grid.removeWidget(gridItemElement as GridStackElement);
             }
         });
+        this.chartService.currentPieRemove.subscribe(pieRemove => {
+            if (pieRemove) {
+                let element = document.getElementById('dash-pie');
+                let gridItemElement = element.closest('.grid-stack-item');
+                this.grid.removeWidget(gridItemElement as GridStackElement);
+            }
+        });
     }
 
 }

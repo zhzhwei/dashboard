@@ -13,6 +13,9 @@ export class ChartService {
 
     public barRemove = new BehaviorSubject<boolean>(false);
     currentBarRemove = this.barRemove.asObservable();
+
+    public pieRemove = new BehaviorSubject<boolean>(false);
+    currentPieRemove = this.pieRemove.asObservable();
     
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();

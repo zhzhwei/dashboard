@@ -79,8 +79,6 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-trash"></i>')
             .on('click', () => {
-                // grid.removeWidget(document.getElementById('dash-bar'));
-                // d3.select('#dash-bar').selectAll('*').remove();
                 this.barRemove = true;
                 this.chartService.barRemove.next(this.barRemove);
             });

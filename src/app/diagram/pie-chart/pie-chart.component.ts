@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog.service';
+import { DialogService } from '../../services/dialog.service';
+import { ChartService } from '../../services/chart.service';
 import * as d3 from 'd3';
 
 interface Datum {
@@ -13,7 +14,7 @@ interface Datum {
 })
 export class PieChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService) { }
+    constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
     private svg: any;
     private margin = 80;
@@ -22,12 +23,14 @@ export class PieChartComponent implements OnInit {
     private color: any;
     private arc: any;
     private g: any;
+    private chartType = 'Pie Chart';
+    public pieRemove = false;
 
     ngOnInit(): void {
 
     }
 
-    public createChart(data: any): void {
+    public createChart(dataSource: any): void {
         this.pieEl = document.getElementById('dash-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -42,16 +45,50 @@ export class PieChartComponent implements OnInit {
             .attr('height', this.pieEl.clientHeight)
 
         this.svg.append('foreignObject')
-            .attr('class', 'edit')
-            .attr('x', this.pieEl.clientWidth - 50)
-            .attr('y', 40)
-            .attr('width', 20)
-            .attr('height', 20)
+            .attr('class', 'pencil')
+            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('y', 20)
+            .attr('width', 25)
+            .attr('height', 25)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.dialogService.openPieChartEditor();
             });
 
+        this.svg.append('foreignObject')
+            .attr('class', 'cart')
+            .attr('x', this.pieEl.clientWidth - 40)
+            .attr('y', 45)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-shopping-cart"></i>')
+            .on('click', () => {
+                // this.dialogService.openPieChartEditor();
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'heart')
+            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('y', 70)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-heart"></i>')
+            .on('click', () => {
+                // this.chartService.saveJsonFile(this.chartType, dataSource);
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'trash')
+            .attr('x', this.pieEl.clientWidth - 36)
+            .attr('y', 95)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-trash"></i>')
+            .on('click', () => {
+                this.pieRemove = true;
+                this.chartService.pieRemove.next(this.pieRemove);
+            });
+        
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.pieEl.clientWidth / 2))
@@ -64,7 +101,7 @@ export class PieChartComponent implements OnInit {
 
         // Define the color scale
         this.color = d3.scaleOrdinal()
-            .domain(data.map(d => d.label))
+            .domain(dataSource.map(d => d.label))
             .range(d3.schemeCategory10);
 
         // Define the pie function
@@ -86,7 +123,7 @@ export class PieChartComponent implements OnInit {
             .style('opacity', 0);
 
         this.g.selectAll('path')
-            .data(pie(data))
+            .data(pie(dataSource))
             .enter()
             .append('path')
             .attr('d', this.arc)
