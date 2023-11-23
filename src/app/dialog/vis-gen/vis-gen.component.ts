@@ -72,7 +72,7 @@ export class VisGenComponent implements OnInit {
         });
     }
 
-    public genVis() {
+    public forwardToEditor() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
         switch (this.chartType) {

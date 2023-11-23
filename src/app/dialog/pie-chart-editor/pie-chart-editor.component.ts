@@ -84,6 +84,7 @@ export class PieChartEditorComponent implements OnInit {
                     }
                 }));
                 this.createChart(this.dataSource);
+                this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
             });
         } else if (event.value === 'isLimitedJob') {
@@ -107,13 +108,13 @@ export class PieChartEditorComponent implements OnInit {
                     }
                 }));
                 this.createChart(this.dataSource);
+                this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
             });
         }
-
     }
 
-    public createChart(data: any): void {
+    public createChart(dataSource: any): void {
         this.pieEl = document.getElementById('editor-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -137,7 +138,7 @@ export class PieChartEditorComponent implements OnInit {
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
         // Define the color scale
         this.color = d3.scaleOrdinal()
-            .domain(data.map(d => d.label))
+            .domain(dataSource.map(d => d.label))
             .range(d3.schemeCategory10);
 
         // Define the pie function
@@ -155,7 +156,7 @@ export class PieChartEditorComponent implements OnInit {
             .attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
 
         this.g.selectAll('path')
-            .data(pie(data))
+            .data(pie(dataSource))
             .enter()
             .append('path')
             .attr('d', this.arc)

@@ -35,36 +35,7 @@ export class GridStackComponent implements OnInit {
     public donutContEl: any;
 
     constructor(private chartService: ChartService) {
-        combineLatest([
-            this.chartService.currentChartType,
-            this.chartService.currentDataSource
-        ]).subscribe(([chartType, dataSource]) => {
-            // console.log('chartType:', chartType);
-            // console.log('dataSource:', dataSource.length);
-            if (dataSource.length > 0) {
-                switch (chartType) {
-                    case 'Bar Chart':
-                        combineLatest([
-                            this.chartService.currentJobName,
-                            this.chartService.currentTitleCount
-                        ]).subscribe(([jobName, titleCount]) => {
-                            // console.log('jobName:', jobName);
-                            // console.log('titleCount:', titleCount);
-                            this.barChart.createChart(jobName, dataSource, titleCount);
-                            // this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
-                        });
-                        break;
-                    case 'Pie Chart':
-                        this.pieChart.createChart(dataSource);
-                        // this.chartService.saveJsonFile(chartType, '', dataSource, 0);
-                        // this.chartService.savePersistence(chartType, '', dataSource, 0);
-                        break;
-                    default:
-                        console.log('Invalid Chart Type:');
-                        break;
-                }
-            }
-        });
+        
     }
 
     ngOnInit(): void {
@@ -188,7 +159,37 @@ export class GridStackComponent implements OnInit {
     }
 
     ngAfterViewInit() {
+        combineLatest([
+            this.chartService.currentChartType,
+            this.chartService.currentDataSource
+        ]).subscribe(([chartType, dataSource]) => {
+            console.log('chartType:', chartType);
+            console.log('dataSource.length:', dataSource.length);
+            if (chartType && dataSource.length > 0) {
+                switch (chartType) {
+                    case 'Bar Chart':
+                        combineLatest([
+                            this.chartService.currentJobName,
+                            this.chartService.currentTitleCount
+                        ]).subscribe(([jobName, titleCount]) => {
+                            this.barChart.createChart(jobName, dataSource, titleCount);
+                            // this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
+                        });
+                        break;
+                    case 'Pie Chart':
+                        this.pieChart.createChart(dataSource);
+                        break;
+                    default:
+                        console.log('Invalid Chart Type:');
+                        break;
+                }
+                this.chartService.chartType.next('');
+                this.chartService.dataSource.next([]);
+            }
+        });
+
         // this.chartService.loadPersistence();
+        
         this.chartService.currentBarRemove.subscribe(barRemove => {
             if (barRemove) {
                 let element = document.getElementById('dash-bar');

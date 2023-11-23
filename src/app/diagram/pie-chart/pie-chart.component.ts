@@ -23,7 +23,6 @@ export class PieChartComponent implements OnInit {
     private color: any;
     private arc: any;
     private g: any;
-    private chartType = 'Pie Chart';
     public pieRemove = false;
 
     ngOnInit(): void {
@@ -53,6 +52,7 @@ export class PieChartComponent implements OnInit {
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.dialogService.openPieChartEditor();
+                this.chartService.chartType.next('Pie Chart');
             });
 
         this.svg.append('foreignObject')
@@ -185,9 +185,21 @@ export class PieChartComponent implements OnInit {
             .attr("x", (this.pieEl.clientWidth / 2))
             .attr("y", this.margin / 2)
 
-        this.svg.select('foreignObject.edit')
-            .attr('x', this.pieEl.clientWidth - 50)
+        this.svg.select('foreignObject.pencil')
+            .attr('x', this.pieEl.clientWidth - 38)
             .attr('y', 20)
+
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.pieEl.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.pieEl.clientWidth - 36)
+            .attr('y', 95)
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
 

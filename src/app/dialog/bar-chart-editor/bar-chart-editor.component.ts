@@ -76,6 +76,22 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     public applyChanges(): void {
+        // console.log(this.jobName);
+        this.titleQuery = this.rdfDataService.prefixes + `
+            select (count(?s) as ?skillCount) where { 
+                ?s rdf:type edm:JobPosting.
+                ?s edm:title ?title.
+                filter contains(?title, "${this.jobName}").
+            }
+        `;
+        this.rdfDataService.getQueryResults(this.titleQuery)
+            .then(data => {
+                this.results = data.results.bindings;
+                this.titleCount = Number(this.results[0].skillCount.value);
+            })
+            .catch(error => console.error(error));
+
+        this.checkedSkills = this.list.filter(item => item.checked === true);
         this.skillQuery = this.rdfDataService.prefixes + `
             select (count(?s) as ?skillCount) where { 
                 ?s rdf:type edm:JobPosting.
@@ -87,16 +103,6 @@ export class BarChartEditorComponent implements OnInit {
                 filter (?skillName = "skillName"@de).
             }
         `;
-
-        this.titleQuery = this.rdfDataService.prefixes + `
-            select (count(?s) as ?skillCount) where { 
-                ?s rdf:type edm:JobPosting.
-                ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
-            }
-        `;
-
-        this.checkedSkills = this.list.filter(item => item.checked === true);
         this.skillQueries = this.checkedSkills.map(item => {
             return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
         });
@@ -105,14 +111,6 @@ export class BarChartEditorComponent implements OnInit {
                 skill: item.title,
             }
         });
-
-        this.rdfDataService.getQueryResults(this.titleQuery)
-            .then(data => {
-                this.results = data.results.bindings;
-                this.titleCount = Number(this.results[0].skillCount.value);
-            })
-            .catch(error => console.error(error));
-
         let promises = this.skillQueries.map((query, index) => {
             return this.rdfDataService.getQueryResults(query)
                 .then(data => {
@@ -121,17 +119,19 @@ export class BarChartEditorComponent implements OnInit {
                 })
                 .catch(error => console.error(error));
         });
+
         Promise.all(promises).then(() => {
             // this.dataSource.forEach(item => {
             //     console.log(item.skill, item.skillCount);
             // });
-            this.createChart(this.jobName, this.titleCount, this.dataSource);
+            this.createChart(this.jobName, this.dataSource, this.titleCount);
+            this.chartService.chartType.next('Bar Chart');
             this.chartService.titleCount.next(this.titleCount);
             this.chartService.dataSource.next(this.dataSource);
         });
     }
 
-    private createChart(jobName: string, titleCount: any, dataSource: any[]): void {
+    private createChart(jobName: string, dataSource: any[], titleCount: any): void {
         this.barEL = document.getElementById('editor-bar');
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 

@@ -16,7 +16,6 @@ export class BarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
-    private chartType = 'Bar Chart';
     public barRemove = false;
 
     ngOnInit(): void { }
@@ -47,6 +46,7 @@ export class BarChartComponent implements OnInit {
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.dialogService.openBarChartEditor();
+                this.chartService.chartType.next('Bar Chart');
             });
 
         this.svg.append('foreignObject')
@@ -68,7 +68,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                this.chartService.saveJsonFile(this.chartType, jobName, dataSource, titleCount);
+                this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
             });
         
         this.svg.append('foreignObject')
