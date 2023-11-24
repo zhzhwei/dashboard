@@ -29,7 +29,7 @@ export class PieChartComponent implements OnInit {
 
     }
 
-    public createChart(dataSource: any, pieLabel: string): void {
+    public createChart(jobName: string, dataSource: any, pieLabel: string): void {
         this.pieEl = document.getElementById('dash-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -49,7 +49,7 @@ export class PieChartComponent implements OnInit {
             .attr("y", this.margin / 2 + 8)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("JobPosting --- " + pieLabel);
+            .text((jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
         this.svg.append('foreignObject')
             .attr('class', 'pencil')

@@ -2,7 +2,7 @@
     margin: 20px;
 }
 
-.gen-vis-btn {
+.to-editor-btn {
     margin: 20px;
 }
 
@@ -22,7 +22,7 @@
 
 .result-p {
     color: rgb(68, 68, 133);
-    font-size: 20px;
+    font-size: 18px;
 }
 
 input {

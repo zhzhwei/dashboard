@@ -51,6 +51,7 @@ export class VisGenComponent implements OnInit {
         }
         if (this.chartType === 'Bar Chart' || this.chartType === 'Pie Chart') {
             this.jobName = jobName;
+            this.chartService.jobName.next(this.jobName);
         }
     }
 
@@ -75,25 +76,26 @@ export class VisGenComponent implements OnInit {
     public forwardToEditor() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
-        switch (this.chartType) {
-            case 'Bar Chart':
-                this.dialogService.openBarChartEditor();
-                this.chartService.jobName.next(this.jobName);
-                break;
-            case 'Stacked Bar Chart':
-                this.dialogService.openStackedBarChartEditor();
-                break;
-            case 'Pie Chart':
-                this.dialogService.openPieChartEditor();
-                break;
-            case 'Doughnut Chart':
-                this.dialogService.openDoughnutChartEditor();
-                break;
-            case 'Star Plot':
-                this.dialogService.openStarPlotEditor();
-                break;
-            default:
-                console.log('Invalid Chart Type');
+        if (this.barResults.length > 0) {
+            switch (this.chartType) {
+                case 'Bar Chart':
+                    this.dialogService.openBarChartEditor();
+                    break;
+                case 'Stacked Bar Chart':
+                    this.dialogService.openStackedBarChartEditor();
+                    break;
+                case 'Pie Chart':
+                    this.dialogService.openPieChartEditor();
+                    break;
+                case 'Doughnut Chart':
+                    this.dialogService.openDoughnutChartEditor();
+                    break;
+                case 'Star Plot':
+                    this.dialogService.openStarPlotEditor();
+                    break;
+                default:
+                    console.log('Invalid Chart Type');
+            }
         }
     }
 

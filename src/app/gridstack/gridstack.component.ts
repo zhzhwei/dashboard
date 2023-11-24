@@ -42,6 +42,7 @@ export class GridStackComponent implements OnInit {
         const options = {
             margin: 5,
             column: 12,
+            cellHeight: "auto",
             disableOneColumnMode: true,
             acceptWidgets: true,
             removable: '#trash',
@@ -185,8 +186,11 @@ export class GridStackComponent implements OnInit {
                         });
                         break;
                     case 'Pie Chart':
-                        this.chartService.currentPieLabel.subscribe(pieLabel => {
-                            this.pieChart.createChart(dataSource, pieLabel);
+                        combineLatest([
+                            this.chartService.currentJobName,
+                            this.chartService.currentPieLabel
+                        ]).subscribe(([jobName, pieLabel]) => {
+                            this.pieChart.createChart(jobName, dataSource, pieLabel);
                             // this.chartService.savePersistence(chartType, '', dataSource, 0);
                         });
                         break;

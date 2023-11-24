@@ -60,9 +60,15 @@ export class PieChartEditorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        if (this.jobName) {
+            this.jobCountQuery = this.jobCountQuery.replace('}', ` filter contains(?title, "${this.jobName}"). }`);
+            this.fulltimeTrueCountQuery = this.fulltimeTrueCountQuery.replace('}', ` filter contains(?title, "${this.jobName}"). }`);
+            this.fulltimeFalseCountQuery = this.fulltimeFalseCountQuery.replace('}', ` filter contains(?title, "${this.jobName}"). }`);
+            this.parttimeTrueCountQuery = this.parttimeTrueCountQuery.replace('}', ` filter contains(?title, "${this.jobName}"). }`);
+            this.parttimeFalseCountQuery = this.parttimeFalseCountQuery.replace('}', ` filter contains(?title, "${this.jobName}"). }`);
+        }
     }
-
+    
     backToDashboard(): void {
         this.dialog.closeAll();
     }
@@ -89,7 +95,7 @@ export class PieChartEditorComponent implements OnInit {
                         } 
                     }
                 }));
-                this.createChart(this.dataSource, 'isFulltimeJob');
+                this.createChart(this.jobName, this.dataSource, 'isFulltimeJob');
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
                 this.chartService.pieLabel.next('isFulltimeJob');
@@ -114,7 +120,7 @@ export class PieChartEditorComponent implements OnInit {
                         } 
                     }
                 }));
-                this.createChart(this.dataSource, 'isLimitedJob');
+                this.createChart(this.jobName, this.dataSource, 'isLimitedJob');
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
                 this.chartService.pieLabel.next('isLimitedJob');
@@ -122,7 +128,7 @@ export class PieChartEditorComponent implements OnInit {
         }
     }
 
-    public createChart(dataSource: any, pieLabel: string): void {
+    public createChart(jobName: string, dataSource: any, pieLabel: string): void {
         this.pieEl = document.getElementById('editor-pie');
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
@@ -141,8 +147,8 @@ export class PieChartEditorComponent implements OnInit {
             .attr("y", this.margin / 2 - 8)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text("JobPosting --- " + pieLabel);
-
+            .text((jobName ? jobName : "JobPosting") + " --- " + pieLabel);
+        
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
         // Define the color scale
         this.color = d3.scaleOrdinal()
