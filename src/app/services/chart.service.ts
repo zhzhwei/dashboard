@@ -26,17 +26,22 @@ export class ChartService {
     public pieRemove = new BehaviorSubject<boolean>(false);
     currentPieRemove = this.pieRemove.asObservable();
 
-    public saveJsonFile(chartType: string, jobName: string, dataSource: any[], titleCount: number) {
+    public saveJsonFile(chartType: string, jobName: string, dataSource: any[], parameter: any) {
         let exportObj = {
             chartType: chartType,
             jobName: jobName,
-            dataSource: dataSource,
-            titleCount: titleCount
+            dataSource: dataSource
         };
+        if (chartType === 'Bar Chart') {
+            exportObj['titleCount'] = parameter;
+        }
+        else if (chartType === 'Pie Chart') {
+            exportObj['pieLabel'] = parameter;
+        }
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "barChart" + ".json");
+        downloadAnchorNode.setAttribute("download", chartType + ".json");
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
@@ -53,34 +58,54 @@ export class ChartService {
                 this.chartType.next(exportObj.chartType);
                 this.jobName.next(exportObj.jobName);
                 this.dataSource.next(exportObj.dataSource);
-                this.titleCount.next(exportObj.titleCount);
+                if (exportObj.chartType === 'Bar Chart') {
+                    this.titleCount.next(exportObj.titleCount);
+                }
+                else if (exportObj.chartType === 'Pie Chart') {
+                    this.pieLabel.next(exportObj.pieLabel);
+                };
             };
             reader.readAsText(event.target.files[0]);
         };
         input.click();
     }
 
-    public savePersistence(chartType: string, jobName: string, dataSource: any[], titleCount: number) {
+    public savePersistence(chartType: string, jobName: string, dataSource: any[], parameter: any) {
         const chartData = {
             chartType: chartType,
             jobName: jobName,
-            dataSource: dataSource,
-            titleCount: titleCount
+            dataSource: dataSource
         };
-        localStorage.setItem('chartData', JSON.stringify(chartData));
+        if (chartType === 'Bar Chart') {
+            chartData['titleCount'] = parameter;
+            localStorage.setItem('barChartData', JSON.stringify(chartData));
+        }
+        else if (chartType === 'Pie Chart') {
+            chartData['pieLabel'] = parameter;
+            localStorage.setItem('pieChartData', JSON.stringify(chartData));
+        }
     }
 
     public loadPersistence() {
-        if (!localStorage.getItem('chartData')) {
+        if (!localStorage.getItem('barChartData') && !localStorage.getItem('pieChartData')) {
             console.log('No chart data in local storage.');
             return;
         }
         else {
-            const chartData = JSON.parse(localStorage.getItem('chartData'));
-            this.chartType.next(chartData.chartType);
-            this.jobName.next(chartData.jobName);
-            this.dataSource.next(chartData.dataSource);
-            this.titleCount.next(chartData.titleCount);
+            if (localStorage.getItem('barChartData')) {
+                const barChartData = JSON.parse(localStorage.getItem('barChartData'));
+                this.chartType.next(barChartData.chartType);
+                this.jobName.next(barChartData.jobName);
+                this.dataSource.next(barChartData.dataSource);
+                this.titleCount.next(barChartData.titleCount);
+            }
+            if (localStorage.getItem('pieChartData')) {
+                const pieChartData = JSON.parse(localStorage.getItem('pieChartData'));
+                this.chartType.next(pieChartData.chartType);
+                this.jobName.next(pieChartData.jobName);
+                this.dataSource.next(pieChartData.dataSource);
+                this.pieLabel.next(pieChartData.pieLabel);
+            }
         }
     }
 }

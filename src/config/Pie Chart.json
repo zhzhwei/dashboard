@@ -1,0 +1,19 @@
+{
+    "chartType": "Pie Chart",
+    "jobName": "Polymechaniker",
+    "dataSource": [
+        {
+            "label": "Fulltime=True",
+            "value": 3
+        },
+        {
+            "label": "Fulltime=False",
+            "value": 4
+        },
+        {
+            "label": "No Infomation",
+            "value": 1
+        }
+    ],
+    "pieLabel": "isFulltimeJob"
+}

@@ -82,7 +82,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                // this.chartService.saveJsonFile(this.chartType, dataSource);
+                this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
             });
         
         this.svg.append('foreignObject')

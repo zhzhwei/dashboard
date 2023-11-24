@@ -26,7 +26,6 @@ export class GridStackComponent implements OnInit {
     private grid: GridStack;
     private serializedData: any[] = []
     private itemEl: any;
-    public titleCount: number;
 
     public barContEl: any;
     public stackedBarContEl: any;
@@ -182,7 +181,7 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentTitleCount
                         ]).subscribe(([jobName, titleCount]) => {
                             this.barChart.createChart(jobName, dataSource, titleCount);
-                            // this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
+                            this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
                         });
                         break;
                     case 'Pie Chart':
@@ -191,7 +190,7 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentPieLabel
                         ]).subscribe(([jobName, pieLabel]) => {
                             this.pieChart.createChart(jobName, dataSource, pieLabel);
-                            // this.chartService.savePersistence(chartType, '', dataSource, 0);
+                            this.chartService.savePersistence(chartType, jobName, dataSource, pieLabel);
                         });
                         break;
                     default:
@@ -203,7 +202,7 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        // this.chartService.loadPersistence();
+        this.chartService.loadPersistence();
         
         this.chartService.currentBarRemove.subscribe(barRemove => {
             if (barRemove) {

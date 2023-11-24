@@ -3,63 +3,63 @@
     "jobName": "Polymechaniker",
     "dataSource": [
         {
-            "skill": "Analytische Fähigkeiten",
+            "skill": "AF",
             "skillCount": 4
         },
         {
-            "skill": "Bewerbungsmanagement",
+            "skill": "BM",
             "skillCount": 4
         },
         {
-            "skill": "CNC-Schleifen",
+            "skill": "CS",
             "skillCount": 4
         },
         {
-            "skill": "Flexibilität",
+            "skill": "F",
             "skillCount": 8
         },
         {
-            "skill": "Kommunikationsfähigkeit",
+            "skill": "KF",
             "skillCount": 8
         },
         {
-            "skill": "Kundenorientierung",
+            "skill": "KO",
             "skillCount": 8
         },
         {
-            "skill": "Leitungsbereitschaft",
+            "skill": "LB",
             "skillCount": 4
         },
         {
-            "skill": "Organisationsfähigkeit",
+            "skill": "OF",
             "skillCount": 8
         },
         {
-            "skill": "Polymechanik",
+            "skill": "P",
             "skillCount": 4
         },
         {
-            "skill": "Problemlösungsfähigkeit",
+            "skill": "PLF",
             "skillCount": 4
         },
         {
-            "skill": "Qualitätsbewusstsein",
+            "skill": "QB",
             "skillCount": 4
         },
         {
-            "skill": "Selbstständigkeit",
+            "skill": "SS",
             "skillCount": 4
         },
         {
-            "skill": "Steuerungskenntnisse",
+            "skill": "SK",
             "skillCount": 4
         },
         {
-            "skill": "Teamfähigkeit",
+            "skill": "TF",
             "skillCount": 8
         },
         {
-            "skill": "Unternehmerisches Denken",
+            "skill": "UD",
             "skillCount": 4
         }
     ],
