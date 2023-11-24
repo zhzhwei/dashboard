@@ -30,6 +30,7 @@ export class PieChartEditorComponent implements OnInit {
     private color: any;
     private arc: any;
     private g: any;
+    public jobName: string;
 
     public jobCountQuery = this.rdfDataService.prefixes + `
         select (count(?s) as ?jobCount) where { 
@@ -51,7 +52,12 @@ export class PieChartEditorComponent implements OnInit {
         replace('?title.', '?title. ?s mp:isLimitedJob "false"^^xsd:boolean.');
 
     constructor(private rdfDataService: RdfDataService, private chartService: ChartService,
-        private dialog: MatDialog) {}
+        private dialog: MatDialog) {
+        this.chartService.currentJobName.subscribe(jobName => {
+            this.jobName = jobName;
+            console.log(this.jobName);
+        });
+    }
 
     ngOnInit(): void {
 

@@ -9,37 +9,45 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Line Chart';">
-                            <img src="assets/line-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/line-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Line Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Bar Chart';">
-                            <img src="assets/bar-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/bar-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Bar Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Pie Chart';">
-                            <img src="assets/pie-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/pie-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Pie Chart</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plot';">
-                            <img src="assets/star-plot.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/star-plot.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Star Plot</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Line Chart';">
-                            <img src="assets/line-charts.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/line-charts.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Line Charts</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Stacked Bar Chart';">
-                            <img src="assets/stacked-bar-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/stacked-bar-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Stacked Bars</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Doughnut';">
-                            <img src="assets/doughnut.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/doughnut.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Doughnut</p>
                         </div>
                         <div class="col-md-3 text-center" (click)="chartType = 'Star Plots';">
-                            <img src="assets/star-plots.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100">
+                            <img src="assets/star-plots.png" (click)="chartTypeSelect($event)" class="img-button"
+                                width="100" height="100">
                             <p>Star Plots</p>
                         </div>
                     </div>
@@ -48,16 +56,18 @@
             <div class="card">
                 <h5>2. Select Dataset</h5>
                 <div class="card-body">
-                    <div class="row" *ngIf="chartType === 'Bar Chart' || chartType === 'Pie Chart'"> 
+                    <div class="row" *ngIf="chartType === 'Bar Chart' || chartType === 'Pie Chart'">
                         <div class="table-container" *ngIf="barResults.length > 0">
-                            <div class="form-container">
-                                <form (ngSubmit)="onSearch(searchTerm.value)">
-                                    <input type="text" placeholder="Please type the full job name (case-sensitive)" #searchTerm>
-                                    <button class="search-btn" mat-stroked-button color="primary">Search</button>
-                                </form>
+                            <div class="search-container">
+                                <input *ngIf="chartType === 'Bar Chart'" [(ngModel)]="searchTerm" (input)="onSearch(searchTerm)" type="text"
+                                    matTooltip="Job name is necessary, and before you go forward to the Visualization Editor, please enter the full job name (case-sensitive)"
+                                    placeholder="Please enter the job name here*">
+                                <input *ngIf="chartType === 'Pie Chart'" [(ngModel)]="searchTerm" (input)="onSearch(searchTerm)" type="text"
+                                    matTooltip="Job name is not necessary, but if you enter the job name and before going forward to the Visualization Editor, please enter the full job name (case-sensitive)"
+                                    placeholder="Please enter the job name here">
                                 <p class="result-p">Showing job titles from 1 to {{ barResults.length }}</p>
                             </div>
-                            <table> 
+                            <table>
                                 <tr>
                                     <th>No.</th>
                                     <th>Job title</th>

@@ -9,6 +9,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { VisGenComponent } from './vis-gen.component';
 
@@ -25,6 +26,7 @@ import { VisGenComponent } from './vis-gen.component';
         ReactiveFormsModule,
         MatNativeDateModule,
         MatTableModule,
+        MatTooltipModule
     ],
     declarations: [
         VisGenComponent,

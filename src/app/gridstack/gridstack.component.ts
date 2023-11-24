@@ -53,14 +53,22 @@ export class GridStackComponent implements OnInit {
         this.grid = GridStack.init(options);
 
         this.serializedData = [
-            { x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Bar Chart', name: 'bar chart' },
-            { x: 4, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
-            { x: 8, y: 0, w: 4, h: 5, minW: 4, minH: 5, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 3, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
-            { x: 8, y: 5, w: 4, h: 6, minW: 4, minH: 6, content: 'Star Plots', name: 'star plots' },
-            { x: 4, y: 4, w: 4, h: 2, minW: 4, minH: 3, content: 'Line Chart', name: 'line Chart' },
-            { x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
-            { x: 4, y: 6, w: 4, h: 4, minW: 4, minH: 4, content: 'Line Charts', name: 'line Charts' },
+            // { x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Bar Chart', name: 'bar chart' },
+            // { x: 4, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
+            // { x: 8, y: 0, w: 4, h: 5, minW: 4, minH: 5, content: 'Star Plot', name: 'star plot' },
+            // { x: 0, y: 3, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
+            // { x: 8, y: 5, w: 4, h: 6, minW: 4, minH: 6, content: 'Star Plots', name: 'star plots' },
+            // { x: 4, y: 4, w: 4, h: 2, minW: 4, minH: 3, content: 'Line Chart', name: 'line Chart' },
+            // { x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
+            // { x: 4, y: 6, w: 4, h: 4, minW: 4, minH: 4, content: 'Line Charts', name: 'line Charts' },
+            { x: 0, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Bar Chart', name: 'bar chart' },
+            { x: 3, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Pie Chart', name: 'pie chart' },
+            { x: 6, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Line Chart', name: 'line Chart' },
+            { x: 9, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Star Plot', name: 'star plot' },
+            { x: 0, y: 2, w: 3, h: 2, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
+            { x: 3, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
+            { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line Charts' },
+            { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
         ];
 
         this.grid.load(this.serializedData);
@@ -122,25 +130,25 @@ export class GridStackComponent implements OnInit {
                         }
                         break;
                     case 'dash-stacked-bar':
-                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
+                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
                             console.log('gridstack item stacked-bar content was resized');
                             this.stackedChart.updateChart();
                         }
                         break;
                     case 'dash-star':
-                        if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
+                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
                             console.log('gridstack item star content was resized');
                             this.starPlot.updateChart();
                         }
                         break;
                     case 'dash-pie':
-                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
+                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
                             console.log('gridstack item pie content was resized');
                             this.pieChart.updateChart();
                         }
                         break;
                     case 'dash-doughnut':
-                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
+                        if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
                             console.log('gridstack item doughnut content was resized');
                             this.donutChart.updateChart();
                         }

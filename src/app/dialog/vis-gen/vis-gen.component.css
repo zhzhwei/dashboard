@@ -10,13 +10,13 @@
     transform: scale(0.95);
 }
 
-.form-container {
+.search-container {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
 }
 
-.search-btn {
+.confirm-btn {
     margin-left: 20px; 
 }
 

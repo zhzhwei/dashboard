@@ -14,8 +14,6 @@ interface Datum {
 })
 export class PieChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService, private chartService: ChartService) { }
-
     private svg: any;
     private margin = 60;
     private pieEl: any;
@@ -24,6 +22,8 @@ export class PieChartComponent implements OnInit {
     private arc: any;
     private g: any;
     public pieRemove = false;
+
+    constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
     ngOnInit(): void {
 
@@ -46,7 +46,7 @@ export class PieChartComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 5)
+            .attr("y", this.margin / 2 + 8)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text("JobPosting --- " + pieLabel);
@@ -183,7 +183,7 @@ export class PieChartComponent implements OnInit {
 
         this.svg.select("text.title")
             .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2)
+            .attr("y", this.margin / 2 + 8)
 
         this.svg.select('foreignObject.pencil')
             .attr('x', this.pieEl.clientWidth - 38)

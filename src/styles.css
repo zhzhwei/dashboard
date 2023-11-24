@@ -28,3 +28,8 @@ body {
     font-size: 20px;
     border-radius: 5px;
 }
+
+.mat-tooltip {
+    font-size: 0.9em;
+    text-align: justify;
+}
