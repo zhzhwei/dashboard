@@ -95,6 +95,7 @@ export class BarChartEditorComponent implements OnInit {
 
     public applyChanges(): void {
         // console.log(this.jobName);
+        this.chartService.newItem.next(true);
         this.titleQuery = this.rdfDataService.prefixes + `
             select (count(?s) as ?skillCount) where { 
                 ?s rdf:type edm:JobPosting.
