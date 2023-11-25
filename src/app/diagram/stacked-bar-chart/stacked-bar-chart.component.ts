@@ -189,9 +189,9 @@ export class StackedBarChartComponent implements OnInit {
                 // Add a mousemove event listener to update the position of the tooltip element
                 d3.select('body')
                     .on('mousemove', () => {
-                        const [x, y] = d3.mouse(nodes[i]);
+                        var [x, y] = d3.mouse(nodes[i]);
                         tooltip.style('left', `${x}px`)
-                            .style('top', `${y + 80}px`);
+                            .style('top', `${y - 40}px`);
                     });
             })
             .on('mouseout', () => {

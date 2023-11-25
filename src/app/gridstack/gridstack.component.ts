@@ -170,7 +170,7 @@ export class GridStackComponent implements OnInit {
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
         // resizeObserver.observe(this.stackedBarContEl);
-        // resizeObserver.observe(this.starContEl);
+        resizeObserver.observe(this.starContEl);
         resizeObserver.observe(this.pieContEl);
         // resizeObserver.observe(this.donutContEl);
 

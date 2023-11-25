@@ -22,6 +22,7 @@ export class StarPlotComponent implements OnInit {
     private svg: any;
     private starEL: any;
     private margin = 70;
+    private starLine: any;
     
     constructor(private dialogService: DialogService) { }
 
@@ -41,7 +42,7 @@ export class StarPlotComponent implements OnInit {
             .attr('height', this.starEL.clientHeight)
             
         var g = this.svg.append('g')
-            .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
+            .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2 + 20) + ')');
 
         this.svg.append("text")
             .attr("class", "title")
@@ -52,7 +53,7 @@ export class StarPlotComponent implements OnInit {
             .text("Stellenausschreibungen - Fertigkeiten");
 
         this.svg.append('foreignObject')
-            .attr('class', 'edit')
+            .attr('class', 'pencil')
             .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 20)
             .attr('width', 20)
@@ -101,7 +102,7 @@ export class StarPlotComponent implements OnInit {
             .align(0)
             .domain(this.data.map(d => d.axis));
         
-        this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2;
+        this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2.5;
         
         g.append('g')
             .selectAll('g')
@@ -120,6 +121,7 @@ export class StarPlotComponent implements OnInit {
             .data(this.data)
             .enter()
             .append('text')
+            .attr('class', 'x-text')
             .attr('transform', d => 'rotate(' + ((this.x(d.axis) * 180 / Math.PI) - 90) + ')translate(' + this.radius + ',0)')
             .attr('text-anchor', 'end')
             .attr('dy', '1em')
@@ -129,7 +131,7 @@ export class StarPlotComponent implements OnInit {
             .domain([0, 8])
             .range([0, this.radius]);
 
-        let starLine = d3.lineRadial<{x: number, y: number}>()
+        this.starLine = d3.lineRadial<{x: number, y: number}>()
             .radius(d => d.y)
             .angle(d => d.x)
             .curve(d3.curveLinearClosed);
@@ -139,7 +141,7 @@ export class StarPlotComponent implements OnInit {
             .data([this.data])
             .enter()
             .append('path')
-            .attr('d', d => starLine(d.map(t => ({ x: this.x(t.axis), y: this.y(t.value) }))))
+            .attr('d', d => this.starLine(d.map(t => ({ x: this.x(t.axis), y: this.y(t.value) }))))
             .style('fill', '#FE5F55')
             .style('stroke', 'red')
             .style('stroke-width', '2px')
@@ -153,23 +155,44 @@ export class StarPlotComponent implements OnInit {
             .attr('height', this.starEL.clientHeight);
         
         this.svg.select('g')
-            .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2) + ')');
+            .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2 + 20) + ')');
 
         this.svg.select("text.title")
             .attr("x", (this.starEL.clientWidth / 2))
             .attr("y", this.margin / 2)
         
-        this.svg.select('foreignObject.edit')
-            .attr('x', this.starEL.clientWidth - 50)
+        this.svg.select('foreignObject.pencil')
+            .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 20)
 
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.starEL.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.starEL.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.starEL.clientWidth - 36)
+            .attr('y', 95)
+
         // Redraw the X-axis on the DOM
-        // this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2;
-        // this.svg.selectAll('g.x-axis')
-        //     .attr('transform', d => 'rotate(' + ((this.x(d.axis) * 180 / Math.PI) - 90) + ')translate(' + this.radius + ',0)')
-        //     .attr('x2', -this.radius)
+        this.radius = Math.min(this.starEL.clientWidth, this.starEL.clientHeight) / 2.5;
+        this.svg.selectAll('g.x-axis')
+            .attr('transform', d => 'rotate(' + ((this.x(d.axis) * 180 / Math.PI) - 90) + ')translate(' + this.radius + ',0)')
+            .selectAll('line')
+            .attr('x2', -this.radius)
+            .style('stroke', '#000')
+            .style('stroke-opacity', 1);
         
         // Update the Y-axis scale range
-        // this.y.range([0, this.radius]);
+        this.y.range([0, this.radius]);
+
+        this.svg.selectAll('.x-text')
+            .attr('transform', d => 'rotate(' + ((this.x(d.axis) * 180 / Math.PI) - 90) + ')translate(' + this.radius + ',0)');
+        
+        this.svg.selectAll('path')
+            .attr('d', d => this.starLine(d.map(t => ({ x: this.x(t.axis), y: this.y(t.value) }))))
     }
 }
