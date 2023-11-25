@@ -14,7 +14,7 @@ export class StackedBarChartComponent implements OnInit {
     private svg: any;
 
     private margin = 70;
-    private barEL: any;
+    private stackedBarEL: any;
     private x: any;
     private y: any;
     private legend: any;
@@ -43,24 +43,24 @@ export class StackedBarChartComponent implements OnInit {
     }
 
     public createChart(data): void {
-        this.barEL = document.getElementById('dash-stacked-bar');
+        this.stackedBarEL = document.getElementById('dash-stacked-bar');
         
         // Clear the item's content
-        while (this.barEL.firstChild) {
-            this.barEL.removeChild(this.barEL.firstChild);
+        while (this.stackedBarEL.firstChild) {
+            this.stackedBarEL.removeChild(this.stackedBarEL.firstChild);
         }
         
         this.svg = d3.select("#dash-stacked-bar")
             .append("svg")
-            .attr("width", this.barEL.clientWidth)
-            .attr("height", this.barEL.clientHeight)
+            .attr("width", this.stackedBarEL.clientWidth)
+            .attr("height", this.stackedBarEL.clientHeight)
 
         var g = this.svg.append("g")
             .attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
         this.svg.append("text")
             .attr("class", "title")
-            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("x", (this.stackedBarEL.clientWidth / 2))
             .attr("y", this.margin / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
@@ -68,13 +68,47 @@ export class StackedBarChartComponent implements OnInit {
 
         this.svg.append('foreignObject')
             .attr('class', 'edit')
-            .attr('x', this.barEL.clientWidth - 50)
+            .attr('x', this.stackedBarEL.clientWidth - 38)
             .attr('y', 20)
             .attr('width', 20)
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                this.dialogService.openStackedBarChartEditor
+                this.dialogService.openStackedBarChartEditor();
+            });
+
+        this.svg.append('foreignObject')
+            .attr('class', 'cart')
+            .attr('x', this.stackedBarEL.clientWidth - 40)
+            .attr('y', 45)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-shopping-cart"></i>')
+            .on('click', () => {
+                // this.dialogService.openBarChartEditor();
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'heart')
+            .attr('x', this.stackedBarEL.clientWidth - 38)
+            .attr('y', 70)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-heart"></i>')
+            .on('click', () => {
+                // this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'trash')
+            .attr('x', this.stackedBarEL.clientWidth - 36)
+            .attr('y', 95)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-trash"></i>')
+            .on('click', () => {
+                // this.barRemove = true;
+                // this.chartService.barRemove.next(this.barRemove);
             });
 
         const groups = ["Werkzeugmacher", "Feinwerkmechaniker"];
@@ -84,13 +118,13 @@ export class StackedBarChartComponent implements OnInit {
         // // Create the X-axis band scale.
         this.x = d3.scaleBand()
             .domain(subgroups)
-            .range([0, this.barEL.clientWidth - this.margin * 2])
+            .range([0, this.stackedBarEL.clientWidth - this.margin * 2])
             .padding(0.2)
 
         // Draw the X-axis on the DOM
         g.append("g")
             .attr('class', 'x-axis')
-            .attr("transform", "translate(0," + (this.barEL.clientHeight - this.margin * 2) + ")")
+            .attr("transform", "translate(0," + (this.stackedBarEL.clientHeight - this.margin * 2) + ")")
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
             .selectAll('text')
             .attr('transform', 'translate(-10,0)rotate(-45)')
@@ -99,7 +133,7 @@ export class StackedBarChartComponent implements OnInit {
         // // Add Y axis
         this.y = d3.scaleLinear()
             .domain([0, 7])
-            .range([this.barEL.clientHeight - this.margin * 2, 0]);
+            .range([this.stackedBarEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
         g.append("g")
@@ -167,7 +201,7 @@ export class StackedBarChartComponent implements OnInit {
 
         this.legend = g.append("g")
             .attr("class", "legend")
-            .attr("transform", `translate(${this.barEL.clientWidth / 4}, 0)`);
+            .attr("transform", `translate(${this.stackedBarEL.clientWidth / 4}, 0)`);
 
         // Create a group element for each legend item
         this.legendItems = this.legend.selectAll(".legend-item")
@@ -199,27 +233,27 @@ export class StackedBarChartComponent implements OnInit {
 
     public updateChart(): void {
         // Update the SVG element size
-        this.svg.attr('width', this.barEL.clientWidth)
-            .attr('height', this.barEL.clientHeight);
+        this.svg.attr('width', this.stackedBarEL.clientWidth)
+            .attr('height', this.stackedBarEL.clientHeight);
 
         this.svg.select("text.title")
-            .attr("x", (this.barEL.clientWidth / 2))
+            .attr("x", (this.stackedBarEL.clientWidth / 2))
             .attr("y", this.margin / 2)
         
         this.svg.select('foreignObject.edit')
-            .attr('x', this.barEL.clientWidth - 50)
+            .attr('x', this.stackedBarEL.clientWidth - 50)
             .attr('y', 20)
 
         // Update the X-axis scale range
-        this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+        this.x.range([0, this.stackedBarEL.clientWidth - this.margin * 2]);
 
         // Redraw the X-axis on the DOM
         this.svg.select('g.x-axis')
-            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
+            .attr('transform', 'translate(0,' + (this.stackedBarEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x).tickSizeOuter(0))
 
         // Update the Y-axis scale range
-        this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);
+        this.y.range([this.stackedBarEL.clientHeight - this.margin * 2, 0]);
 
         // Redraw the Y-axis on the DOM
         this.svg.select('g.y-axis')
@@ -234,7 +268,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("stroke", "grey");
         
         this.svg.select("g.legend")
-            .attr("transform", 'translate(' + (this.barEL.clientWidth / 4) + ', 0)');
+            .attr("transform", 'translate(' + (this.stackedBarEL.clientWidth / 4) + ', 0)');
     }
 
 }

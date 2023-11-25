@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DialogService } from 'src/app/services/dialog.service';
+
 import * as d3 from 'd3';
 
 @Component({
@@ -21,7 +23,7 @@ export class StarPlotComponent implements OnInit {
     private starEL: any;
     private margin = 70;
     
-    constructor() { }
+    constructor(private dialogService: DialogService) { }
 
     ngOnInit() {
         
@@ -51,13 +53,47 @@ export class StarPlotComponent implements OnInit {
 
         this.svg.append('foreignObject')
             .attr('class', 'edit')
-            .attr('x', this.starEL.clientWidth - 50)
+            .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 20)
             .attr('width', 20)
             .attr('height', 20)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                // this.openDialog();
+                this.dialogService.openStarPlotEditor();
+            });
+
+        this.svg.append('foreignObject')
+            .attr('class', 'cart')
+            .attr('x', this.starEL.clientWidth - 40)
+            .attr('y', 45)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-shopping-cart"></i>')
+            .on('click', () => {
+                // this.dialogService.openBarChartEditor();
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'heart')
+            .attr('x', this.starEL.clientWidth - 38)
+            .attr('y', 70)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-heart"></i>')
+            .on('click', () => {
+                // this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'trash')
+            .attr('x', this.starEL.clientWidth - 36)
+            .attr('y', 95)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-trash"></i>')
+            .on('click', () => {
+                // this.barRemove = true;
+                // this.chartService.barRemove.next(this.barRemove);
             });
 
         this.x = d3.scaleBand()

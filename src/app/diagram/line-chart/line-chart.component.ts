@@ -51,7 +51,7 @@ export class LineChartComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.lineEL.clientWidth / 2))
-            .attr("y", this.margin / 2 + 5)
+            .attr("y", this.margin / 2 + 2)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text("JobPosting");
