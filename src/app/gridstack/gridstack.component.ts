@@ -20,7 +20,7 @@ declare var ResizeObserver: any;
 
 export class GridStackComponent implements OnInit {
     @ViewChild(BarChartComponent) barChart: BarChartComponent;
-    @ViewChild(StackedBarChartComponent) stackedChart: StackedBarChartComponent;
+    @ViewChild(StackedBarChartComponent) stackedBarChart: StackedBarChartComponent;
     @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
     @ViewChild(PieChartComponent) pieChart: PieChartComponent;
     @ViewChild(DoughnutComponent) donutChart: DoughnutComponent;
@@ -126,7 +126,8 @@ export class GridStackComponent implements OnInit {
             { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
             { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
             { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight },
-            { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight }
+            { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight },
+            { width: this.lineContEl.offsetWidth, height: this.lineContEl.offsetHeight }
         ];
 
         // Create a new ResizeObserver
@@ -142,25 +143,30 @@ export class GridStackComponent implements OnInit {
                         }
                         break;
                     case 'dash-stacked-bar':
-                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
-                            this.stackedChart.updateChart();
+                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
+                            this.stackedBarChart.updateChart();
                         }
                         break;
                     case 'dash-star':
-                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
+                        if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
                             this.starPlot.updateChart();
                         }
                         break;
                     case 'dash-pie':
-                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
+                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
                             if (!this.pieChart.pieRemove) {
                                 this.pieChart.updateChart();
                             }
                         }
                         break;
                     case 'dash-doughnut':
-                        if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
+                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
                             this.donutChart.updateChart();
+                        }
+                        break;
+                    case 'dash-line':
+                        if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[5].height) > 10) {
+                            this.lineChart.updateChart();
                         }
                         break;
                 }
@@ -169,10 +175,11 @@ export class GridStackComponent implements OnInit {
 
         // Observe the element for size changes
         resizeObserver.observe(this.barContEl);
-        // resizeObserver.observe(this.stackedBarContEl);
+        resizeObserver.observe(this.stackedBarContEl);
         resizeObserver.observe(this.starContEl);
         resizeObserver.observe(this.pieContEl);
-        // resizeObserver.observe(this.donutContEl);
+        resizeObserver.observe(this.donutContEl);
+        resizeObserver.observe(this.lineContEl);
 
     }
 
@@ -186,7 +193,7 @@ export class GridStackComponent implements OnInit {
             if (chartType && dataSource.length === 0) {
                 switch (chartType) {
                     case 'Stacked Bar Chart':
-                        this.stackedChart.createChart(this.stackedChart.data);
+                        this.stackedBarChart.createChart(this.stackedBarChart.data);
                         break;
                     case 'Star Plot':
                         this.starPlot.createChart();

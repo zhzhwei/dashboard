@@ -103,8 +103,8 @@ export class DoughnutComponent implements OnInit {
             });
 
 
-        this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
-        this.innerRadius1 = this.outerRadius - 30; // adjust this value to change the thickness of the doughnut
+        this.outerRadius = Math.min(this.donutEl.clientWidth, this.donutEl.clientHeight) / 2 - this.margin;
+        this.innerRadius1 = this.outerRadius - 30;
         this.innerRadius2 = this.outerRadius - 60;
 
         // Define the color scale
@@ -171,9 +171,9 @@ export class DoughnutComponent implements OnInit {
             .attr('y', 95)
 
 
-        this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
-        this.innerRadius1 = this.outerRadius - 50; // adjust this value to change the thickness of the doughnut
-        this.innerRadius2 = this.outerRadius - 100;
+        this.outerRadius = Math.min(this.donutEl.clientWidth, this.donutEl.clientHeight) / 2 - this.margin;
+        this.innerRadius1 = this.outerRadius - 30;
+        this.innerRadius2 = this.outerRadius - 60;
 
         this.arc1 = d3.arc()
             .innerRadius(this.innerRadius1)

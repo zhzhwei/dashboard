@@ -67,7 +67,7 @@ export class StackedBarChartComponent implements OnInit {
             .text("Stellenausschreibungen - Fertigkeiten");
 
         this.svg.append('foreignObject')
-            .attr('class', 'edit')
+            .attr('class', 'pencil')
             .attr('x', this.stackedBarEL.clientWidth - 38)
             .attr('y', 20)
             .attr('width', 20)
@@ -146,15 +146,15 @@ export class StackedBarChartComponent implements OnInit {
             .range(['steelblue', 'darkorange'])
 
         // stack the data per subgroup
-        var stackedData = d3.stack()
+        var stackedBarData = d3.stack()
             .keys(groups)
             (data)
-        // console.log(stackedData);
+        // console.log(stackedBarData);
 
         // Create and fill the bars.
         g.append("g")
             .selectAll("g")
-            .data(stackedData)
+            .data(stackedBarData)
             .enter()
             .append("g")
             .attr("fill", d => color(d.key))
@@ -240,9 +240,21 @@ export class StackedBarChartComponent implements OnInit {
             .attr("x", (this.stackedBarEL.clientWidth / 2))
             .attr("y", this.margin / 2)
         
-        this.svg.select('foreignObject.edit')
-            .attr('x', this.stackedBarEL.clientWidth - 50)
+        this.svg.select('foreignObject.pencil')
+            .attr('x', this.stackedBarEL.clientWidth - 38)
             .attr('y', 20)
+
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.stackedBarEL.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.stackedBarEL.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.stackedBarEL.clientWidth - 36)
+            .attr('y', 95)
 
         // Update the X-axis scale range
         this.x.range([0, this.stackedBarEL.clientWidth - this.margin * 2]);

@@ -117,12 +117,14 @@ export class LineChartComponent implements OnInit {
             .domain([0, d3.max(data, d => d.value)]);  
 
         g.append("g")
+            .attr('class', 'x-axis')
             .attr('transform', 'translate(0,' + (this.lineEL.clientHeight - this.margin * 2) + ')')
             .call(d3.axisBottom(this.x))
             .selectAll("text")
             .style('text-anchor', 'middle');
 
         g.append("g")
+            .attr('class', 'y-axis')
             .call(d3.axisLeft(this.y));
         
         g.selectAll("dot")
@@ -147,4 +149,55 @@ export class LineChartComponent implements OnInit {
 
     }
 
+    public updateChart(): void {
+        // Update the SVG element size
+        this.svg.attr('width', this.lineEL.clientWidth)
+            .attr('height', this.lineEL.clientHeight);
+
+        this.svg.select("text.title")
+            .attr("x", (this.lineEL.clientWidth / 2))
+            .attr("y", this.margin / 2 + 5)
+
+        this.svg.select('foreignObject.pencil')
+            .attr('x', this.lineEL.clientWidth - 38)
+            .attr('y', 20)
+
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.lineEL.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.lineEL.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.lineEL.clientWidth - 36)
+            .attr('y', 95)
+        
+        this.x.range([0, this.lineEL.clientWidth - this.margin * 2]);
+        this.y.range([this.lineEL.clientHeight - this.margin * 2, 0]);
+
+        this.svg.selectAll('g.x-axis')
+            .attr('transform', 'translate(0,' + (this.lineEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(this.x))
+            .selectAll("text")
+            .style('text-anchor', 'middle');
+
+        this.svg.selectAll('g.y-axis')
+            .call(d3.axisLeft(this.y));
+
+        this.svg.selectAll('circle')
+            .attr("cx", (d: any) => this.x(d.date))
+            .attr("cy", (d: any) => this.y(d.value));
+
+        this.svg.selectAll('.line')
+            .attr("d", d3.line()
+                .x((d: any) => this.x(d.date))
+                .y((d: any) => this.y(d.value))
+            );
+
+        
+
+            
+    }
 }
