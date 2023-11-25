@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RdfDataService } from '../../services/rdf-data.service';
 import { MatRadioChange } from '@angular/material/radio';
-import { ChartService } from 'src/app/services/chart.service';
+import { ChartService } from '../../services/chart.service';
 import * as d3 from 'd3';
 
 interface Datum {

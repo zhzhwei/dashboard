@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StackedBarEditorComponent } from   '../../dialog/stacked-bar-editor/stacked-bar-editor.component';
-import { DialogService } from 'src/app/services/dialog.service';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'app-stacked-bar-chart',
@@ -19,7 +19,6 @@ export class StackedBarChartComponent implements OnInit {
     private y: any;
     private legend: any;
     private legendItems: any;
-    private tooltip: any;
 
     public data = [
         { Type: "Kommfähigkeit", Werkzeugmacher: 3, Feinwerkmechaniker: 2 },
@@ -135,7 +134,7 @@ export class StackedBarChartComponent implements OnInit {
             .attr("stroke", "grey")
             .on('mouseover', (d, i, nodes) => {
                 // Create the tooltip element
-                this.tooltip = d3.select('body')
+                var tooltip = d3.select('#dash-stacked-bar')
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
@@ -144,11 +143,12 @@ export class StackedBarChartComponent implements OnInit {
                     .style('border-width', '1px')
                     .style('border-radius', '5px')
                     .style('padding', '10px')
-                    .style('opacity', 0)
-                    .html(`Type: ${d.data['Type']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}<br>Werkzeugmacher: ${d.data['Werkzeugmacher']}`);
+                    .style('opacity', 0);
 
                 // Show the tooltip element
-                this.tooltip.transition()
+                d3.select('.tooltip')
+                    .html(`Type: ${d.data['Type']}<br>Feinwerkmechaniker: ${d.data['Feinwerkmechaniker']}<br>Werkzeugmacher: ${d.data['Werkzeugmacher']}`)
+                    .transition()
                     .duration(200)
                     .style('opacity', 1);
 
@@ -156,7 +156,7 @@ export class StackedBarChartComponent implements OnInit {
                 d3.select('body')
                     .on('mousemove', () => {
                         const [x, y] = d3.mouse(nodes[i]);
-                        this.tooltip.style('left', `${x + 1000}px`)
+                        tooltip.style('left', `${x}px`)
                             .style('top', `${y + 80}px`);
                     });
             })

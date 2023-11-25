@@ -18,6 +18,8 @@ import { AppComponent } from './app.component';
 import { BarChartEditorComponent } from './dialog/bar-chart-editor/bar-chart-editor.component';
 import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-bar-editor.component';
 import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-editor.component';
+import { StarPlotEditorComponent } from './dialog/star-plot-editor/star-plot-editor.component';
+import { LineChartEditorComponent } from './dialog/line-chart-editor/line-chart-editor.component';
 
 @NgModule({
     imports: [
@@ -41,6 +43,8 @@ import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-edi
         BarChartEditorComponent,
         StackedBarEditorComponent,
         PieChartEditorComponent,
+        StarPlotEditorComponent,
+        LineChartEditorComponent
     ],
     bootstrap: [
         AppComponent

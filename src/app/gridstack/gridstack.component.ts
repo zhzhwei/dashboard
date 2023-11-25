@@ -4,6 +4,8 @@ import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-b
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
+import { LineChartComponent } from '../diagram/line-chart/line-chart.component';
+
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { combineLatest } from 'rxjs';
 import { GridStack, GridStackElement } from 'gridstack';
@@ -22,6 +24,8 @@ export class GridStackComponent implements OnInit {
     @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
     @ViewChild(PieChartComponent) pieChart: PieChartComponent;
     @ViewChild(DoughnutComponent) donutChart: DoughnutComponent;
+    @ViewChild(LineChartComponent) lineChart: LineChartComponent;
+
 
     private grid: GridStack;
     private serializedData: any[] = []
@@ -32,6 +36,7 @@ export class GridStackComponent implements OnInit {
     public starContEl: any;
     public pieContEl: any;
     public donutContEl: any;
+    public lineContEl: any;
 
     constructor(private chartService: ChartService) {
         
@@ -61,13 +66,13 @@ export class GridStackComponent implements OnInit {
             // { x: 4, y: 4, w: 4, h: 2, minW: 4, minH: 3, content: 'Line Chart', name: 'line Chart' },
             // { x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
             // { x: 4, y: 6, w: 4, h: 4, minW: 4, minH: 4, content: 'Line Charts', name: 'line Charts' },
-            { x: 0, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Bar Chart', name: 'bar chart' },
-            { x: 3, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Pie Chart', name: 'pie chart' },
-            { x: 6, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Line Chart', name: 'line Chart' },
-            { x: 9, y: 0, w: 3, h: 2, minW: 3, minH: 2, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 2, w: 3, h: 2, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
+            { x: 0, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Bar Chart', name: 'bar chart' },
+            { x: 3, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
+            { x: 6, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Chart', name: 'line chart' },
+            { x: 9, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plot', name: 'star plot' },
+            { x: 0, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
             { x: 3, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
-            { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line Charts' },
+            { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line charts' },
             { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
         ];
 
@@ -106,6 +111,12 @@ export class GridStackComponent implements OnInit {
                     this.itemEl = this.grid.getGridItems()[itemIndex];
                     this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.donutContEl.setAttribute('id', 'dash-doughnut');
+                    break;
+                case 'line chart':
+                    var itemIndex = this.serializedData.findIndex(item => item.name === 'line chart');
+                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.lineContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                    this.lineContEl.setAttribute('id', 'dash-line');
                     break;
             }
         });
@@ -172,6 +183,22 @@ export class GridStackComponent implements OnInit {
         ]).subscribe(([chartType, dataSource]) => {
             // console.log('chartType:', chartType);
             // console.log('dataSource.length:', dataSource.length);
+            if (chartType && dataSource.length === 0) {
+                switch (chartType) {
+                    case 'Stacked Bar Chart':
+                        this.stackedChart.createChart(this.stackedChart.data);
+                        break;
+                    case 'Star Plot':
+                        this.starPlot.createChart();
+                        break;
+                    case 'Doughnut':
+                        this.donutChart.createChart(this.donutChart.data);
+                        break;
+                    case 'Line Chart':
+                        this.lineChart.createChart();
+                        break;
+                }
+            }
             if (chartType && dataSource.length > 0) {
                 switch (chartType) {
                     case 'Bar Chart':

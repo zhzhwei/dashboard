@@ -10,7 +10,7 @@ export class DoughnutComponent implements OnInit {
     constructor(private dialog: MatDialog) { }
 
     private svg: any;
-    private margin = 80;
+    private margin = 70;
     private donutEl: any;
     private color: any;
     private outerRadius: number;
@@ -51,21 +51,57 @@ export class DoughnutComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.donutEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 15)
+            .attr("y", this.margin / 2 + 2)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text("Beruf - Stellenausschreibungen");
 
-        this.svg.append('foreignObject')
-            .attr('class', 'edit')
-            .attr('x', this.donutEl.clientWidth - 50)
-            .attr('y', 40)
-            .attr('width', 20)
-            .attr('height', 20)
+            this.svg.append('foreignObject')
+            .attr('class', 'pencil')
+            .attr('x', this.donutEl.clientWidth - 38)
+            .attr('y', 20)
+            .attr('width', 25)
+            .attr('height', 25)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                // this.openDialog();
+                // this.dialogService.openPieChartEditor();
+                // this.chartService.chartType.next('Pie Chart');
             });
+
+        this.svg.append('foreignObject')
+            .attr('class', 'cart')
+            .attr('x', this.donutEl.clientWidth - 40)
+            .attr('y', 45)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-shopping-cart"></i>')
+            .on('click', () => {
+                // this.dialogService.openPieChartEditor();
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'heart')
+            .attr('x', this.donutEl.clientWidth - 38)
+            .attr('y', 70)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-heart"></i>')
+            .on('click', () => {
+                // this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
+            });
+        
+        this.svg.append('foreignObject')
+            .attr('class', 'trash')
+            .attr('x', this.donutEl.clientWidth - 36)
+            .attr('y', 95)
+            .attr('width', 25)
+            .attr('height', 25)
+            .html('<i class="fas fa-trash"></i>')
+            .on('click', () => {
+                // this.pieRemove = true;
+                // this.chartService.pieRemove.next(this.pieRemove);
+            });
+
 
         this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
         this.innerRadius1 = this.outerRadius - 30; // adjust this value to change the thickness of the doughnut
@@ -116,11 +152,24 @@ export class DoughnutComponent implements OnInit {
 
         this.svg.select("text.title")
             .attr("x", (this.donutEl.clientWidth / 2))
-            .attr("y", this.margin / 2)
+            .attr("y", this.margin / 2 + 2)
 
-        this.svg.select('foreignObject.edit')
-            .attr('x', this.donutEl.clientWidth - 50)
+            this.svg.select('foreignObject.pencil')
+            .attr('x', this.donutEl.clientWidth - 38)
             .attr('y', 20)
+
+        this.svg.select('foreignObject.cart')
+            .attr('x', this.donutEl.clientWidth - 40)
+            .attr('y', 45)
+
+        this.svg.select('foreignObject.heart')
+            .attr('x', this.donutEl.clientWidth - 38)
+            .attr('y', 70)
+
+        this.svg.select('foreignObject.trash')
+            .attr('x', this.donutEl.clientWidth - 36)
+            .attr('y', 95)
+
 
         this.outerRadius = Math.min(this.donutEl.clientWidth - this.margin * 2, this.donutEl.clientHeight - this.margin * 2) / 2;
         this.innerRadius1 = this.outerRadius - 50; // adjust this value to change the thickness of the doughnut

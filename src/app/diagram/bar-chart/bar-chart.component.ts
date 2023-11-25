@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import { DialogService } from '../../services/dialog.service';
-import { ChartService } from 'src/app/services/chart.service';
+import { ChartService } from '../../services/chart.service';
 
 @Component({
     selector: 'app-bar-chart',

@@ -3,9 +3,9 @@ import { GridStackComponent } from '../../gridstack/gridstack.component';
 
 import { ChartService } from '../../services/chart.service';
 import { DialogService } from '../../services/dialog.service';
+import { RdfDataService } from '../../services/rdf-data.service';
 
 import * as d3 from 'd3';
-import { RdfDataService } from 'src/app/services/rdf-data.service';
 
 @Component({
     selector: 'app-vis-gen',
@@ -92,6 +92,9 @@ export class VisGenComponent implements OnInit {
                     break;
                 case 'Star Plot':
                     this.dialogService.openStarPlotEditor();
+                    break;
+                case 'Line Chart':
+                    this.dialogService.openLineChartEditor();
                     break;
                 default:
                     console.log('Invalid Chart Type');

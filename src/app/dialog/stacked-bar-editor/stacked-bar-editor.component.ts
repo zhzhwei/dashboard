@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { RdfDataService } from '../../services/rdf-data.service';
 
 @Component({
@@ -7,13 +8,12 @@ import { RdfDataService } from '../../services/rdf-data.service';
 })
 export class StackedBarEditorComponent {
 
-    constructor(private rdfDataService: RdfDataService) { }
 
     public results: any;
     public dataSource = Array(10).fill({});
     public query: string;
 
-    displayColumns: string[] = ['subject', 'predicate', 'object'];
+    constructor(private rdfDataService: RdfDataService, private dialog: MatDialog) { }
     
     ngOnInit(): void {
         this.query = `
@@ -25,6 +25,10 @@ export class StackedBarEditorComponent {
         this.rdfDataService.getQueryResults(this.query)
             .then(data => this.results = data.results.bindings)
             .catch(error => console.error(error));
+    }
+
+    backToDashboard(): void {
+        this.dialog.closeAll();
     }
     
     public applyChanges(): void {

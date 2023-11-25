@@ -6,6 +6,7 @@ import { StackedBarChartComponent } from '../diagram/stacked-bar-chart/stacked-b
 import { StarPlotComponent } from '../diagram/star-plot/star-plot.component';
 import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
+import { LineChartComponent } from '../diagram/line-chart/line-chart.component';
 
 @NgModule({
     imports: [CommonModule],
@@ -15,7 +16,8 @@ import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
         StackedBarChartComponent,
         StarPlotComponent,
         PieChartComponent,
-        DoughnutComponent
+        DoughnutComponent,
+        LineChartComponent
     ],
     exports: [GridStackComponent]
 })

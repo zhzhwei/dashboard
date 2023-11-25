@@ -46,7 +46,7 @@ export class PieChartComponent implements OnInit {
         this.svg.append("text")
             .attr("class", "title")
             .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 8)
+            .attr("y", this.margin / 2 + 5)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text((jobName ? jobName : "JobPosting") + " --- " + pieLabel);
@@ -183,7 +183,7 @@ export class PieChartComponent implements OnInit {
 
         this.svg.select("text.title")
             .attr("x", (this.pieEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 8)
+            .attr("y", this.margin / 2 + 5)
 
         this.svg.select('foreignObject.pencil')
             .attr('x', this.pieEl.clientWidth - 38)
