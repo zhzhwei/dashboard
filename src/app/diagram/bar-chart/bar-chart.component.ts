@@ -25,9 +25,9 @@ export class BarChartComponent implements OnInit {
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         
         // Clear the item's content
-        // while (this.barEL.firstChild) {
-        //     this.barEL.removeChild(this.barEL.firstChild);
-        // }
+        while (this.barEL.firstChild) {
+            this.barEL.removeChild(this.barEL.firstChild);
+        }
 
         this.svg = d3.select('#dash-bar')
             .append('svg')
