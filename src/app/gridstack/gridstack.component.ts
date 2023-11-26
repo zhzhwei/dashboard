@@ -38,8 +38,24 @@ export class GridStackComponent implements OnInit {
     public donutContEl: any;
     public lineContEl: any;
 
+    public chartTypeNum = {
+        'Line Chart': 1, 
+        'Stacked Line Chart': 1,
+        'Bar Chart': 1, 
+        'Stacked Bar Chart': 1,
+        'Pie Chart': 1, 
+        'Doughnut': 1,
+        'Star Plot': 1, 
+        'Star Plots': 1
+    };
+
+    private newTile = {
+        x: 0, y: 0, w: 3, h: 3,
+        autoPosition: true,
+    };
+
     constructor(private chartService: ChartService) {
-        
+
     }
 
     ngOnInit(): void {
@@ -213,7 +229,16 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentJobName,
                             this.chartService.currentTitleCount
                         ]).subscribe(([jobName, titleCount]) => {
-                            this.barChart.createChart(jobName, dataSource, titleCount);
+                            if (this.chartTypeNum[chartType] === 1) {
+                                this.itemEl = this.grid.addWidget(this.newTile);
+                                this.chartTypeNum[chartType]++;
+                            } else {
+                                this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
+                            }
+                            this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                            var tileSerial = 'dash-bar-' + this.chartTypeNum[chartType];
+                            this.barContEl.setAttribute('id', tileSerial);
+                            this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
                             this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
                         });
                         break;
@@ -236,7 +261,7 @@ export class GridStackComponent implements OnInit {
         });
 
         this.chartService.loadPersistence();
-        
+
         this.chartService.currentBarRemove.subscribe(barRemove => {
             if (barRemove) {
                 this.barChart.barRemove = true;
@@ -253,6 +278,10 @@ export class GridStackComponent implements OnInit {
                 this.grid.removeWidget(gridItemElement as GridStackElement);
             }
         });
+
+        // let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
+        // let gridItemElement = element.closest('.grid-stack-item');
+        // this.grid.removeWidget(gridItemElement as GridStackElement);
     }
 
 }
