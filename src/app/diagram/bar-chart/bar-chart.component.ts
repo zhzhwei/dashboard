@@ -20,8 +20,8 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public createChart(jobName: string, dataSource: any[], titleCount: any): void {
-        this.barEL = document.getElementById('dash-bar');
+    public createChart(tileSerial: string, jobName: string, dataSource: any[], titleCount: any): void {
+        this.barEL = document.getElementById(tileSerial);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
         
         // Clear the item's content
@@ -29,7 +29,7 @@ export class BarChartComponent implements OnInit {
             this.barEL.removeChild(this.barEL.firstChild);
         }
 
-        this.svg = d3.select('#dash-bar')
+        this.svg = d3.select('#' + tileSerial)
             .append('svg')
             .attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight)
@@ -131,7 +131,7 @@ export class BarChartComponent implements OnInit {
                 var bar = d3.select(nodes[i]);
 
                 // Create the tooltip element
-                var tooltip = d3.select('#dash-bar')
+                var tooltip = d3.select('#' + tileSerial)
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
