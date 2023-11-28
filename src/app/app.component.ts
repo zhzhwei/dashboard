@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { VisGenComponent } from './dialog/vis-gen/vis-gen.component';
+import { VisGenDialogComponent } from './dialog/vis-gen-dialog/vis-gen-dialog.component';
 import { ChartService } from './services/chart.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class AppComponent {
     }
 
     openDialog() {
-        this.dialog.open(VisGenComponent, {
+        this.dialog.open(VisGenDialogComponent, {
             width: '1500px',
             height: '800px',
             backdropClass: "hello",

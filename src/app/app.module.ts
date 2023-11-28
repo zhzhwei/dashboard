@@ -12,7 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { GridStackModule } from './gridstack/gridstack.module';
-import { VisGenModule } from './dialog/vis-gen/vis-gen.module';
+import { VisGenModule } from './dialog/vis-gen-dialog/vis-gen-dialog.module';
 
 import { AppComponent } from './app.component';
 import { BarChartEditorComponent } from './dialog/bar-chart-editor/bar-chart-editor.component';
@@ -20,6 +20,7 @@ import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-b
 import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-editor.component';
 import { StarPlotEditorComponent } from './dialog/star-plot-editor/star-plot-editor.component';
 import { LineChartEditorComponent } from './dialog/line-chart-editor/line-chart-editor.component';
+import { DeleteConfirmationComponent } from './dialog/delete-confirmation/delete-confirmation.component';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import { LineChartEditorComponent } from './dialog/line-chart-editor/line-chart-
         StackedBarEditorComponent,
         PieChartEditorComponent,
         StarPlotEditorComponent,
-        LineChartEditorComponent
+        LineChartEditorComponent,
+        DeleteConfirmationComponent
     ],
     bootstrap: [
         AppComponent

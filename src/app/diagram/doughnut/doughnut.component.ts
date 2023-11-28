@@ -69,12 +69,12 @@ export class DoughnutComponent implements OnInit {
             });
 
         this.svg.append('foreignObject')
-            .attr('class', 'cart')
-            .attr('x', this.donutEl.clientWidth - 40)
+            .attr('class', 'download')
+            .attr('x', this.donutEl.clientWidth - 38)
             .attr('y', 45)
             .attr('width', 25)
             .attr('height', 25)
-            .html('<i class="fas fa-shopping-cart"></i>')
+            .html('<i class="fas fa-download"></i>')
             .on('click', () => {
                 // this.dialogService.openPieChartEditor();
             });
@@ -158,8 +158,8 @@ export class DoughnutComponent implements OnInit {
             .attr('x', this.donutEl.clientWidth - 38)
             .attr('y', 20)
 
-        this.svg.select('foreignObject.cart')
-            .attr('x', this.donutEl.clientWidth - 40)
+        this.svg.select('foreignObject.download')
+            .attr('x', this.donutEl.clientWidth - 38)
             .attr('y', 45)
 
         this.svg.select('foreignObject.heart')

@@ -64,14 +64,14 @@ export class PieChartComponent implements OnInit {
             });
 
         this.svg.append('foreignObject')
-            .attr('class', 'cart')
-            .attr('x', this.pieEl.clientWidth - 40)
+            .attr('class', 'download')
+            .attr('x', this.pieEl.clientWidth - 38)
             .attr('y', 45)
             .attr('width', 25)
             .attr('height', 25)
-            .html('<i class="fas fa-shopping-cart"></i>')
+            .html('<i class="fas fa-download"></i>')
             .on('click', () => {
-                // this.dialogService.openPieChartEditor();
+                this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
             });
         
         this.svg.append('foreignObject')
@@ -82,7 +82,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
+                
             });
         
         this.svg.append('foreignObject')
@@ -189,8 +189,8 @@ export class PieChartComponent implements OnInit {
             .attr('x', this.pieEl.clientWidth - 38)
             .attr('y', 20)
 
-        this.svg.select('foreignObject.cart')
-            .attr('x', this.pieEl.clientWidth - 40)
+        this.svg.select('foreignObject.download')
+            .attr('x', this.pieEl.clientWidth - 38)
             .attr('y', 45)
 
         this.svg.select('foreignObject.heart')

@@ -1,17 +1,41 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { DeleteConfirmationComponent } from '../dialog/delete-confirmation/delete-confirmation.component';
 import { BarChartEditorComponent } from '../dialog/bar-chart-editor/bar-chart-editor.component';
 import { StackedBarEditorComponent } from '../dialog/stacked-bar-editor/stacked-bar-editor.component';
 import { PieChartEditorComponent } from '../dialog/pie-chart-editor/pie-chart-editor.component';
 import { DoughnutEditorComponent } from '../dialog/doughnut-editor/doughnut-editor.component';
 import { StarPlotEditorComponent } from '../dialog/star-plot-editor/star-plot-editor.component';
 import { LineChartEditorComponent } from '../dialog/line-chart-editor/line-chart-editor.component';
+import { ChartService } from './chart.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DialogService {
-    constructor(private dialog: MatDialog) { }
+    constructor(private dialog: MatDialog, private chartService: ChartService) { }
+
+    openDeleteConfirmation() {
+        const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+            backdropClass: "hello",
+            autoFocus: false,
+            disableClose: true,
+            data:{
+                message: 'Are you sure to delete?',
+                buttonText: {
+                    ok: 'Yes',
+                    cancel: 'Cancel'
+                }
+            }
+        });
+    
+        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+            if (confirmed) {
+                // console.log('Delete confirmed');
+                this.chartService.barRemove.next(true);
+            }
+        });
+    }
 
     openBarChartEditor() {
         this.dialog.open(BarChartEditorComponent, {

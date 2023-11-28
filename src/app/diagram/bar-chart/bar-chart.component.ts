@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as d3 from 'd3';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
+import * as d3 from 'd3';
 
 @Component({
     selector: 'app-bar-chart',
@@ -58,14 +58,14 @@ export class BarChartComponent implements OnInit {
             });
 
         this.svg.append('foreignObject')
-            .attr('class', 'cart')
-            .attr('x', this.barEL.clientWidth - 40)
+            .attr('class', 'download')
+            .attr('x', this.barEL.clientWidth - 38)
             .attr('y', 45)
             .attr('width', 25)
             .attr('height', 25)
-            .html('<i class="fas fa-shopping-cart"></i>')
+            .html('<i class="fas fa-download"></i>')
             .on('click', () => {
-                // this.dialogService.openBarChartEditor();
+                this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
             });
         
         this.svg.append('foreignObject')
@@ -76,7 +76,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
+                
             });
         
         this.svg.append('foreignObject')
@@ -87,8 +87,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-trash"></i>')
             .on('click', () => {
-                this.barRemove = true;
-                this.chartService.barRemove.next(this.barRemove);
+                this.dialogService.openDeleteConfirmation();
             });
 
         // Create the X-axis band scale
@@ -190,8 +189,8 @@ export class BarChartComponent implements OnInit {
             .attr('x', this.barEL.clientWidth - 38)
             .attr('y', 20)
 
-        this.svg.select('foreignObject.cart')
-            .attr('x', this.barEL.clientWidth - 40)
+        this.svg.select('foreignObject.download')
+            .attr('x', this.barEL.clientWidth - 38)
             .attr('y', 45)
 
         this.svg.select('foreignObject.heart')

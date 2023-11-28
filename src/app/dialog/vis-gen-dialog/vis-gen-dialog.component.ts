@@ -8,11 +8,11 @@ import { RdfDataService } from '../../services/rdf-data.service';
 import * as d3 from 'd3';
 
 @Component({
-    selector: 'app-vis-gen',
-    templateUrl: './vis-gen.component.html',
-    styleUrls: ['./vis-gen.component.css']
+    selector: 'app-vis-gen-dialog',
+    templateUrl: './vis-gen-dialog.component.html',
+    styleUrls: ['./vis-gen-dialog.component.css']
 })
-export class VisGenComponent implements OnInit {
+export class VisGenDialogComponent implements OnInit {
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
         private rdfDataService: RdfDataService) { }

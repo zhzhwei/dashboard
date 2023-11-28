@@ -11,7 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { VisGenComponent } from './vis-gen.component';
+import { VisGenDialogComponent } from './vis-gen-dialog.component';
 
 @NgModule({
     imports: [
@@ -29,7 +29,7 @@ import { VisGenComponent } from './vis-gen.component';
         MatTooltipModule
     ],
     declarations: [
-        VisGenComponent,
+        VisGenDialogComponent,
     ],
     // exports: [VisGenComponent]
 })
