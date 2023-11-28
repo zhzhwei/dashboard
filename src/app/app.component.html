@@ -13,7 +13,7 @@
         <div fxFlex="20" class="text-center card text-white grid-stack-item">
             <div id="add-circle" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                 <div>
-                    <ion-icon name="add-circle" style="font-size: 400%" (click)="openDialog()"></ion-icon>
+                    <ion-icon name="add-circle" style="font-size: 400%" (click)="openVisGenDialog()"></ion-icon>
                 </div>
                 <div>
                     <span>Click to create a diagram</span>
@@ -23,7 +23,7 @@
         <div fxFlex="20" class="text-center card text-white grid-stack-item">
             <div id="heart" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
                 <div>
-                    <ion-icon name="heart" style="font-size: 400%"></ion-icon>
+                    <ion-icon name="heart" style="font-size: 400%" (click)="toggleShowDiagrams()"></ion-icon>
                 </div>
                 <div>
                     <span>Show Diagrams in Inventory</span>
@@ -53,9 +53,9 @@
     </div>
     <div fxLayout="row">
         <div fxFlex="100">
-            <div class="grid-container">
+            <!-- <div class="grid-container"> -->
                 <app-gridstack></app-gridstack>
-            </div>
+            <!-- </div> -->
         </div>
     </div>
 </section>

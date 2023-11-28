@@ -9,14 +9,15 @@ import { ChartService } from './services/chart.service';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    
+
+    private showDiagrams: boolean = false;
     constructor(public dialog: MatDialog, private chartService: ChartService) { }
     
     ngOnInit() {
 
     }
 
-    openDialog() {
+    openVisGenDialog() {
         this.dialog.open(VisGenDialogComponent, {
             width: '1500px',
             height: '800px',
@@ -24,6 +25,11 @@ export class AppComponent {
             autoFocus: false,
             disableClose: true
         });
+    }
+
+    toggleShowDiagrams() {
+        this.showDiagrams = !this.showDiagrams;
+        this.chartService.showDiagrams.next(this.showDiagrams);
     }
 
     loadDiagram() {

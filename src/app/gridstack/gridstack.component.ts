@@ -11,6 +11,7 @@ import { combineLatest } from 'rxjs';
 import { GridStack, GridStackElement } from 'gridstack';
 
 import { ChartService } from '../services/chart.service';
+import { escapeRegExp } from '@angular/compiler/src/util';
 declare var ResizeObserver: any;
 
 @Component({
@@ -27,7 +28,8 @@ export class GridStackComponent implements OnInit {
     @ViewChild(LineChartComponent) lineChart: LineChartComponent;
 
 
-    private grid: GridStack;
+    private grid1: GridStack;
+    private grid2: GridStack;
     private serializedData: any[] = []
     private itemEl: any;
 
@@ -37,15 +39,28 @@ export class GridStackComponent implements OnInit {
     public pieContEl: any;
     public donutContEl: any;
     public lineContEl: any;
+    
+    private options = {
+        margin: 5,
+        column: 12,
+        cellHeight: "auto",
+        disableOneColumnMode: true,
+        acceptWidgets: true,
+        removable: '#trash',
+        removeTimeout: 100
+    };
+
+
+    public showDiagrams: boolean = false;
 
     public chartTypeNum = {
-        'Line Chart': 1, 
+        'Line Chart': 1,
         'Stacked Line Chart': 1,
-        'Bar Chart': 1, 
+        'Bar Chart': 1,
         'Stacked Bar Chart': 1,
-        'Pie Chart': 1, 
+        'Pie Chart': 1,
         'Doughnut': 1,
-        'Star Plot': 1, 
+        'Star Plot': 1,
         'Star Plots': 1
     };
 
@@ -59,19 +74,10 @@ export class GridStackComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const options = {
-            margin: 5,
-            column: 12,
-            cellHeight: "auto",
-            disableOneColumnMode: true,
-            acceptWidgets: true,
-            removable: '#trash',
-            removeTimeout: 100
-        };
 
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
 
-        this.grid = GridStack.init(options);
+        this.grid2 = GridStack.init(this.options, '#grid2');
 
         this.serializedData = [
             // { x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Bar Chart', name: 'bar chart' },
@@ -92,7 +98,7 @@ export class GridStackComponent implements OnInit {
             { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
         ];
 
-        this.grid.load(this.serializedData);
+        this.grid2.load(this.serializedData);
 
         // Load the serialized data into the grid
         this.serializedData.forEach(item => {
@@ -100,37 +106,37 @@ export class GridStackComponent implements OnInit {
             switch (item.name) {
                 case 'bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.barContEl.setAttribute('id', 'dash-bar');
                     break;
                 case 'stacked bar chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.stackedBarContEl.setAttribute('id', 'dash-stacked-bar');
                     break;
                 case 'star plot':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.starContEl.setAttribute('id', 'dash-star');
                     break;
                 case 'pie chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.pieContEl.setAttribute('id', 'dash-pie');
                     break;
                 case 'doughnut':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.donutContEl.setAttribute('id', 'dash-doughnut');
                     break;
                 case 'line chart':
                     var itemIndex = this.serializedData.findIndex(item => item.name === 'line chart');
-                    this.itemEl = this.grid.getGridItems()[itemIndex];
+                    this.itemEl = this.grid2.getGridItems()[itemIndex];
                     this.lineContEl = this.itemEl.querySelector('.grid-stack-item-content');
                     this.lineContEl.setAttribute('id', 'dash-line');
                     break;
@@ -230,7 +236,7 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentTitleCount
                         ]).subscribe(([jobName, titleCount]) => {
                             if (this.chartTypeNum[chartType] === 1) {
-                                this.itemEl = this.grid.addWidget(this.newTile);
+                                this.itemEl = this.grid2.addWidget(this.newTile);
                                 this.chartTypeNum[chartType]++;
                             } else {
                                 this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
@@ -267,7 +273,7 @@ export class GridStackComponent implements OnInit {
                 this.barChart.barRemove = true;
                 let element = document.getElementById('dash-bar');
                 let gridItemElement = element.closest('.grid-stack-item');
-                this.grid.removeWidget(gridItemElement as GridStackElement);
+                this.grid2.removeWidget(gridItemElement as GridStackElement);
             }
         });
         this.chartService.currentPieRemove.subscribe(pieRemove => {
@@ -275,13 +281,24 @@ export class GridStackComponent implements OnInit {
                 this.pieChart.pieRemove = true;
                 let element = document.getElementById('dash-pie');
                 let gridItemElement = element.closest('.grid-stack-item');
-                this.grid.removeWidget(gridItemElement as GridStackElement);
+                this.grid2.removeWidget(gridItemElement as GridStackElement);
             }
         });
 
-        // let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
-        // let gridItemElement = element.closest('.grid-stack-item');
-        // this.grid.removeWidget(gridItemElement as GridStackElement);
+        let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
+        let gridItemElement = element.closest('.grid-stack-item');
+        this.grid2.removeWidget(gridItemElement as GridStackElement);
+
+        this.chartService.currentShowDiagrams.subscribe(showDiagrams => {
+            this.showDiagrams = showDiagrams;
+            console.log('showDiagrams:', this.showDiagrams);
+            if (this.showDiagrams) {
+                setTimeout(() => {
+                    this.grid1 = GridStack.init(this.options, '#grid1');
+                    this.grid1.load(this.serializedData);
+                });
+            }
+        });
     }
 
 }

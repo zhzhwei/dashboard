@@ -5,6 +5,9 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class ChartService {
+    public showDiagrams = new BehaviorSubject<boolean>(false);
+    currentShowDiagrams = this.showDiagrams.asObservable();
+    
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
 
