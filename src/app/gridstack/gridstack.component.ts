@@ -12,6 +12,7 @@ import { GridStack, GridStackElement } from 'gridstack';
 
 import { ChartService } from '../services/chart.service';
 import { escapeRegExp } from '@angular/compiler/src/util';
+import { VariableAst } from '@angular/compiler';
 declare var ResizeObserver: any;
 
 @Component({
@@ -32,6 +33,7 @@ export class GridStackComponent implements OnInit {
     private majorGrid: GridStack;
     private serializedData: any[] = []
     private itemEl: any;
+    private tileSerial: string;
 
     public barContEl: any;
     public stackedBarContEl: any;
@@ -39,7 +41,7 @@ export class GridStackComponent implements OnInit {
     public pieContEl: any;
     public donutContEl: any;
     public lineContEl: any;
-    
+
     private options = {
         margin: 5,
         column: 12,
@@ -50,18 +52,18 @@ export class GridStackComponent implements OnInit {
         removeTimeout: 100
     };
 
-
     public showDiagrams: boolean = false;
+    public initImage: boolean = true;
 
     public chartTypeNum = {
-        'Line Chart': 1,
-        'Stacked Line Chart': 1,
-        'Bar Chart': 1,
-        'Stacked Bar Chart': 1,
-        'Pie Chart': 1,
-        'Doughnut': 1,
-        'Star Plot': 1,
-        'Star Plots': 1
+        'Line Chart': 0,
+        'Stacked Line Chart': 0,
+        'Bar Chart': 0,
+        'Stacked Bar Chart': 0,
+        'Pie Chart': 0,
+        'Doughnut': 0,
+        'Star Plot': 0,
+        'Star Plots': 0
     };
 
     private newTile = {
@@ -74,132 +76,13 @@ export class GridStackComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
-
         this.majorGrid = GridStack.init(this.options, '#major-grid');
-
         this.majorGrid.addWidget({
             w: 3, h: 3, minW: 12, minH: 6,
             content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+            noResize: true,
         });
-
-        // this.serializedData = [
-        //     { x: 0, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Bar Chart', name: 'bar chart' },
-        //     { x: 3, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
-        //     { x: 6, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Chart', name: 'line chart' },
-        //     { x: 9, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plot', name: 'star plot' },
-        //     { x: 0, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
-        //     { x: 3, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
-        //     { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line charts' },
-        //     { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
-        // ];
-
-        // this.majorGrid.load(this.serializedData);
-
-        // Load the serialized data into the grid
-        // this.serializedData.forEach(item => {
-        //     // check item.name and set id accordingly
-        //     switch (item.name) {
-        //         case 'bar chart':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.barContEl.setAttribute('id', 'dash-bar');
-        //             break;
-        //         case 'stacked bar chart':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.stackedBarContEl.setAttribute('id', 'dash-stacked-bar');
-        //             break;
-        //         case 'star plot':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.starContEl.setAttribute('id', 'dash-star');
-        //             break;
-        //         case 'pie chart':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.pieContEl.setAttribute('id', 'dash-pie');
-        //             break;
-        //         case 'doughnut':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.donutContEl.setAttribute('id', 'dash-doughnut');
-        //             break;
-        //         case 'line chart':
-        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'line chart');
-        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
-        //             this.lineContEl = this.itemEl.querySelector('.grid-stack-item-content');
-        //             this.lineContEl.setAttribute('id', 'dash-line');
-        //             break;
-        //     }
-        // });
-
-        // let prevSize = [
-        //     { width: this.barContEl.offsetWidth, height: this.barContEl.offsetHeight },
-        //     { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
-        //     { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
-        //     { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight },
-        //     { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight },
-        //     { width: this.lineContEl.offsetWidth, height: this.lineContEl.offsetHeight }
-        // ];
-
-        // // Create a new ResizeObserver
-        // const resizeObserver = new ResizeObserver(entries => {
-        //     for (let entry of entries) {
-        //         const { width, height } = entry.contentRect;
-        //         switch (entry.target.id) {
-        //             case 'dash-bar':
-        //                 if (Math.abs(width - prevSize[0].width) > 10 || Math.abs(height - prevSize[0].height) > 10) {
-        //                     if (!this.barChart.barRemove) {
-        //                         this.barChart.updateChart();
-        //                     }
-        //                 }
-        //                 break;
-        //             case 'dash-stacked-bar':
-        //                 if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
-        //                     this.stackedBarChart.updateChart();
-        //                 }
-        //                 break;
-        //             case 'dash-star':
-        //                 if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
-        //                     this.starPlot.updateChart();
-        //                 }
-        //                 break;
-        //             case 'dash-pie':
-        //                 if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
-        //                     if (!this.pieChart.pieRemove) {
-        //                         this.pieChart.updateChart();
-        //                     }
-        //                 }
-        //                 break;
-        //             case 'dash-doughnut':
-        //                 if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
-        //                     this.donutChart.updateChart();
-        //                 }
-        //                 break;
-        //             case 'dash-line':
-        //                 if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[5].height) > 10) {
-        //                     this.lineChart.updateChart();
-        //                 }
-        //                 break;
-        //         }
-        //     }
-        // });
-
-        // // Observe the element for size changes
-        // resizeObserver.observe(this.barContEl);
-        // resizeObserver.observe(this.stackedBarContEl);
-        // resizeObserver.observe(this.starContEl);
-        // resizeObserver.observe(this.pieContEl);
-        // resizeObserver.observe(this.donutContEl);
-        // resizeObserver.observe(this.lineContEl);
-
     }
 
     ngAfterViewInit() {
@@ -226,40 +109,40 @@ export class GridStackComponent implements OnInit {
                 }
             }
             if (chartType && dataSource.length > 0) {
-                switch (chartType) {
-                    case 'Bar Chart':
-                        combineLatest([
-                            this.chartService.currentJobName,
-                            this.chartService.currentTitleCount
-                        ]).subscribe(([jobName, titleCount]) => {
-                            // if (this.chartTypeNum[chartType] === 1) {
-                            //     this.itemEl = this.majorGrid.addWidget(this.newTile);
-                            //     this.chartTypeNum[chartType]++;
-                            // } else {
-                            //     this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
-                            // }
-                            // this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                            // var tileSerial = 'dash-bar-' + this.chartTypeNum[chartType];
-                            // this.barContEl.setAttribute('id', tileSerial);
-                            this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
-                            this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
-                        });
-                        break;
-                    case 'Pie Chart':
-                        combineLatest([
-                            this.chartService.currentJobName,
-                            this.chartService.currentPieLabel
-                        ]).subscribe(([jobName, pieLabel]) => {
-                            this.pieChart.createChart(jobName, dataSource, pieLabel);
-                            this.chartService.savePersistence(chartType, jobName, dataSource, pieLabel);
-                        });
-                        break;
-                    default:
-                        console.log('Invalid Chart Type:');
-                        break;
+                if (this.initImage) {
+                    this.majorGrid.removeAll();
+                    this.initImage = false;
                 }
-                this.chartService.chartType.next('');
-                this.chartService.dataSource.next([]);
+                if (!this.initImage) {
+                    switch (chartType) {
+                        case 'Bar Chart':
+                            combineLatest([
+                                this.chartService.currentJobName,
+                                this.chartService.currentTitleCount
+                            ]).subscribe(([jobName, titleCount]) => {
+                                var tileSerial = this.initDiagram(chartType);
+                                this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
+                                this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
+                            });
+                            break;
+                        case 'Pie Chart':
+                                console.log(chartType);
+                                combineLatest([
+                                    this.chartService.currentJobName,
+                                    this.chartService.currentPieLabel
+                                ]).subscribe(([jobName, pieLabel]) => {
+                                    var tileSerial = this.initDiagram(chartType);
+                                    this.pieChart.createChart(tileSerial, jobName, dataSource, pieLabel);
+                                    this.chartService.savePersistence(chartType, jobName, dataSource, pieLabel);
+                                });
+                                break;
+                        default:
+                            console.log('Invalid Chart Type:');
+                            break;
+                    }
+                    this.chartService.chartType.next('');
+                    this.chartService.dataSource.next([]);
+                }
             }
         });
 
@@ -282,10 +165,6 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        // let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
-        // let gridItemElement = element.closest('.grid-stack-item');
-        // this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-
         this.chartService.currentShowDiagrams.subscribe(showDiagrams => {
             this.showDiagrams = showDiagrams;
             // console.log('showDiagrams:', this.showDiagrams);
@@ -302,6 +181,39 @@ export class GridStackComponent implements OnInit {
                 // this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
             }
         });
+    }
+
+    private initDiagram(chartType: string) {
+        if (this.chartTypeNum[chartType] === 0) {
+            this.itemEl = this.majorGrid.addWidget(this.newTile);
+            this.chartTypeNum[chartType]++;
+        }
+        var contEl = this.itemEl.querySelector('.grid-stack-item-content');
+        const chartActions = {
+            'Bar Chart': {
+                setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
+                updateChart: () => {
+                    if (!this.barChart.barRemove) {
+                        this.barChart.updateChart();
+                    }
+                }
+            },
+            'Pie Chart': {
+                setTileSerial: () => 'dash-pie-' + this.chartTypeNum[chartType],
+                updateChart: () => {
+                    if (!this.pieChart.pieRemove) {
+                        this.pieChart.updateChart();
+                    }
+                }
+            }
+        };
+        var tileSerial = chartActions[chartType].setTileSerial();
+        contEl.setAttribute('id', tileSerial);
+        var resizeObserver = new ResizeObserver(entries => {
+            chartActions[chartType].updateChart();
+        }); 
+        resizeObserver.observe(contEl);
+        return tileSerial;
     }
 
 }

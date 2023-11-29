@@ -29,8 +29,8 @@ export class PieChartComponent implements OnInit {
 
     }
 
-    public createChart(jobName: string, dataSource: any, pieLabel: string): void {
-        this.pieEl = document.getElementById('dash-pie');
+    public createChart(tileSerial: string, jobName: string, dataSource: any, pieLabel: string): void {
+        this.pieEl = document.getElementById(tileSerial);
         // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
 
         // Clear the item's content
@@ -38,7 +38,7 @@ export class PieChartComponent implements OnInit {
             this.pieEl.removeChild(this.pieEl.firstChild);
         }
 
-        this.svg = d3.select('#dash-pie')
+        this.svg = d3.select('#' + tileSerial)
             .append('svg')
             .attr('width', this.pieEl.clientWidth)
             .attr('height', this.pieEl.clientHeight)
@@ -133,7 +133,7 @@ export class PieChartComponent implements OnInit {
                 var bar = d3.select(nodes[i]);
 
                 // Create the tooltip element
-                var tooltip = d3.select('#dash-pie')
+                var tooltip = d3.select('#' + tileSerial)
                     .append('div')
                     .attr('class', 'tooltip')
                     .style('position', 'absolute')
