@@ -13,6 +13,9 @@ interface DiagramRemovedType {
 export class ChartService {
     public drivenBy = new BehaviorSubject<string>('');
     currentDrivenBy = this.drivenBy.asObservable();
+
+    public tileSerial = new BehaviorSubject<string>('');
+    currentTileSerial = this.tileSerial.asObservable();
     
     public showDiagrams = new BehaviorSubject<boolean>(false);
     currentShowDiagrams = this.showDiagrams.asObservable();
@@ -82,46 +85,55 @@ export class ChartService {
         input.click();
     }
 
-    public savePersistence(chartType: string, jobName: string, dataSource: any[], parameter: any) {
+    public savePersistence(chartType: string, tileSerial: string, jobName: string, dataSource: any[], parameter: any) {
         const chartData = {
             chartType: chartType,
+            tileSerial: tileSerial,
             jobName: jobName,
             dataSource: dataSource
         };
         if (chartType === 'Bar Chart') {
             chartData['titleCount'] = parameter;
-            localStorage.setItem('barChartData', JSON.stringify(chartData));
         }
         else if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
-            localStorage.setItem('pieChartData', JSON.stringify(chartData));
         }
+        localStorage.setItem(tileSerial, JSON.stringify(chartData));
     }
 
-    public clearPersistence() {
-        localStorage.removeItem('barChartData');
-        localStorage.removeItem('pieChartData');
+    public removePersistence(tileSerial: string) {
+        localStorage.removeItem(tileSerial);
     }
 
     public loadPersistence() {
-        if (!localStorage.getItem('barChartData') && !localStorage.getItem('pieChartData')) {
-            console.log('No chart data in local storage.');
-            return;
-        }
-        else {
-            if (localStorage.getItem('barChartData')) {
-                const barChartData = JSON.parse(localStorage.getItem('barChartData'));
-                this.chartType.next(barChartData.chartType);
-                this.jobName.next(barChartData.jobName);
-                this.dataSource.next(barChartData.dataSource);
-                this.titleCount.next(barChartData.titleCount);
-            }
-            if (localStorage.getItem('pieChartData')) {
-                const pieChartData = JSON.parse(localStorage.getItem('pieChartData'));
-                this.chartType.next(pieChartData.chartType);
-                this.jobName.next(pieChartData.jobName);
-                this.dataSource.next(pieChartData.dataSource);
-                this.pieLabel.next(pieChartData.pieLabel);
+        if (localStorage.length > 0) {
+            const chartActions = {
+                'dash-bar': {
+                    nextActions: {
+                        titleCount: this.titleCount
+                    }
+                },
+                'dash-pie': {
+                    nextActions: {
+                        pieLabel: this.pieLabel
+                    }
+                }
+            };
+    
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
+                if (chartActions[chartType]) {
+                    const chartData = JSON.parse(localStorage.getItem(key));
+                    this.drivenBy.next('Create');
+                    this.chartType.next(chartData.chartType);
+                    this.tileSerial.next(chartData.tileSerial);
+                    this.jobName.next(chartData.jobName);
+                    this.dataSource.next(chartData.dataSource);
+                    for (const action in chartActions[chartType].nextActions) {
+                        chartActions[chartType].nextActions[action].next(chartData[action]);
+                    }
+                }
             }
         }
     }

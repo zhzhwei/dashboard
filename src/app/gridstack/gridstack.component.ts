@@ -88,7 +88,7 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentChartType,
             this.chartService.currentDataSource
         ]).subscribe(([drivenBy, chartType, dataSource]) => {
-            console.log('drivenBy:', drivenBy);
+            // console.log('drivenBy:', drivenBy);
             // console.log('chartType:', chartType);
             // console.log('dataSource.length:', dataSource.length);
             if (chartType && dataSource.length > 0) {
@@ -107,6 +107,11 @@ export class GridStackComponent implements OnInit {
                                 if (jobName && titleCount > 0) {
                                     this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
                                 }
+                            },
+                            savePersistence: (tileSerial, [jobName, titleCount]) => {
+                                if (jobName && titleCount > 0) {
+                                    this.chartService.savePersistence('Bar Chart', tileSerial, jobName, dataSource, titleCount);
+                                }
                             }
                         },
                         'Pie Chart': {
@@ -118,6 +123,11 @@ export class GridStackComponent implements OnInit {
                                 if (jobName && pieLabel) {
                                     this.pieChart.createChart(tileSerial, jobName, dataSource, pieLabel);
                                 }
+                            },
+                            savePersistence: (tileSerial, [jobName, pieLabel]) => {
+                                if (jobName && pieLabel) {
+                                    this.chartService.savePersistence('Pie Chart', tileSerial, jobName, dataSource, pieLabel);
+                                }
                             }
                         }
                     };
@@ -126,6 +136,7 @@ export class GridStackComponent implements OnInit {
                         const tileSerial = this.createDiagram(drivenBy, chartType);
                         chartActions[chartType].observable.subscribe(dataSource => {
                             chartActions[chartType].createChart(tileSerial, dataSource);
+                            chartActions[chartType].savePersistence(tileSerial, dataSource);
                         });
                     } else {
                         console.log('Invalid Chart Type:');
@@ -137,7 +148,7 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        // this.chartService.loadPersistence();
+        this.chartService.loadPersistence();
 
         this.chartService.currentDiagramRemoved.subscribe(diagramRemoved => {
             if (diagramRemoved.removed) {
@@ -152,7 +163,7 @@ export class GridStackComponent implements OnInit {
                 let element = document.getElementById(diagramRemoved.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-                // this.chartService.clearPersistence(diagramRemoved.type, diagramRemoved.serial);
+                this.chartService.removePersistence(diagramRemoved.serial);
             }
         });
 
