@@ -55,7 +55,6 @@ export class PieChartEditorComponent implements OnInit {
         private dialog: MatDialog) {
         this.chartService.currentJobName.subscribe(jobName => {
             this.jobName = jobName;
-            console.log(this.jobName);
         });
     }
 

@@ -59,7 +59,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                this.dialogService.openPieChartEditor();
+                this.dialogService.openPieChartEditor('Edit');
                 this.chartService.chartType.next('Pie Chart');
             });
 

@@ -37,7 +37,7 @@ export class DialogService {
         });
     }
 
-    openBarChartEditor() {
+    openBarChartEditor(drivenBy: string) {
         this.dialog.open(BarChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -45,6 +45,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
+        this.chartService.drivenBy.next(drivenBy);
     }
 
     openStackedBarChartEditor() {
@@ -57,7 +58,7 @@ export class DialogService {
         });
     }
 
-    openPieChartEditor() {
+    openPieChartEditor(drivenBy: string) {
         this.dialog.open(PieChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -65,6 +66,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
+        this.chartService.drivenBy.next(drivenBy);
     }
 
     openDoughnutChartEditor() {

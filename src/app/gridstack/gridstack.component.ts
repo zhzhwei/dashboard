@@ -84,66 +84,60 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit() {
         combineLatest([
+            this.chartService.currentDrivenBy,
             this.chartService.currentChartType,
             this.chartService.currentDataSource
-        ]).subscribe(([chartType, dataSource]) => {
-            console.log('chartType:', chartType);
-            console.log('dataSource.length:', dataSource.length);
-            if (chartType && dataSource.length === 0) {
-                switch (chartType) {
-                    case 'Stacked Bar Chart':
-                        this.stackedBarChart.createChart(this.stackedBarChart.data);
-                        break;
-                    case 'Star Plot':
-                        this.starPlot.createChart();
-                        break;
-                    case 'Doughnut':
-                        this.donutChart.createChart(this.donutChart.data);
-                        break;
-                    case 'Line Chart':
-                        this.lineChart.createChart();
-                        break;
-                }
-            }
+        ]).subscribe(([drivenBy, chartType, dataSource]) => {
+            console.log('drivenBy:', drivenBy);
+            // console.log('chartType:', chartType);
+            // console.log('dataSource.length:', dataSource.length);
             if (chartType && dataSource.length > 0) {
                 if (this.initImage) {
                     this.majorGrid.removeAll();
                     this.initImage = false;
                 }
                 if (!this.initImage) {
-                    switch (chartType) {
-                        case 'Bar Chart':
-                            combineLatest([
+                    const chartActions = {
+                        'Bar Chart': {
+                            observable: combineLatest([
                                 this.chartService.currentJobName,
                                 this.chartService.currentTitleCount
-                            ]).subscribe(([jobName, titleCount]) => {
-                                var tileSerial = this.initDiagram(chartType);
-                                this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
-                                this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
-                            });
-                            break;
-                        case 'Pie Chart':
-                                console.log(chartType);
-                                combineLatest([
-                                    this.chartService.currentJobName,
-                                    this.chartService.currentPieLabel
-                                ]).subscribe(([jobName, pieLabel]) => {
-                                    var tileSerial = this.initDiagram(chartType);
+                            ]),
+                            createChart: (tileSerial, [jobName, titleCount]) => {
+                                if (jobName && titleCount > 0) {
+                                    this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
+                                }
+                            }
+                        },
+                        'Pie Chart': {
+                            observable: combineLatest([
+                                this.chartService.currentJobName,
+                                this.chartService.currentPieLabel
+                            ]),
+                            createChart: (tileSerial, [jobName, pieLabel]) => {
+                                if (jobName && pieLabel) {
                                     this.pieChart.createChart(tileSerial, jobName, dataSource, pieLabel);
-                                    this.chartService.savePersistence(chartType, jobName, dataSource, pieLabel);
-                                });
-                                break;
-                        default:
-                            console.log('Invalid Chart Type:');
-                            break;
+                                }
+                            }
+                        }
+                    };
+            
+                    if (chartActions[chartType]) {
+                        const tileSerial = this.createDiagram(drivenBy, chartType);
+                        chartActions[chartType].observable.subscribe(dataSource => {
+                            chartActions[chartType].createChart(tileSerial, dataSource);
+                        });
+                    } else {
+                        console.log('Invalid Chart Type:');
                     }
+            
                     this.chartService.chartType.next('');
                     this.chartService.dataSource.next([]);
                 }
             }
         });
 
-        this.chartService.loadPersistence();
+        // this.chartService.loadPersistence();
 
         this.chartService.currentDiagramRemoved.subscribe(diagramRemoved => {
             if (diagramRemoved.removed) {
@@ -158,6 +152,7 @@ export class GridStackComponent implements OnInit {
                 let element = document.getElementById(diagramRemoved.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+                // this.chartService.clearPersistence(diagramRemoved.type, diagramRemoved.serial);
             }
         });
 
@@ -186,10 +181,11 @@ export class GridStackComponent implements OnInit {
         });
     }
 
-    private initDiagram(chartType: string) {
-        console.log('this.chartTypeNum[chartType]:', this.chartTypeNum[chartType]);
-        this.itemEl = this.majorGrid.addWidget(this.newTile);
-        this.chartTypeNum[chartType]++;
+    private createDiagram(drivenBy:string, chartType: string) {
+        if (drivenBy === 'Create') {
+            this.itemEl = this.majorGrid.addWidget(this.newTile);
+            this.chartTypeNum[chartType]++;
+        }
         var contEl = this.itemEl.querySelector('.grid-stack-item-content');
         const chartActions = {
             'Bar Chart': {

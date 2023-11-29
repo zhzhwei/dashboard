@@ -53,7 +53,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
-                this.dialogService.openBarChartEditor();
+                this.dialogService.openBarChartEditor('Edit');
                 this.chartService.chartType.next('Bar Chart');
             });
 
