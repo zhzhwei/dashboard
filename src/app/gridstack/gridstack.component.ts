@@ -7,7 +7,7 @@ import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 import { LineChartComponent } from '../diagram/line-chart/line-chart.component';
 
 import { combineLatest } from 'rxjs';
-import { GridStack, GridStackElement } from 'gridstack';
+import { GridStack, GridStackElement, GridHTMLElement } from 'gridstack';
 import { ChartService } from '../services/chart.service';
 
 import 'gridstack/dist/h5/gridstack-dd-native';
@@ -30,8 +30,10 @@ export class GridStackComponent implements OnInit {
 
     private minorGrid: GridStack;
     private majorGrid: GridStack;
-    private itemEl: any;
+    public majorInitImage: boolean = true;
+    public minorInitImage: boolean = true;
 
+    private itemEl: any;
     public barContEl: any;
     public stackedBarContEl: any;
     public starContEl: any;
@@ -49,9 +51,6 @@ export class GridStackComponent implements OnInit {
         removeTimeout: 100
     };
 
-    public showDiagrams: boolean = false;
-    public initImage: boolean = true;
-
     public chartTypeNum = {
         'Line Chart': 0,
         'Stacked Line Chart': 0,
@@ -68,9 +67,7 @@ export class GridStackComponent implements OnInit {
         autoPosition: true,
     };
 
-    constructor(private chartService: ChartService) {
-
-    }
+    constructor(private chartService: ChartService) { }
 
     ngOnInit(): void {
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
@@ -80,6 +77,14 @@ export class GridStackComponent implements OnInit {
             content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
             noResize: true,
         });
+        this.minorGrid = GridStack.init(this.options, '#minor-grid');
+        this.minorGrid.addWidget({
+            w: 3, h: 3, minW: 12, minH: 3,
+            content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+            noResize: true,
+        });
+        let minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
+        minorGridEl.style.display = 'none';
     }
 
     ngAfterViewInit() {
@@ -92,11 +97,11 @@ export class GridStackComponent implements OnInit {
             // console.log('chartType:', chartType);
             // console.log('dataSource.length:', dataSource.length);
             if (chartType && dataSource.length > 0) {
-                if (this.initImage) {
+                if (this.majorInitImage) {
                     this.majorGrid.removeAll();
-                    this.initImage = false;
+                    this.majorInitImage = false;
                 }
-                if (!this.initImage) {
+                if (!this.majorInitImage) {
                     const chartActions = {
                         'Bar Chart': {
                             observable: combineLatest([
@@ -131,7 +136,7 @@ export class GridStackComponent implements OnInit {
                             }
                         }
                     };
-            
+
                     if (chartActions[chartType]) {
                         const tileSerial = this.createDiagram(drivenBy, chartType);
                         chartActions[chartType].observable.subscribe(dataSource => {
@@ -141,7 +146,7 @@ export class GridStackComponent implements OnInit {
                     } else {
                         console.log('Invalid Chart Type:');
                     }
-            
+
                     this.chartService.chartType.next('');
                     this.chartService.dataSource.next([]);
                 }
@@ -167,32 +172,24 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        this.chartService.currentShowDiagrams.subscribe(showDiagrams => {
-            this.showDiagrams = showDiagrams;
-            // console.log('showDiagrams:', this.showDiagrams);
-            if (this.showDiagrams) {
-                setTimeout(() => {
-                    this.minorGrid = GridStack.init(this.options, '#minor-grid');
-                    this.minorGrid.addWidget({
-                        w: 3, h: 3, minW: 12, minH: 3,
-                        content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
-                        noResize: true,
-                    });
-                });
-            }
-        });
-
-        this.chartService.currentBarFavorite.subscribe(barFavorite => {
-            if (barFavorite) {
-                let element = document.getElementById('dash-bar-1');
-                let gridItemElement = element.closest('.grid-stack-item');
-                let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
-                this.minorGrid.addWidget(gridItemElementClone);
+        this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
+            if (diagramFavorite.favorite) {
+                if (this.minorInitImage) {
+                    this.minorGrid.removeAll();
+                    this.minorInitImage = false;
+                }
+                if (!this.minorInitImage) {
+                    console.log('diagramFavorite:', diagramFavorite);
+                    let element = document.getElementById(diagramFavorite.serial);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
+                    this.minorGrid.addWidget(gridItemElementClone);
+                }
             }
         });
     }
 
-    private createDiagram(drivenBy:string, chartType: string) {
+    private createDiagram(drivenBy: string, chartType: string) {
         if (drivenBy === 'Create') {
             this.itemEl = this.majorGrid.addWidget(this.newTile);
             this.chartTypeNum[chartType]++;
@@ -220,7 +217,7 @@ export class GridStackComponent implements OnInit {
         contEl.setAttribute('id', tileSerial);
         var resizeObserver = new ResizeObserver(entries => {
             chartActions[chartType].updateChart();
-        }); 
+        });
         resizeObserver.observe(contEl);
         return tileSerial;
     }

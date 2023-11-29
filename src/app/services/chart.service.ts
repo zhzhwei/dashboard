@@ -7,6 +7,12 @@ interface DiagramRemovedType {
     removed: boolean;
 }
 
+interface DiagramFavoriteType {
+    type: string;
+    serial: string;
+    favorite: boolean;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -16,9 +22,6 @@ export class ChartService {
 
     public tileSerial = new BehaviorSubject<string>('');
     currentTileSerial = this.tileSerial.asObservable();
-    
-    public showDiagrams = new BehaviorSubject<boolean>(false);
-    currentShowDiagrams = this.showDiagrams.asObservable();
 
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
@@ -31,6 +34,9 @@ export class ChartService {
 
     public titleCount = new BehaviorSubject<number>(0);
     currentTitleCount = this.titleCount.asObservable();
+
+    public diagramFavorite = new BehaviorSubject<DiagramFavoriteType>({type: '', serial: '', favorite: false});
+    currentDiagramFavorite = this.diagramFavorite.asObservable();
 
     public diagramRemoved = new BehaviorSubject<DiagramRemovedType>({type: '', serial: '', removed: false});
     currentDiagramRemoved = this.diagramRemoved.asObservable();

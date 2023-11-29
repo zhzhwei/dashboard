@@ -82,7 +82,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                
+                this.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
             });
         
         this.svg.append('foreignObject')

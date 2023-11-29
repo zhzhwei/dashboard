@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { VisGenDialogComponent } from './dialog/vis-gen-dialog/vis-gen-dialog.component';
 import { ChartService } from './services/chart.service';
+import { GridHTMLElement } from 'gridstack';
 
 @Component({
     selector: 'app-root',
@@ -10,7 +11,6 @@ import { ChartService } from './services/chart.service';
 })
 export class AppComponent {
 
-    private showDiagrams: boolean = false;
     constructor(public dialog: MatDialog, private chartService: ChartService) { }
     
     ngOnInit() {
@@ -28,8 +28,12 @@ export class AppComponent {
     }
 
     toggleShowDiagrams() {
-        this.showDiagrams = !this.showDiagrams;
-        this.chartService.showDiagrams.next(this.showDiagrams);
+        let minorGridEl= document.querySelector('#minor-grid') as GridHTMLElement;
+        if (minorGridEl.style.display === 'none') {
+            minorGridEl.style.display = 'block';
+        } else {
+            minorGridEl.style.display = 'none';
+        }
     }
 
     loadDiagram() {
