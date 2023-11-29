@@ -21,7 +21,7 @@ export class PieChartComponent implements OnInit {
     private color: any;
     private arc: any;
     private g: any;
-    public pieRemove = false;
+    public pieRemoved = false;
 
     constructor(private dialogService: DialogService, private chartService: ChartService) { }
 
@@ -93,8 +93,7 @@ export class PieChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-trash"></i>')
             .on('click', () => {
-                this.pieRemove = true;
-                this.chartService.pieRemove.next(this.pieRemove);
+                this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
             });
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;

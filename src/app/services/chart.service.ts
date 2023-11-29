@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+interface DiagramRemovedType {
+    type: string;
+    serial: string;
+    removed: boolean;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -20,17 +26,14 @@ export class ChartService {
     public titleCount = new BehaviorSubject<number>(0);
     currentTitleCount = this.titleCount.asObservable();
 
-    public barRemove = new BehaviorSubject<boolean>(false);
-    currentBarRemove = this.barRemove.asObservable();
+    public diagramRemoved = new BehaviorSubject<DiagramRemovedType>({type: '', serial: '', removed: false});
+    currentDiagramRemoved = this.diagramRemoved.asObservable();
 
     public barFavorite = new BehaviorSubject<boolean>(false);
     currentBarFavorite = this.barFavorite.asObservable();
 
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
-
-    public pieRemove = new BehaviorSubject<boolean>(false);
-    currentPieRemove = this.pieRemove.asObservable();
 
     public saveJsonFile(chartType: string, jobName: string, dataSource: any[], parameter: any) {
         let exportObj = {

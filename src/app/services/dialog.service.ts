@@ -15,7 +15,7 @@ import { ChartService } from './chart.service';
 export class DialogService {
     constructor(private dialog: MatDialog, private chartService: ChartService) { }
 
-    openDeleteConfirmation() {
+    openDeleteConfirmation(chartType, tileSerial) {
         const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
             backdropClass: "hello",
             autoFocus: false,
@@ -32,7 +32,7 @@ export class DialogService {
         dialogRef.afterClosed().subscribe((confirmed: boolean) => {
             if (confirmed) {
                 // console.log('Delete confirmed');
-                this.chartService.barRemove.next(true);
+                this.chartService.diagramRemoved.next({ type: chartType, serial: tileSerial, removed: true });
             }
         });
     }

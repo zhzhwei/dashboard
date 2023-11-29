@@ -6,13 +6,12 @@ import { PieChartComponent } from '../diagram/pie-chart/pie-chart.component';
 import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 import { LineChartComponent } from '../diagram/line-chart/line-chart.component';
 
-import 'gridstack/dist/h5/gridstack-dd-native';
 import { combineLatest } from 'rxjs';
 import { GridStack, GridStackElement } from 'gridstack';
-
 import { ChartService } from '../services/chart.service';
-import { escapeRegExp } from '@angular/compiler/src/util';
-import { VariableAst } from '@angular/compiler';
+
+import 'gridstack/dist/h5/gridstack-dd-native';
+
 declare var ResizeObserver: any;
 
 @Component({
@@ -31,9 +30,7 @@ export class GridStackComponent implements OnInit {
 
     private minorGrid: GridStack;
     private majorGrid: GridStack;
-    private serializedData: any[] = []
     private itemEl: any;
-    private tileSerial: string;
 
     public barContEl: any;
     public stackedBarContEl: any;
@@ -90,8 +87,8 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentChartType,
             this.chartService.currentDataSource
         ]).subscribe(([chartType, dataSource]) => {
-            // console.log('chartType:', chartType);
-            // console.log('dataSource.length:', dataSource.length);
+            console.log('chartType:', chartType);
+            console.log('dataSource.length:', dataSource.length);
             if (chartType && dataSource.length === 0) {
                 switch (chartType) {
                     case 'Stacked Bar Chart':
@@ -148,18 +145,17 @@ export class GridStackComponent implements OnInit {
 
         this.chartService.loadPersistence();
 
-        this.chartService.currentBarRemove.subscribe(barRemove => {
-            if (barRemove) {
-                this.barChart.barRemove = true;
-                let element = document.getElementById('dash-bar');
-                let gridItemElement = element.closest('.grid-stack-item');
-                this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-            }
-        });
-        this.chartService.currentPieRemove.subscribe(pieRemove => {
-            if (pieRemove) {
-                this.pieChart.pieRemove = true;
-                let element = document.getElementById('dash-pie');
+        this.chartService.currentDiagramRemoved.subscribe(diagramRemoved => {
+            if (diagramRemoved.removed) {
+                switch (diagramRemoved.type) {
+                    case 'Bar Chart':
+                        this.barChart.barRemoved = true;
+                        break;
+                    case 'Pie Chart':
+                        this.pieChart.pieRemoved = true;
+                        break;
+                }
+                let element = document.getElementById(diagramRemoved.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
             }
@@ -170,30 +166,36 @@ export class GridStackComponent implements OnInit {
             // console.log('showDiagrams:', this.showDiagrams);
             if (this.showDiagrams) {
                 setTimeout(() => {
-                    this.minorGrid = GridStack.init(this.options, '#minorGrid');
-                    this.minorGrid.load(this.serializedData);
+                    this.minorGrid = GridStack.init(this.options, '#minor-grid');
+                    this.minorGrid.addWidget({
+                        w: 3, h: 3, minW: 12, minH: 3,
+                        content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+                        noResize: true,
+                    });
                 });
             }
         });
 
         this.chartService.currentBarFavorite.subscribe(barFavorite => {
             if (barFavorite) {
-                // this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
+                let element = document.getElementById('dash-bar-1');
+                let gridItemElement = element.closest('.grid-stack-item');
+                let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
+                this.minorGrid.addWidget(gridItemElementClone);
             }
         });
     }
 
     private initDiagram(chartType: string) {
-        if (this.chartTypeNum[chartType] === 0) {
-            this.itemEl = this.majorGrid.addWidget(this.newTile);
-            this.chartTypeNum[chartType]++;
-        }
+        console.log('this.chartTypeNum[chartType]:', this.chartTypeNum[chartType]);
+        this.itemEl = this.majorGrid.addWidget(this.newTile);
+        this.chartTypeNum[chartType]++;
         var contEl = this.itemEl.querySelector('.grid-stack-item-content');
         const chartActions = {
             'Bar Chart': {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
                 updateChart: () => {
-                    if (!this.barChart.barRemove) {
+                    if (!this.barChart.barRemoved) {
                         this.barChart.updateChart();
                     }
                 }
@@ -201,7 +203,7 @@ export class GridStackComponent implements OnInit {
             'Pie Chart': {
                 setTileSerial: () => 'dash-pie-' + this.chartTypeNum[chartType],
                 updateChart: () => {
-                    if (!this.pieChart.pieRemove) {
+                    if (!this.pieChart.pieRemoved) {
                         this.pieChart.updateChart();
                     }
                 }

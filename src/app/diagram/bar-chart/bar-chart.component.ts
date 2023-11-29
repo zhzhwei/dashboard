@@ -16,7 +16,7 @@ export class BarChartComponent implements OnInit {
     private barEL: any;
     private x: any;
     private y: any;
-    public barRemove = false;
+    public barRemoved = false;
 
     ngOnInit(): void { }
 
@@ -87,7 +87,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-trash"></i>')
             .on('click', () => {
-                this.dialogService.openDeleteConfirmation();
+                this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
             });
 
         // Create the X-axis band scale
