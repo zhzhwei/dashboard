@@ -68,6 +68,7 @@ export class BarChartComponent implements OnInit {
                 this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
             });
         
+        const self = this;
         this.svg.append('foreignObject')
             .attr('class', 'heart')
             .attr('x', this.barEL.clientWidth - 38)
@@ -75,8 +76,17 @@ export class BarChartComponent implements OnInit {
             .attr('width', 25)
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
-            .on('click', () => {
-                this.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
+            .on('click', function() {
+                const heart = d3.select(this).select('i');
+                if (heart.style('color') === 'red') {
+                    heart.style('color', '');
+                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
+                    self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+                } else {
+                    heart.style('color', 'red');
+                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
+                    self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
+                }
             });
         
         this.svg.append('foreignObject')

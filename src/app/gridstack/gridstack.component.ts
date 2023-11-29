@@ -154,6 +154,28 @@ export class GridStackComponent implements OnInit {
         });
 
         this.chartService.loadPersistence();
+        // localStorage.clear();
+
+        this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
+            if (diagramFavorite.favorite) {
+                if (this.minorInitImage) {
+                    this.minorGrid.removeAll();
+                    this.minorInitImage = false;
+                }
+                console.log('diagramFavorite:', diagramFavorite);
+                let element = document.getElementById(diagramFavorite.serial);
+                let gridItemElement = element.closest('.grid-stack-item');
+                let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
+                this.minorGrid.addWidget(gridItemElementClone);
+            }
+            else {
+                if (!this.minorInitImage) {
+                    let element = document.getElementById(diagramFavorite.serial);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    this.minorGrid.removeWidget(gridItemElement as GridStackElement);
+                }
+            }
+        });
 
         this.chartService.currentDiagramRemoved.subscribe(diagramRemoved => {
             if (diagramRemoved.removed) {
@@ -169,22 +191,6 @@ export class GridStackComponent implements OnInit {
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
                 this.chartService.removePersistence(diagramRemoved.serial);
-            }
-        });
-
-        this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
-            if (diagramFavorite.favorite) {
-                if (this.minorInitImage) {
-                    this.minorGrid.removeAll();
-                    this.minorInitImage = false;
-                }
-                if (!this.minorInitImage) {
-                    console.log('diagramFavorite:', diagramFavorite);
-                    let element = document.getElementById(diagramFavorite.serial);
-                    let gridItemElement = element.closest('.grid-stack-item');
-                    let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
-                    this.minorGrid.addWidget(gridItemElementClone);
-                }
             }
         });
     }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteConfirmationComponent } from '../dialog/delete-confirmation/delete-confirmation.component';
 import { BarChartEditorComponent } from '../dialog/bar-chart-editor/bar-chart-editor.component';
 import { StackedBarEditorComponent } from '../dialog/stacked-bar-editor/stacked-bar-editor.component';
@@ -13,7 +14,7 @@ import { ChartService } from './chart.service';
     providedIn: 'root'
 })
 export class DialogService {
-    constructor(private dialog: MatDialog, private chartService: ChartService) { }
+    constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar) { }
 
     openDeleteConfirmation(chartType, tileSerial) {
         const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
@@ -34,6 +35,12 @@ export class DialogService {
                 // console.log('Delete confirmed');
                 this.chartService.diagramRemoved.next({ type: chartType, serial: tileSerial, removed: true });
             }
+        });
+    }
+
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action, {
+            duration: 2000,
         });
     }
 
