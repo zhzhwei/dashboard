@@ -63,7 +63,8 @@ export class GridStackComponent implements OnInit {
     };
 
     private newTile = {
-        x: 0, y: 0, w: 3, h: 3,
+        w: 3, h: 3,
+        minW: 3, minH: 3,
         autoPosition: true,
     };
 
@@ -73,14 +74,14 @@ export class GridStackComponent implements OnInit {
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
         this.majorGrid = GridStack.init(this.options, '#major-grid');
         this.majorGrid.addWidget({
-            w: 3, h: 3, minW: 12, minH: 6,
-            content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+            w: 3, h: 3, minW: 12, minH: 3,
+            content: '<ion-icon name="help-buoy-outline" style="color: white; background-color: #5763cc; height: 100%; width: 100%"></ion-icon>',
             noResize: true,
         });
         this.minorGrid = GridStack.init(this.options, '#minor-grid');
         this.minorGrid.addWidget({
             w: 3, h: 3, minW: 12, minH: 3,
-            content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+            content: '<ion-icon name="heart" style="color: white; background-color: rgb(115, 105, 148); height: 100%; width: 100%"></ion-icon>',
             noResize: true,
         });
         let minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
@@ -154,7 +155,7 @@ export class GridStackComponent implements OnInit {
         });
 
         this.chartService.loadPersistence();
-        // localStorage.clear();
+        localStorage.clear();
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
             if (diagramFavorite.favorite) {
@@ -162,7 +163,7 @@ export class GridStackComponent implements OnInit {
                     this.minorGrid.removeAll();
                     this.minorInitImage = false;
                 }
-                console.log('diagramFavorite:', diagramFavorite);
+                // console.log('diagramFavorite:', diagramFavorite);
                 let element = document.getElementById(diagramFavorite.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
