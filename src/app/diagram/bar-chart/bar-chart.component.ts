@@ -99,6 +99,13 @@ export class BarChartComponent implements OnInit {
             .on('click', () => {
                 this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
             });
+        
+        this.svg.on('mouseover', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'block');
+            })
+            .on('mouseout', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'none');
+            });
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()

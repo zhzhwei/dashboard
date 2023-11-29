@@ -105,6 +105,13 @@ export class PieChartComponent implements OnInit {
             .on('click', () => {
                 this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
             });
+        
+        this.svg.on('mouseover', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'block');
+            })
+            .on('mouseout', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'none');
+            });
 
         this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
 
