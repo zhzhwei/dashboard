@@ -76,7 +76,7 @@ export class BarChartComponent implements OnInit {
             .attr('height', 25)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
-                
+                this.chartService.barFavorite.next(true);
             });
         
         this.svg.append('foreignObject')

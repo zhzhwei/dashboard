@@ -28,7 +28,7 @@ body {
     text-align: justify;
 }
 
-#grid1 {
+#minor-grid {
     padding: 5px;
     margin-bottom: 10px;
     border: 1px solid #18bc9c;
@@ -36,7 +36,7 @@ body {
     background-color: gray;
 }
 
-#grid2 {
+#major-grid {
     padding: 5px;
     border: 1px solid #18bc9c;
     border-radius: 5px;

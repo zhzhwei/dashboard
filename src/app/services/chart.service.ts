@@ -23,6 +23,9 @@ export class ChartService {
     public barRemove = new BehaviorSubject<boolean>(false);
     currentBarRemove = this.barRemove.asObservable();
 
+    public barFavorite = new BehaviorSubject<boolean>(false);
+    currentBarFavorite = this.barFavorite.asObservable();
+
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
 

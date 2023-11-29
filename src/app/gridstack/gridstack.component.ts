@@ -28,8 +28,8 @@ export class GridStackComponent implements OnInit {
     @ViewChild(LineChartComponent) lineChart: LineChartComponent;
 
 
-    private grid1: GridStack;
-    private grid2: GridStack;
+    private minorGrid: GridStack;
+    private majorGrid: GridStack;
     private serializedData: any[] = []
     private itemEl: any;
 
@@ -77,131 +77,128 @@ export class GridStackComponent implements OnInit {
 
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
 
-        this.grid2 = GridStack.init(this.options, '#grid2');
+        this.majorGrid = GridStack.init(this.options, '#major-grid');
 
-        this.serializedData = [
-            // { x: 0, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Bar Chart', name: 'bar chart' },
-            // { x: 4, y: 0, w: 4, h: 4, minW: 4, minH: 4, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
-            // { x: 8, y: 0, w: 4, h: 5, minW: 4, minH: 5, content: 'Star Plot', name: 'star plot' },
-            // { x: 0, y: 3, w: 4, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
-            // { x: 8, y: 5, w: 4, h: 6, minW: 4, minH: 6, content: 'Star Plots', name: 'star plots' },
-            // { x: 4, y: 4, w: 4, h: 2, minW: 4, minH: 3, content: 'Line Chart', name: 'line Chart' },
-            // { x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
-            // { x: 4, y: 6, w: 4, h: 4, minW: 4, minH: 4, content: 'Line Charts', name: 'line Charts' },
-            { x: 0, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Bar Chart', name: 'bar chart' },
-            { x: 3, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
-            { x: 6, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Chart', name: 'line chart' },
-            { x: 9, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plot', name: 'star plot' },
-            { x: 0, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
-            { x: 3, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
-            { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line charts' },
-            { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
-        ];
+        this.majorGrid.addWidget({
+            w: 3, h: 3, minW: 12, minH: 6,
+            content: '<img src="assets/page.webp" style="width: 100%; height: 100%;">',
+        });
 
-        this.grid2.load(this.serializedData);
+        // this.serializedData = [
+        //     { x: 0, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Bar Chart', name: 'bar chart' },
+        //     { x: 3, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Pie Chart', name: 'pie chart' },
+        //     { x: 6, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Chart', name: 'line chart' },
+        //     { x: 9, y: 0, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plot', name: 'star plot' },
+        //     { x: 0, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Stacked Bar Chart', name: 'stacked bar chart' },
+        //     { x: 3, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Doughnut', name: 'doughnut' },
+        //     { x: 6, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Line Charts', name: 'line charts' },
+        //     { x: 9, y: 2, w: 3, h: 3, minW: 3, minH: 3, content: 'Star Plots', name: 'star plots' }
+        // ];
+
+        // this.majorGrid.load(this.serializedData);
 
         // Load the serialized data into the grid
-        this.serializedData.forEach(item => {
-            // check item.name and set id accordingly
-            switch (item.name) {
-                case 'bar chart':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.barContEl.setAttribute('id', 'dash-bar');
-                    break;
-                case 'stacked bar chart':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.stackedBarContEl.setAttribute('id', 'dash-stacked-bar');
-                    break;
-                case 'star plot':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.starContEl.setAttribute('id', 'dash-star');
-                    break;
-                case 'pie chart':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.pieContEl.setAttribute('id', 'dash-pie');
-                    break;
-                case 'doughnut':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.donutContEl.setAttribute('id', 'dash-doughnut');
-                    break;
-                case 'line chart':
-                    var itemIndex = this.serializedData.findIndex(item => item.name === 'line chart');
-                    this.itemEl = this.grid2.getGridItems()[itemIndex];
-                    this.lineContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                    this.lineContEl.setAttribute('id', 'dash-line');
-                    break;
-            }
-        });
+        // this.serializedData.forEach(item => {
+        //     // check item.name and set id accordingly
+        //     switch (item.name) {
+        //         case 'bar chart':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'bar chart');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.barContEl.setAttribute('id', 'dash-bar');
+        //             break;
+        //         case 'stacked bar chart':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'stacked bar chart');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.stackedBarContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.stackedBarContEl.setAttribute('id', 'dash-stacked-bar');
+        //             break;
+        //         case 'star plot':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'star plot');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.starContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.starContEl.setAttribute('id', 'dash-star');
+        //             break;
+        //         case 'pie chart':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'pie chart');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.pieContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.pieContEl.setAttribute('id', 'dash-pie');
+        //             break;
+        //         case 'doughnut':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'doughnut');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.donutContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.donutContEl.setAttribute('id', 'dash-doughnut');
+        //             break;
+        //         case 'line chart':
+        //             var itemIndex = this.serializedData.findIndex(item => item.name === 'line chart');
+        //             this.itemEl = this.majorGrid.getGridItems()[itemIndex];
+        //             this.lineContEl = this.itemEl.querySelector('.grid-stack-item-content');
+        //             this.lineContEl.setAttribute('id', 'dash-line');
+        //             break;
+        //     }
+        // });
 
-        let prevSize = [
-            { width: this.barContEl.offsetWidth, height: this.barContEl.offsetHeight },
-            { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
-            { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
-            { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight },
-            { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight },
-            { width: this.lineContEl.offsetWidth, height: this.lineContEl.offsetHeight }
-        ];
+        // let prevSize = [
+        //     { width: this.barContEl.offsetWidth, height: this.barContEl.offsetHeight },
+        //     { width: this.stackedBarContEl.offsetWidth, height: this.stackedBarContEl.offsetHeight },
+        //     { width: this.starContEl.offsetWidth, height: this.starContEl.offsetHeight },
+        //     { width: this.pieContEl.offsetWidth, height: this.pieContEl.offsetHeight },
+        //     { width: this.donutContEl.offsetWidth, height: this.donutContEl.offsetHeight },
+        //     { width: this.lineContEl.offsetWidth, height: this.lineContEl.offsetHeight }
+        // ];
 
-        // Create a new ResizeObserver
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const { width, height } = entry.contentRect;
-                switch (entry.target.id) {
-                    case 'dash-bar':
-                        if (Math.abs(width - prevSize[0].width) > 10 || Math.abs(height - prevSize[0].height) > 10) {
-                            if (!this.barChart.barRemove) {
-                                this.barChart.updateChart();
-                            }
-                        }
-                        break;
-                    case 'dash-stacked-bar':
-                        if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
-                            this.stackedBarChart.updateChart();
-                        }
-                        break;
-                    case 'dash-star':
-                        if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
-                            this.starPlot.updateChart();
-                        }
-                        break;
-                    case 'dash-pie':
-                        if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
-                            if (!this.pieChart.pieRemove) {
-                                this.pieChart.updateChart();
-                            }
-                        }
-                        break;
-                    case 'dash-doughnut':
-                        if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
-                            this.donutChart.updateChart();
-                        }
-                        break;
-                    case 'dash-line':
-                        if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[5].height) > 10) {
-                            this.lineChart.updateChart();
-                        }
-                        break;
-                }
-            }
-        });
+        // // Create a new ResizeObserver
+        // const resizeObserver = new ResizeObserver(entries => {
+        //     for (let entry of entries) {
+        //         const { width, height } = entry.contentRect;
+        //         switch (entry.target.id) {
+        //             case 'dash-bar':
+        //                 if (Math.abs(width - prevSize[0].width) > 10 || Math.abs(height - prevSize[0].height) > 10) {
+        //                     if (!this.barChart.barRemove) {
+        //                         this.barChart.updateChart();
+        //                     }
+        //                 }
+        //                 break;
+        //             case 'dash-stacked-bar':
+        //                 if (Math.abs(width - prevSize[1].width) > 10 || Math.abs(height - prevSize[1].height) > 10) {
+        //                     this.stackedBarChart.updateChart();
+        //                 }
+        //                 break;
+        //             case 'dash-star':
+        //                 if (Math.abs(width - prevSize[2].width) > 10 || Math.abs(height - prevSize[2].height) > 10) {
+        //                     this.starPlot.updateChart();
+        //                 }
+        //                 break;
+        //             case 'dash-pie':
+        //                 if (Math.abs(width - prevSize[3].width) > 10 || Math.abs(height - prevSize[3].height) > 10) {
+        //                     if (!this.pieChart.pieRemove) {
+        //                         this.pieChart.updateChart();
+        //                     }
+        //                 }
+        //                 break;
+        //             case 'dash-doughnut':
+        //                 if (Math.abs(width - prevSize[4].width) > 10 || Math.abs(height - prevSize[4].height) > 10) {
+        //                     this.donutChart.updateChart();
+        //                 }
+        //                 break;
+        //             case 'dash-line':
+        //                 if (Math.abs(width - prevSize[5].width) > 10 || Math.abs(height - prevSize[5].height) > 10) {
+        //                     this.lineChart.updateChart();
+        //                 }
+        //                 break;
+        //         }
+        //     }
+        // });
 
-        // Observe the element for size changes
-        resizeObserver.observe(this.barContEl);
-        resizeObserver.observe(this.stackedBarContEl);
-        resizeObserver.observe(this.starContEl);
-        resizeObserver.observe(this.pieContEl);
-        resizeObserver.observe(this.donutContEl);
-        resizeObserver.observe(this.lineContEl);
+        // // Observe the element for size changes
+        // resizeObserver.observe(this.barContEl);
+        // resizeObserver.observe(this.stackedBarContEl);
+        // resizeObserver.observe(this.starContEl);
+        // resizeObserver.observe(this.pieContEl);
+        // resizeObserver.observe(this.donutContEl);
+        // resizeObserver.observe(this.lineContEl);
 
     }
 
@@ -235,16 +232,16 @@ export class GridStackComponent implements OnInit {
                             this.chartService.currentJobName,
                             this.chartService.currentTitleCount
                         ]).subscribe(([jobName, titleCount]) => {
-                            if (this.chartTypeNum[chartType] === 1) {
-                                this.itemEl = this.grid2.addWidget(this.newTile);
-                                this.chartTypeNum[chartType]++;
-                            } else {
-                                this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
-                            }
-                            this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
-                            var tileSerial = 'dash-bar-' + this.chartTypeNum[chartType];
-                            this.barContEl.setAttribute('id', tileSerial);
-                            this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
+                            // if (this.chartTypeNum[chartType] === 1) {
+                            //     this.itemEl = this.majorGrid.addWidget(this.newTile);
+                            //     this.chartTypeNum[chartType]++;
+                            // } else {
+                            //     this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
+                            // }
+                            // this.barContEl = this.itemEl.querySelector('.grid-stack-item-content');
+                            // var tileSerial = 'dash-bar-' + this.chartTypeNum[chartType];
+                            // this.barContEl.setAttribute('id', tileSerial);
+                            this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
                             this.chartService.savePersistence(chartType, jobName, dataSource, titleCount);
                         });
                         break;
@@ -273,7 +270,7 @@ export class GridStackComponent implements OnInit {
                 this.barChart.barRemove = true;
                 let element = document.getElementById('dash-bar');
                 let gridItemElement = element.closest('.grid-stack-item');
-                this.grid2.removeWidget(gridItemElement as GridStackElement);
+                this.majorGrid.removeWidget(gridItemElement as GridStackElement);
             }
         });
         this.chartService.currentPieRemove.subscribe(pieRemove => {
@@ -281,22 +278,28 @@ export class GridStackComponent implements OnInit {
                 this.pieChart.pieRemove = true;
                 let element = document.getElementById('dash-pie');
                 let gridItemElement = element.closest('.grid-stack-item');
-                this.grid2.removeWidget(gridItemElement as GridStackElement);
+                this.majorGrid.removeWidget(gridItemElement as GridStackElement);
             }
         });
 
-        let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
-        let gridItemElement = element.closest('.grid-stack-item');
-        this.grid2.removeWidget(gridItemElement as GridStackElement);
+        // let element = document.getElementById('dash-bar-' + this.chartTypeNum['Bar Chart']);
+        // let gridItemElement = element.closest('.grid-stack-item');
+        // this.majorGrid.removeWidget(gridItemElement as GridStackElement);
 
         this.chartService.currentShowDiagrams.subscribe(showDiagrams => {
             this.showDiagrams = showDiagrams;
-            console.log('showDiagrams:', this.showDiagrams);
+            // console.log('showDiagrams:', this.showDiagrams);
             if (this.showDiagrams) {
                 setTimeout(() => {
-                    this.grid1 = GridStack.init(this.options, '#grid1');
-                    this.grid1.load(this.serializedData);
+                    this.minorGrid = GridStack.init(this.options, '#minorGrid');
+                    this.minorGrid.load(this.serializedData);
                 });
+            }
+        });
+
+        this.chartService.currentBarFavorite.subscribe(barFavorite => {
+            if (barFavorite) {
+                // this.barChart.createChart('dash-bar', jobName, dataSource, titleCount);
             }
         });
     }
