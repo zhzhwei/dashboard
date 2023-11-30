@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
+import { IconService } from 'src/app/services/icon.sevice';
+
 import * as d3 from 'd3';
 
 interface Datum {
@@ -16,44 +18,43 @@ export class PieChartComponent implements OnInit {
 
     private svg: any;
     private margin = 60;
-    private pieEl: any;
+    private pieEL: any;
     private radius: number;
     private color: any;
     private arc: any;
     private g: any;
     public pieRemoved = false;
 
-    constructor(private dialogService: DialogService, private chartService: ChartService) { }
+    constructor(private dialogService: DialogService, private chartService: ChartService, 
+        private iconService: IconService) { }
 
-    ngOnInit(): void {
-
-    }
+    ngOnInit(): void { }
 
     public createChart(tileSerial: string, jobName: string, dataSource: any, pieLabel: string): void {
-        this.pieEl = document.getElementById(tileSerial);
-        // console.log(this.pieEl.clientWidth, this.pieEl.clientHeight);
+        this.pieEL = document.getElementById(tileSerial);
+        // console.log(this.pieEL.clientWidth, this.pieEL.clientHeight);
 
         // Clear the item's content
-        while (this.pieEl.firstChild) {
-            this.pieEl.removeChild(this.pieEl.firstChild);
+        while (this.pieEL.firstChild) {
+            this.pieEL.removeChild(this.pieEL.firstChild);
         }
 
         this.svg = d3.select('#' + tileSerial)
             .append('svg')
-            .attr('width', this.pieEl.clientWidth)
-            .attr('height', this.pieEl.clientHeight)
+            .attr('width', this.pieEL.clientWidth)
+            .attr('height', this.pieEL.clientHeight)
         
         this.svg.append("text")
             .attr("class", "title")
-            .attr("x", (this.pieEl.clientWidth / 2))
+            .attr("x", (this.pieEL.clientWidth / 2))
             .attr("y", this.margin / 2 + 5)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .text((jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
-        this.svg.append('foreignObject')
+            this.svg.append('foreignObject')
             .attr('class', 'pencil')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 20)
             .attr('width', 25)
             .attr('height', 25)
@@ -65,7 +66,7 @@ export class PieChartComponent implements OnInit {
 
         this.svg.append('foreignObject')
             .attr('class', 'download')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 45)
             .attr('width', 25)
             .attr('height', 25)
@@ -77,7 +78,7 @@ export class PieChartComponent implements OnInit {
         const self = this;
         this.svg.append('foreignObject')
             .attr('class', 'heart')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 70)
             .attr('width', 25)
             .attr('height', 25)
@@ -86,18 +87,18 @@ export class PieChartComponent implements OnInit {
                 const heart = d3.select(this).select('i');
                 if (heart.style('color') === 'red') {
                     heart.style('color', '');
-                    self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
+                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
                     self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
                 } else {
                     heart.style('color', 'red');
-                    self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
+                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
                     self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
                 }
             });
         
         this.svg.append('foreignObject')
             .attr('class', 'trash')
-            .attr('x', this.pieEl.clientWidth - 36)
+            .attr('x', this.pieEL.clientWidth - 36)
             .attr('y', 95)
             .attr('width', 25)
             .attr('height', 25)
@@ -105,15 +106,10 @@ export class PieChartComponent implements OnInit {
             .on('click', () => {
                 this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
             });
-        
-        this.svg.on('mouseover', function() {
-                d3.select(this).selectAll('foreignObject').style('display', 'block');
-            })
-            .on('mouseout', function() {
-                d3.select(this).selectAll('foreignObject').style('display', 'none');
-            });
 
-        this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
+        this.iconService.hoverSVG(this.svg);
+
+        this.radius = Math.min(this.pieEL.clientWidth, this.pieEL.clientHeight) / 2 - this.margin;
 
         // Define the color scale
         this.color = d3.scaleOrdinal()
@@ -132,7 +128,7 @@ export class PieChartComponent implements OnInit {
 
         // Bind the data to the pie chart and draw the arcs
         this.g = this.svg.append('g')
-            .attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
+            .attr('transform', 'translate(' + this.pieEL.clientWidth / 2 + ',' + this.pieEL.clientHeight / 2 + ')');
         
         var tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
@@ -194,36 +190,36 @@ export class PieChartComponent implements OnInit {
 
     public updateChart(): void {
         // Update the SVG element size
-        this.svg.attr('width', this.pieEl.clientWidth)
-            .attr('height', this.pieEl.clientHeight);
+        this.svg.attr('width', this.pieEL.clientWidth)
+            .attr('height', this.pieEL.clientHeight);
 
         this.svg.select("text.title")
-            .attr("x", (this.pieEl.clientWidth / 2))
+            .attr("x", (this.pieEL.clientWidth / 2))
             .attr("y", this.margin / 2 + 5)
 
         this.svg.select('foreignObject.pencil')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 20)
 
         this.svg.select('foreignObject.download')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 45)
 
         this.svg.select('foreignObject.heart')
-            .attr('x', this.pieEl.clientWidth - 38)
+            .attr('x', this.pieEL.clientWidth - 38)
             .attr('y', 70)
 
         this.svg.select('foreignObject.trash')
-            .attr('x', this.pieEl.clientWidth - 36)
+            .attr('x', this.pieEL.clientWidth - 36)
             .attr('y', 95)
 
-        this.radius = Math.min(this.pieEl.clientWidth, this.pieEl.clientHeight) / 2 - this.margin;
+        this.radius = Math.min(this.pieEL.clientWidth, this.pieEL.clientHeight) / 2 - this.margin;
 
         this.arc = d3.arc()
             .innerRadius(0)
             .outerRadius(this.radius);
         
-        this.g.attr('transform', 'translate(' + this.pieEl.clientWidth / 2 + ',' + this.pieEl.clientHeight / 2 + ')');
+        this.g.attr('transform', 'translate(' + this.pieEL.clientWidth / 2 + ',' + this.pieEL.clientHeight / 2 + ')');
 
         this.svg.selectAll('path')
             .attr('d', this.arc)

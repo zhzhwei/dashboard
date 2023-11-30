@@ -155,7 +155,7 @@ export class GridStackComponent implements OnInit {
         });
 
         this.chartService.loadPersistence();
-        localStorage.clear();
+        // localStorage.clear();
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
             if (diagramFavorite.favorite) {

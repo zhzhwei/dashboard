@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
+import { IconService } from 'src/app/services/icon.sevice';
+
 import * as d3 from 'd3';
 
 @Component({
@@ -9,7 +11,8 @@ import * as d3 from 'd3';
 
 export class BarChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService, private chartService: ChartService) { }
+    constructor(private dialogService: DialogService, private chartService: ChartService, 
+        private iconService: IconService) { }
 
     private svg: any;
     private margin = 70;
@@ -100,12 +103,7 @@ export class BarChartComponent implements OnInit {
                 this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
             });
         
-        this.svg.on('mouseover', function() {
-                d3.select(this).selectAll('foreignObject').style('display', 'block');
-            })
-            .on('mouseout', function() {
-                d3.select(this).selectAll('foreignObject').style('display', 'none');
-            });
+        this.iconService.hoverSVG(this.svg);
 
         // Create the X-axis band scale
         this.x = d3.scaleBand()
