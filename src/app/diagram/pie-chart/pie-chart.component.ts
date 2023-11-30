@@ -44,69 +44,36 @@ export class PieChartComponent implements OnInit {
             .attr('width', this.pieEL.clientWidth)
             .attr('height', this.pieEL.clientHeight)
         
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.pieEL.clientWidth / 2))
-            .attr("y", this.margin / 2 + 5)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text((jobName ? jobName : "JobPosting") + " --- " + pieLabel);
+        this.iconService.createTitle(this.svg, this.pieEL.clientWidth / 2, this.margin / 2 + 5, 
+            (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
-            this.svg.append('foreignObject')
-            .attr('class', 'pencil')
-            .attr('x', this.pieEL.clientWidth - 38)
-            .attr('y', 20)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-pencil"></i>')
-            .on('click', () => {
-                this.dialogService.openPieChartEditor('Edit');
-                this.chartService.chartType.next('Pie Chart');
-            });
+        this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 20, 'pencil', () => {
+            this.dialogService.openPieChartEditor('Edit');
+            this.chartService.chartType.next('Pie Chart');
+        });
 
-        this.svg.append('foreignObject')
-            .attr('class', 'download')
-            .attr('x', this.pieEL.clientWidth - 38)
-            .attr('y', 45)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-download"></i>')
-            .on('click', () => {
-                this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
-            });
-        
+        this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 45, 'download', () => {
+            this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
+        });
+
         const self = this;
-        this.svg.append('foreignObject')
-            .attr('class', 'heart')
-            .attr('x', this.pieEL.clientWidth - 38)
-            .attr('y', 70)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-heart"></i>')
-            .on('click', function() {
-                const heart = d3.select(this).select('i');
-                if (heart.style('color') === 'red') {
-                    heart.style('color', '');
-                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
-                    self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-                } else {
-                    heart.style('color', 'red');
-                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
-                    self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
-                }
-            });
-        
-        this.svg.append('foreignObject')
-            .attr('class', 'trash')
-            .attr('x', this.pieEL.clientWidth - 36)
-            .attr('y', 95)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-trash"></i>')
-            .on('click', () => {
-                this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
-            });
+        this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 70, 'heart', function() {
+            const heart = d3.select(this).select('i');
+            if (heart.style('color') === 'red') {
+                heart.style('color', '');
+                self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
+                self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+            } else {
+                heart.style('color', 'red');
+                self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
+                self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
+            }
+        });
 
+        this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 36, 95, 'trash', () => {
+            this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
+        });
+        
         this.iconService.hoverSVG(this.svg);
 
         this.radius = Math.min(this.pieEL.clientWidth, this.pieEL.clientHeight) / 2 - this.margin;

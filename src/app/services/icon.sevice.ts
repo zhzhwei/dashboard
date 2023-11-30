@@ -6,15 +6,25 @@ import * as d3 from 'd3';
 })
 export class IconService {
 
-    createIcon(svg, className, x, y, icon, clickHandler) {
+    createTitle(svg, x, y, text) {
+        svg.append("text")
+            .attr("class", "title")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text(text);
+    }
+
+    createIcon(svg, x, y, icon, clickHandler) {
         svg.append('foreignObject')
-            .attr('class', className)
+            .attr('class', icon)
             .attr('x', x)
             .attr('y', y)
             .attr('width', 25)
             .attr('height', 25)
             .html(`<i class="fas fa-${icon}"></i>`)
-            .on('click', clickHandler)
+            .on('click', clickHandler);
     }
 
     hoverSVG(svg) {

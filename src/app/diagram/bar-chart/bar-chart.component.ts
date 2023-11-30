@@ -11,7 +11,7 @@ import * as d3 from 'd3';
 
 export class BarChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService, private chartService: ChartService, 
+    constructor(private dialogService: DialogService, private chartService: ChartService,
         private iconService: IconService) { }
 
     private svg: any;
@@ -26,7 +26,7 @@ export class BarChartComponent implements OnInit {
     public createChart(tileSerial: string, jobName: string, dataSource: any[], titleCount: any): void {
         this.barEL = document.getElementById(tileSerial);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
-        
+
         // Clear the item's content
         while (this.barEL.firstChild) {
             this.barEL.removeChild(this.barEL.firstChild);
@@ -40,69 +40,36 @@ export class BarChartComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.barEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+        this.iconService.createTitle(this.svg, this.barEL.clientWidth / 2, this.margin / 2,
+            `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
-        this.svg.append('foreignObject')
-            .attr('class', 'pencil')
-            .attr('x', this.barEL.clientWidth - 38)
-            .attr('y', 20)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-pencil"></i>')
-            .on('click', () => {
-                this.dialogService.openBarChartEditor('Edit');
-                this.chartService.chartType.next('Bar Chart');
-            });
+        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 20, 'pencil', () => {
+            this.dialogService.openBarChartEditor('Edit');
+            this.chartService.chartType.next('Bar Chart');
+        });
 
-        this.svg.append('foreignObject')
-            .attr('class', 'download')
-            .attr('x', this.barEL.clientWidth - 38)
-            .attr('y', 45)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-download"></i>')
-            .on('click', () => {
-                this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
-            });
-        
+        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 45, 'download', () => {
+            this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
+        });
+
         const self = this;
-        this.svg.append('foreignObject')
-            .attr('class', 'heart')
-            .attr('x', this.barEL.clientWidth - 38)
-            .attr('y', 70)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-heart"></i>')
-            .on('click', function() {
-                const heart = d3.select(this).select('i');
-                if (heart.style('color') === 'red') {
-                    heart.style('color', '');
-                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
-                    self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-                } else {
-                    heart.style('color', 'red');
-                    self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
-                    self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
-                }
-            });
-        
-        this.svg.append('foreignObject')
-            .attr('class', 'trash')
-            .attr('x', this.barEL.clientWidth - 36)
-            .attr('y', 95)
-            .attr('width', 25)
-            .attr('height', 25)
-            .html('<i class="fas fa-trash"></i>')
-            .on('click', () => {
-                this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
-            });
-        
+        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 70, 'heart', function () {
+            const heart = d3.select(this).select('i');
+            if (heart.style('color') === 'red') {
+                heart.style('color', '');
+                self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
+                self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+            } else {
+                heart.style('color', 'red');
+                self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
+                self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
+            }
+        });
+
+        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 36, 95, 'trash', () => {
+            this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
+        });
+
         this.iconService.hoverSVG(this.svg);
 
         // Create the X-axis band scale
@@ -123,14 +90,14 @@ export class BarChartComponent implements OnInit {
         // Create the Y-axis band scale
         var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
-            .domain([0, maxSkillCount + 1]) 
+            .domain([0, maxSkillCount + 1])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
         g.append('g')
             .attr('class', 'y-axis')
             .call(d3.axisLeft(this.y))
-        
+
         // Create and fill the bars
         g.selectAll('bars')
             .data(dataSource)
@@ -191,7 +158,6 @@ export class BarChartComponent implements OnInit {
     }
 
     public updateChart(): void {
-        // Update the SVG element size
         this.svg.attr('width', this.barEL.clientWidth)
             .attr('height', this.barEL.clientHeight);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
@@ -215,7 +181,7 @@ export class BarChartComponent implements OnInit {
         this.svg.select('foreignObject.trash')
             .attr('x', this.barEL.clientWidth - 36)
             .attr('y', 95)
-            
+
         // Update the X-axis scale range
         this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
 
