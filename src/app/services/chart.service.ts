@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+interface ChartAction {
+    action: string;
+    serial: string;
+}
+
 interface DiagramRemovedType {
     type: string;
     serial: string;
@@ -17,9 +22,6 @@ interface DiagramFavoriteType {
     providedIn: 'root'
 })
 export class ChartService {
-    public drivenBy = new BehaviorSubject<string>('');
-    currentDrivenBy = this.drivenBy.asObservable();
-
     public tileSerial = new BehaviorSubject<string>('');
     currentTileSerial = this.tileSerial.asObservable();
 
@@ -34,6 +36,9 @@ export class ChartService {
 
     public titleCount = new BehaviorSubject<number>(0);
     currentTitleCount = this.titleCount.asObservable();
+
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '' });
+    currentChartAction = this.chartAction.asObservable();
 
     public diagramFavorite = new BehaviorSubject<DiagramFavoriteType>({type: '', serial: '', favorite: false});
     currentDiagramFavorite = this.diagramFavorite.asObservable();
@@ -113,7 +118,7 @@ export class ChartService {
 
     public loadPersistence() {
         if (localStorage.length > 0) {
-            const chartActions = {
+            var chartActions = {
                 'dash-bar': {
                     nextActions: {
                         titleCount: this.titleCount
@@ -127,16 +132,15 @@ export class ChartService {
             };
     
             for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
+                var key = localStorage.key(i);
+                var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
                 if (chartActions[chartType]) {
-                    const chartData = JSON.parse(localStorage.getItem(key));
-                    this.drivenBy.next('Create');
+                    var chartData = JSON.parse(localStorage.getItem(key));
+                    this.chartAction.next({ action: 'Load', serial: chartData.tileSerial });
                     this.chartType.next(chartData.chartType);
-                    this.tileSerial.next(chartData.tileSerial);
                     this.jobName.next(chartData.jobName);
                     this.dataSource.next(chartData.dataSource);
-                    for (const action in chartActions[chartType].nextActions) {
+                    for (var action in chartActions[chartType].nextActions) {
                         chartActions[chartType].nextActions[action].next(chartData[action]);
                     }
                 }

@@ -48,7 +48,7 @@ export class PieChartComponent implements OnInit {
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
         this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openPieChartEditor('Edit');
+            this.dialogService.openPieChartEditor('Edit', tileSerial);
             this.chartService.chartType.next('Pie Chart');
         });
 

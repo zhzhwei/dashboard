@@ -27,7 +27,6 @@ export class GridStackComponent implements OnInit {
     @ViewChild(DoughnutComponent) donutChart: DoughnutComponent;
     @ViewChild(LineChartComponent) lineChart: LineChartComponent;
 
-
     private minorGrid: GridStack;
     private majorGrid: GridStack;
     public majorInitImage: boolean = true;
@@ -40,6 +39,8 @@ export class GridStackComponent implements OnInit {
     public pieContEl: any;
     public donutContEl: any;
     public lineContEl: any;
+
+    private contElsAndObservers = {};
 
     private options = {
         margin: 5,
@@ -90,10 +91,10 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit() {
         combineLatest([
-            this.chartService.currentDrivenBy,
+            this.chartService.currentChartAction,
             this.chartService.currentChartType,
             this.chartService.currentDataSource
-        ]).subscribe(([drivenBy, chartType, dataSource]) => {
+        ]).subscribe(([chartAction, chartType, dataSource]) => {
             // console.log('drivenBy:', drivenBy);
             // console.log('chartType:', chartType);
             // console.log('dataSource.length:', dataSource.length);
@@ -103,7 +104,7 @@ export class GridStackComponent implements OnInit {
                     this.majorInitImage = false;
                 }
                 if (!this.majorInitImage) {
-                    const chartActions = {
+                    var chartActions = {
                         'Bar Chart': {
                             observable: combineLatest([
                                 this.chartService.currentJobName,
@@ -139,11 +140,29 @@ export class GridStackComponent implements OnInit {
                     };
 
                     if (chartActions[chartType]) {
-                        const tileSerial = this.createDiagram(drivenBy, chartType);
-                        chartActions[chartType].observable.subscribe(dataSource => {
-                            chartActions[chartType].createChart(tileSerial, dataSource);
-                            chartActions[chartType].savePersistence(tileSerial, dataSource);
-                        });
+                        if (chartAction.action === 'Create') {
+                            console.log('Create');
+                            var tileSerial = this.getTileSerial(chartType);
+                            chartActions[chartType].observable.subscribe(dataCombi => {
+                                console.log('tileSerial:', tileSerial);
+                                console.log('dataCombi:', dataCombi);
+                                chartActions[chartType].createChart(tileSerial, dataCombi);
+                                // chartActions[chartType].savePersistence(tileSerial, dataCombi);
+                            });
+                        } else if (chartAction.action === 'Edit') {
+                            console.log('Edit');
+                            console.log(chartAction.serial);
+                            chartActions[chartType].observable.subscribe(dataCombi => {
+                                chartActions[chartType].createChart(chartAction.serial, dataCombi);
+                                // chartActions[chartType].savePersistence(chartAction.serial, dataCombi);
+                            });
+                        } else if (chartAction.action === 'Load') {
+                            console.log('Load');
+                            console.log(chartAction.serial);
+                            chartActions[chartType].observable.subscribe(dataCombi => {
+                                chartActions[chartType].createChart(chartAction.serial, dataCombi);
+                            });
+                        }
                     } else {
                         console.log('Invalid Chart Type:');
                     }
@@ -154,7 +173,7 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        this.chartService.loadPersistence();
+        // this.chartService.loadPersistence();
         // localStorage.clear();
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
@@ -196,13 +215,11 @@ export class GridStackComponent implements OnInit {
         });
     }
 
-    private createDiagram(drivenBy: string, chartType: string) {
-        if (drivenBy === 'Create') {
-            this.itemEl = this.majorGrid.addWidget(this.newTile);
-            this.chartTypeNum[chartType]++;
-        }
+    private getTileSerial(chartType: string) {
+        this.itemEl = this.majorGrid.addWidget(this.newTile);
+        this.chartTypeNum[chartType]++;
         var contEl = this.itemEl.querySelector('.grid-stack-item-content');
-        const chartActions = {
+        var chartActions = {
             'Bar Chart': {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
                 updateChart: () => {

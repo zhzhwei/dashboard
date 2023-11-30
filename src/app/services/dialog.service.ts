@@ -44,7 +44,7 @@ export class DialogService {
         });
     }
 
-    openBarChartEditor(drivenBy: string) {
+    openBarChartEditor(action: string, tileSerial: string) {
         this.dialog.open(BarChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -52,7 +52,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.drivenBy.next(drivenBy);
+        this.chartService.chartAction.next({ action: action, serial: tileSerial });
     }
 
     openStackedBarChartEditor() {
@@ -65,7 +65,7 @@ export class DialogService {
         });
     }
 
-    openPieChartEditor(drivenBy: string) {
+    openPieChartEditor(action: string, tileSerial: string) {
         this.dialog.open(PieChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -73,7 +73,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.drivenBy.next(drivenBy);
+        this.chartService.chartAction.next({ action: action, serial: tileSerial });
     }
 
     openDoughnutChartEditor() {

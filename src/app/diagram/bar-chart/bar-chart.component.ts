@@ -44,7 +44,7 @@ export class BarChartComponent implements OnInit {
             `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
         this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openBarChartEditor('Edit');
+            this.dialogService.openBarChartEditor('Edit', tileSerial);
             this.chartService.chartType.next('Bar Chart');
         });
 
