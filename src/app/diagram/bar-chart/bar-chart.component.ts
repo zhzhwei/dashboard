@@ -44,7 +44,7 @@ export class BarChartComponent implements OnInit {
         });
 
         this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 45, 'download', () => {
-            this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
+            this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
 
         const self = this;

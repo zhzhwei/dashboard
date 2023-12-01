@@ -99,18 +99,22 @@ export class GridStackComponent implements OnInit {
             switchMap(([chartType, dataSource]) => {
                 if (chartType && dataSource.length > 0) {
                     return this.chartService.chartAction.pipe(
-                        map(chartAction => ({ ...chartAction, chartType, dataSource }))
+                        map(chartAction => ({ chartType, dataSource, ...chartAction }))
                     );
                 } else {
                     return EMPTY;
                 }
             })
-        ).subscribe(({ action, serial, jobName, titleCount, pieLabel, chartType, dataSource }) => {
+        ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
             if (chartType === 'Bar Chart') {
                 if (action === 'Create') {
+                    if (this.majorInitImage) {
+                        this.majorGrid.removeAll();
+                        this.majorInitImage = false;
+                    }
                     if (jobName && titleCount > 0) {
                         serial = this.getTileSerial(chartType);
-                        console.log('chartAction', { action, serial, jobName, titleCount, chartType, dataSource });
+                        console.log('chartAction', { chartType, dataSource, action, serial, jobName, titleCount });
                         this.barChart.createChart(serial, jobName, dataSource, titleCount);
                     }
                 } else if (action === 'Edit') {
@@ -120,9 +124,13 @@ export class GridStackComponent implements OnInit {
                 }
             } else if (chartType === 'Pie Chart') {
                 if (action === 'Create') {
+                    if (this.majorInitImage) {
+                        this.majorGrid.removeAll();
+                        this.majorInitImage = false;
+                    }
                     if (jobName && pieLabel) {
                         serial = this.getTileSerial(chartType);
-                        console.log('chartAction', { action, serial, jobName, pieLabel, chartType, dataSource });
+                        console.log('chartAction', { chartType, dataSource, action, serial, jobName, pieLabel });
                         this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
                     }
                 } else if (action === 'Edit') {
