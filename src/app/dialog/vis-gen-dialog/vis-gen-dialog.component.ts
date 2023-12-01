@@ -51,7 +51,6 @@ export class VisGenDialogComponent implements OnInit {
         }
         if (this.chartType === 'Bar Chart' || this.chartType === 'Pie Chart') {
             this.jobName = jobName;
-            this.chartService.jobName.next(this.jobName);
         }
     }
 

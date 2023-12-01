@@ -53,8 +53,8 @@ export class PieChartEditorComponent implements OnInit {
 
     constructor(private rdfDataService: RdfDataService, private chartService: ChartService,
         private dialog: MatDialog) {
-        this.chartService.currentJobName.subscribe(jobName => {
-            this.jobName = jobName;
+        this.chartService.currentChartAction.subscribe(chartAction => {
+            this.jobName = chartAction.jobName;
         });
     }
 
@@ -94,10 +94,14 @@ export class PieChartEditorComponent implements OnInit {
                         } 
                     }
                 }));
-                this.createChart(this.jobName, this.dataSource, 'isFulltimeJob');
+                this.chartService.chartAction.next({
+                    ...this.chartService.chartAction.value,
+                    pieLabel: 'isFulltimeJob'
+                });
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
                 this.chartService.pieLabel.next('isFulltimeJob');
+                this.createChart(this.jobName, this.dataSource, 'isFulltimeJob');
             });
         } else if (event.value === 'isLimitedJob') {
             Promise.all([
@@ -119,10 +123,14 @@ export class PieChartEditorComponent implements OnInit {
                         } 
                     }
                 }));
-                this.createChart(this.jobName, this.dataSource, 'isLimitedJob');
+                this.chartService.chartAction.next({
+                    ...this.chartService.chartAction.value,
+                    pieLabel: 'isLimitedJob'
+                });
                 this.chartService.chartType.next('Pie Chart');
                 this.chartService.dataSource.next(this.dataSource);
                 this.chartService.pieLabel.next('isLimitedJob');
+                this.createChart(this.jobName, this.dataSource, 'isLimitedJob');
             });
         }
     }

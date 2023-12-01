@@ -32,12 +32,6 @@ export class PieChartComponent implements OnInit {
 
     public createChart(tileSerial: string, jobName: string, dataSource: any, pieLabel: string): void {
         this.pieEL = document.getElementById(tileSerial);
-        // console.log(this.pieEL.clientWidth, this.pieEL.clientHeight);
-
-        // Clear the item's content
-        // while (this.pieEL.firstChild) {
-        //     this.pieEL.removeChild(this.pieEL.firstChild);
-        // }
 
         this.svg = d3.select('#' + tileSerial)
             .append('svg')

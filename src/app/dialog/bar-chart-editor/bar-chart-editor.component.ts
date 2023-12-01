@@ -53,7 +53,6 @@ export class BarChartEditorComponent implements OnInit {
         this.chartService.currentChartAction.subscribe( chartAction => {
             this.jobName = chartAction.jobName;
             this.titleCount = chartAction.titleCount;
-            // console.log(this.jobName, this.titleCount);
         });
     }
 
@@ -95,21 +94,6 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     public applyChanges(): void {
-        // console.log(this.jobName);
-        // this.titleQuery = this.rdfDataService.prefixes + `
-        //     select (count(?s) as ?skillCount) where { 
-        //         ?s rdf:type edm:JobPosting.
-        //         ?s edm:title ?title.
-        //         filter contains(?title, "${this.jobName}").
-        //     }
-        // `;
-        // this.rdfDataService.getQueryResults(this.titleQuery)
-        //     .then(data => {
-        //         this.results = data.results.bindings;
-        //         this.titleCount = Number(this.results[0].skillCount.value);
-        //     })
-        //     .catch(error => console.error(error));
-
         this.checkedSkills = this.list.filter(item => item.checked === true);
         this.skillQuery = this.rdfDataService.prefixes + `
             select (count(?s) as ?skillCount) where { 
@@ -146,9 +130,6 @@ export class BarChartEditorComponent implements OnInit {
             this.dataSource.forEach(item => {
                 item.skill = this.skillAbbr[item.skill];
             });
-            // this.chartService.chartType.next('Bar Chart'); for Edit mode
-            // this.chartService.jobName.next(this.jobName);
-            // this.chartService.titleCount.next(this.titleCount);
             this.chartService.dataSource.next(this.dataSource);
             this.createChart(this.jobName, this.dataSource, this.titleCount);
         });
@@ -156,7 +137,6 @@ export class BarChartEditorComponent implements OnInit {
 
     private createChart(jobName: string, dataSource: any[], titleCount: any): void {
         this.barEL = document.getElementById('editor-bar');
-        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
         while (this.barEL.firstChild) {
             this.barEL.removeChild(this.barEL.firstChild);

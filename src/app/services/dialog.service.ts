@@ -73,7 +73,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        // this.chartService.chartAction.next({ action: action, serial: tileSerial, jobName: jobName });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, jobName: jobName });
     }
 
     openDoughnutChartEditor() {

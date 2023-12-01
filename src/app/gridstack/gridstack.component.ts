@@ -105,18 +105,31 @@ export class GridStackComponent implements OnInit {
                     return EMPTY;
                 }
             })
-        ).subscribe(({ action, serial, jobName, titleCount, chartType, dataSource }) => {
-            if (action === 'Create') {
-                if (jobName && titleCount > 0) {
-                    serial = this.getTileSerial(chartType);
-                    console.log('chartAction', { action, serial, jobName, titleCount, chartType, dataSource });
+        ).subscribe(({ action, serial, jobName, titleCount, pieLabel, chartType, dataSource }) => {
+            if (chartType === 'Bar Chart') {
+                if (action === 'Create') {
+                    if (jobName && titleCount > 0) {
+                        serial = this.getTileSerial(chartType);
+                        console.log('chartAction', { action, serial, jobName, titleCount, chartType, dataSource });
+                        this.barChart.createChart(serial, jobName, dataSource, titleCount);
+                    }
+                } else if (action === 'Edit') {
+                    this.itemEl = document.getElementById(serial);
+                    this.itemEl.innerHTML = '';
                     this.barChart.createChart(serial, jobName, dataSource, titleCount);
-                    this.chartService.chartAction.next({ action: '', serial: '', jobName: '', titleCount: 0 });
                 }
-            } else if (action === 'Edit') {
-                this.itemEl = document.getElementById(serial);
-                this.itemEl.innerHTML = '';
-                this.barChart.createChart(serial, jobName, dataSource, titleCount);
+            } else if (chartType === 'Pie Chart') {
+                if (action === 'Create') {
+                    if (jobName && pieLabel) {
+                        serial = this.getTileSerial(chartType);
+                        console.log('chartAction', { action, serial, jobName, pieLabel, chartType, dataSource });
+                        this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
+                    }
+                } else if (action === 'Edit') {
+                    this.itemEl = document.getElementById(serial);
+                    this.itemEl.innerHTML = '';
+                    this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
+                }
             }
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
