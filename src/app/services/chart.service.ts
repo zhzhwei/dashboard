@@ -4,6 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 interface ChartAction {
     action: string;
     serial: string;
+    jobName: string;
+    titleCount: number;
 }
 
 interface DiagramRemovedType {
@@ -37,7 +39,7 @@ export class ChartService {
     public titleCount = new BehaviorSubject<number>(0);
     currentTitleCount = this.titleCount.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '' });
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', jobName: '', titleCount: 0 });
     currentChartAction = this.chartAction.asObservable();
 
     public diagramFavorite = new BehaviorSubject<DiagramFavoriteType>({type: '', serial: '', favorite: false});
@@ -116,35 +118,35 @@ export class ChartService {
         localStorage.removeItem(tileSerial);
     }
 
-    public loadPersistence() {
-        if (localStorage.length > 0) {
-            var chartActions = {
-                'dash-bar': {
-                    nextActions: {
-                        titleCount: this.titleCount
-                    }
-                },
-                'dash-pie': {
-                    nextActions: {
-                        pieLabel: this.pieLabel
-                    }
-                }
-            };
+    // public loadPersistence() {
+    //     if (localStorage.length > 0) {
+    //         var chartActions = {
+    //             'dash-bar': {
+    //                 nextActions: {
+    //                     titleCount: this.titleCount
+    //                 }
+    //             },
+    //             'dash-pie': {
+    //                 nextActions: {
+    //                     pieLabel: this.pieLabel
+    //                 }
+    //             }
+    //         };
     
-            for (let i = 0; i < localStorage.length; i++) {
-                var key = localStorage.key(i);
-                var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
-                if (chartActions[chartType]) {
-                    var chartData = JSON.parse(localStorage.getItem(key));
-                    this.chartAction.next({ action: 'Load', serial: chartData.tileSerial });
-                    this.chartType.next(chartData.chartType);
-                    this.jobName.next(chartData.jobName);
-                    this.dataSource.next(chartData.dataSource);
-                    for (var action in chartActions[chartType].nextActions) {
-                        chartActions[chartType].nextActions[action].next(chartData[action]);
-                    }
-                }
-            }
-        }
-    }
+    //         for (let i = 0; i < localStorage.length; i++) {
+    //             var key = localStorage.key(i);
+    //             var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
+    //             if (chartActions[chartType]) {
+    //                 var chartData = JSON.parse(localStorage.getItem(key));
+    //                 this.chartAction.next({ action: 'Load', serial: chartData.tileSerial });
+    //                 this.chartType.next(chartData.chartType);
+    //                 this.jobName.next(chartData.jobName);
+    //                 this.dataSource.next(chartData.dataSource);
+    //                 for (var action in chartActions[chartType].nextActions) {
+    //                     chartActions[chartType].nextActions[action].next(chartData[action]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }

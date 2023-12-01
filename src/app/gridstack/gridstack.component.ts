@@ -7,6 +7,8 @@ import { DoughnutComponent } from '../diagram/doughnut/doughnut.component';
 import { LineChartComponent } from '../diagram/line-chart/line-chart.component';
 
 import { combineLatest } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 import { GridStack, GridStackElement, GridHTMLElement } from 'gridstack';
 import { ChartService } from '../services/chart.service';
 
@@ -91,86 +93,31 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit() {
         combineLatest([
-            this.chartService.currentChartAction,
             this.chartService.currentChartType,
             this.chartService.currentDataSource
-        ]).subscribe(([chartAction, chartType, dataSource]) => {
-            // console.log('drivenBy:', drivenBy);
-            // console.log('chartType:', chartType);
-            // console.log('dataSource.length:', dataSource.length);
-            if (chartType && dataSource.length > 0) {
-                if (this.majorInitImage) {
-                    this.majorGrid.removeAll();
-                    this.majorInitImage = false;
+        ]).pipe(
+            switchMap(([chartType, dataSource]) => {
+                if (chartType && dataSource.length > 0) {
+                    return this.chartService.chartAction.pipe(
+                        map(chartAction => ({ ...chartAction, chartType, dataSource }))
+                    );
+                } else {
+                    return EMPTY;
                 }
-                if (!this.majorInitImage) {
-                    var chartActions = {
-                        'Bar Chart': {
-                            observable: combineLatest([
-                                this.chartService.currentJobName,
-                                this.chartService.currentTitleCount
-                            ]),
-                            createChart: (tileSerial, [jobName, titleCount]) => {
-                                if (jobName && titleCount > 0) {
-                                    this.barChart.createChart(tileSerial, jobName, dataSource, titleCount);
-                                }
-                            },
-                            savePersistence: (tileSerial, [jobName, titleCount]) => {
-                                if (jobName && titleCount > 0) {
-                                    this.chartService.savePersistence('Bar Chart', tileSerial, jobName, dataSource, titleCount);
-                                }
-                            }
-                        },
-                        'Pie Chart': {
-                            observable: combineLatest([
-                                this.chartService.currentJobName,
-                                this.chartService.currentPieLabel
-                            ]),
-                            createChart: (tileSerial, [jobName, pieLabel]) => {
-                                if (jobName && pieLabel) {
-                                    this.pieChart.createChart(tileSerial, jobName, dataSource, pieLabel);
-                                }
-                            },
-                            savePersistence: (tileSerial, [jobName, pieLabel]) => {
-                                if (jobName && pieLabel) {
-                                    this.chartService.savePersistence('Pie Chart', tileSerial, jobName, dataSource, pieLabel);
-                                }
-                            }
-                        }
-                    };
-
-                    if (chartActions[chartType]) {
-                        if (chartAction.action === 'Create') {
-                            console.log('Create');
-                            var tileSerial = this.getTileSerial(chartType);
-                            chartActions[chartType].observable.subscribe(dataCombi => {
-                                console.log('tileSerial:', tileSerial);
-                                console.log('dataCombi:', dataCombi);
-                                chartActions[chartType].createChart(tileSerial, dataCombi);
-                                // chartActions[chartType].savePersistence(tileSerial, dataCombi);
-                            });
-                        } else if (chartAction.action === 'Edit') {
-                            console.log('Edit');
-                            console.log(chartAction.serial);
-                            chartActions[chartType].observable.subscribe(dataCombi => {
-                                chartActions[chartType].createChart(chartAction.serial, dataCombi);
-                                // chartActions[chartType].savePersistence(chartAction.serial, dataCombi);
-                            });
-                        } else if (chartAction.action === 'Load') {
-                            console.log('Load');
-                            console.log(chartAction.serial);
-                            chartActions[chartType].observable.subscribe(dataCombi => {
-                                chartActions[chartType].createChart(chartAction.serial, dataCombi);
-                            });
-                        }
-                    } else {
-                        console.log('Invalid Chart Type:');
-                    }
-
-                    this.chartService.chartType.next('');
-                    this.chartService.dataSource.next([]);
+            })
+        ).subscribe(({ action, serial, jobName, titleCount, chartType, dataSource }) => {
+            if (action === 'Create') {
+                if (jobName && titleCount > 0) {
+                    serial = this.getTileSerial(chartType);
+                    console.log('chartAction', { action, serial, jobName, titleCount, chartType, dataSource });
+                    this.barChart.createChart(serial, jobName, dataSource, titleCount);
+                    this.chartService.chartAction.next({ action: '', serial: '', jobName: '', titleCount: 0 });
                 }
+            } else if (action === 'Edit') {
+                this.barChart.createChart(serial, jobName, dataSource, titleCount);
             }
+            this.chartService.chartType.next('');
+            this.chartService.dataSource.next([]);
         });
 
         // this.chartService.loadPersistence();

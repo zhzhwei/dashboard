@@ -27,11 +27,6 @@ export class BarChartComponent implements OnInit {
         this.barEL = document.getElementById(tileSerial);
         // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
 
-        // Clear the item's content
-        while (this.barEL.firstChild) {
-            this.barEL.removeChild(this.barEL.firstChild);
-        }
-
         this.svg = d3.select('#' + tileSerial)
             .append('svg')
             .attr('width', this.barEL.clientWidth)
@@ -44,7 +39,7 @@ export class BarChartComponent implements OnInit {
             `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
 
         this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openBarChartEditor('Edit', tileSerial);
+            this.dialogService.openBarChartEditor('Edit', tileSerial, jobName, titleCount);
             this.chartService.chartType.next('Bar Chart');
         });
 

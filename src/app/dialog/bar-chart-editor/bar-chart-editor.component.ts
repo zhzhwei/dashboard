@@ -50,9 +50,10 @@ export class BarChartEditorComponent implements OnInit {
 
     constructor(private rdfDataService: RdfDataService, private chartService:
         ChartService, private dialog: MatDialog) {
-        this.chartService.currentJobName.subscribe(jobName => {
-            this.jobName = jobName;
-            // console.log(this.jobName);
+        this.chartService.currentChartAction.subscribe( chartAction => {
+            this.jobName = chartAction.jobName;
+            this.titleCount = chartAction.titleCount;
+            // console.log(this.jobName, this.titleCount);
         });
     }
 
@@ -95,19 +96,19 @@ export class BarChartEditorComponent implements OnInit {
 
     public applyChanges(): void {
         // console.log(this.jobName);
-        this.titleQuery = this.rdfDataService.prefixes + `
-            select (count(?s) as ?skillCount) where { 
-                ?s rdf:type edm:JobPosting.
-                ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
-            }
-        `;
-        this.rdfDataService.getQueryResults(this.titleQuery)
-            .then(data => {
-                this.results = data.results.bindings;
-                this.titleCount = Number(this.results[0].skillCount.value);
-            })
-            .catch(error => console.error(error));
+        // this.titleQuery = this.rdfDataService.prefixes + `
+        //     select (count(?s) as ?skillCount) where { 
+        //         ?s rdf:type edm:JobPosting.
+        //         ?s edm:title ?title.
+        //         filter contains(?title, "${this.jobName}").
+        //     }
+        // `;
+        // this.rdfDataService.getQueryResults(this.titleQuery)
+        //     .then(data => {
+        //         this.results = data.results.bindings;
+        //         this.titleCount = Number(this.results[0].skillCount.value);
+        //     })
+        //     .catch(error => console.error(error));
 
         this.checkedSkills = this.list.filter(item => item.checked === true);
         this.skillQuery = this.rdfDataService.prefixes + `
@@ -145,8 +146,9 @@ export class BarChartEditorComponent implements OnInit {
             this.dataSource.forEach(item => {
                 item.skill = this.skillAbbr[item.skill];
             });
-            this.chartService.chartType.next('Bar Chart');
-            this.chartService.titleCount.next(this.titleCount);
+            // this.chartService.chartType.next('Bar Chart'); for Edit mode
+            // this.chartService.jobName.next(this.jobName);
+            // this.chartService.titleCount.next(this.titleCount);
             this.chartService.dataSource.next(this.dataSource);
             this.createChart(this.jobName, this.dataSource, this.titleCount);
         });

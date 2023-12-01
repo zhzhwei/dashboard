@@ -35,9 +35,9 @@ export class PieChartComponent implements OnInit {
         // console.log(this.pieEL.clientWidth, this.pieEL.clientHeight);
 
         // Clear the item's content
-        while (this.pieEL.firstChild) {
-            this.pieEL.removeChild(this.pieEL.firstChild);
-        }
+        // while (this.pieEL.firstChild) {
+        //     this.pieEL.removeChild(this.pieEL.firstChild);
+        // }
 
         this.svg = d3.select('#' + tileSerial)
             .append('svg')
@@ -48,7 +48,7 @@ export class PieChartComponent implements OnInit {
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
         this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openPieChartEditor('Edit', tileSerial);
+            this.dialogService.openPieChartEditor('Edit', tileSerial, jobName);
             this.chartService.chartType.next('Pie Chart');
         });
 
