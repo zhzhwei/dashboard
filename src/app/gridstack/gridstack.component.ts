@@ -114,6 +114,8 @@ export class GridStackComponent implements OnInit {
                     this.chartService.chartAction.next({ action: '', serial: '', jobName: '', titleCount: 0 });
                 }
             } else if (action === 'Edit') {
+                this.itemEl = document.getElementById(serial);
+                this.itemEl.innerHTML = '';
                 this.barChart.createChart(serial, jobName, dataSource, titleCount);
             }
             this.chartService.chartType.next('');
@@ -163,9 +165,9 @@ export class GridStackComponent implements OnInit {
     }
 
     private getTileSerial(chartType: string) {
-        this.itemEl = this.majorGrid.addWidget(this.newTile);
+        var itemEl = this.majorGrid.addWidget(this.newTile);
         this.chartTypeNum[chartType]++;
-        var contEl = this.itemEl.querySelector('.grid-stack-item-content');
+        var contEl = itemEl.querySelector('.grid-stack-item-content');
         var chartActions = {
             'Bar Chart': {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],

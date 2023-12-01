@@ -79,8 +79,6 @@ export class VisGenDialogComponent implements OnInit {
         if (this.barResults.length > 0) {
             switch (this.chartType) {
                 case 'Bar Chart':
-                    // this.chartService.jobName.next(this.jobName);
-                    // this.chartService.titleCount.next(this.barResults.length);
                     this.dialogService.openBarChartEditor('Create', '', this.jobName, this.barResults.length);
                     break;
                 case 'Stacked Bar Chart':
