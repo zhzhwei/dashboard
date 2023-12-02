@@ -78,7 +78,52 @@ export class PieChartComponent implements OnInit {
                 .enter()
                 .append('path')
                 .attr('d', (d: any) => arc(d))
-                .attr('fill', (d) => color(d.data.label) as string);
+                .attr('fill', (d) => color(d.data.label) as string)
+                .on('mouseover', (d, i, nodes) => {
+                    // Get the current bar element
+                    var bar = d3.select(nodes[i]);
+
+                    // Create the tooltip element
+                    var tooltip = d3.select('#' + tileSerial)
+                        .append('div')
+                        .attr('class', 'tooltip')
+                        .style('position', 'absolute')
+                        .style('background-color', 'white')
+                        .style('border', 'solid')
+                        .style('border-width', '1px')
+                        .style('border-radius', '5px')
+                        .style('padding', '10px')
+                        .style('opacity', 0);
+
+                    // Show the tooltip element
+                    d3.select('.tooltip')
+                        .text(`${d.data.label}: ${d.data.value}`)
+                        .transition()
+                        .duration(200)
+                        .style('opacity', 1);
+
+                    // Change the color of the bar
+                    // bar.style('fill', 'orange');
+
+                    // Add a mousemove event listener to update the position of the tooltip element
+                    d3.select('body')
+                        .on('mousemove', () => {
+                            var [x, y] = d3.mouse(nodes[i]);
+                            // console.log(x, y);
+                            tooltip.style('left', `${x + 250}px`)
+                                .style('top', `${y + 200}px`);
+                        });
+                })
+                .on('mouseout', (d, i, nodes) => {
+                    // Get the current bar element
+                    var bar = d3.select(nodes[i]);
+
+                    // Hide the tooltip element
+                    d3.select('.tooltip').remove();
+
+                    // Change the color of the bar back to the original color
+                    // bar.style('fill', color(d.data.label));
+                });
         } else {
             this.g.selectAll('path')
                 .attr('d', (d: any) => arc(d))

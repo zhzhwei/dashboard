@@ -113,7 +113,7 @@ export class GridStackComponent implements OnInit {
             })
         ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
             var chartCreators = {
-                'Bar Chart': this.barChart.createChart.bind(this.barChart),
+                'Bar Chart': this.barChart.chartCreateOrUpdate.bind(this.barChart),
                 'Pie Chart': this.pieChart.chartCreateOrUpdate.bind(this.pieChart),
             };
         
@@ -138,7 +138,7 @@ export class GridStackComponent implements OnInit {
             } else if (action === 'Edit') {
                 this.itemEl = document.getElementById(serial);
                 this.itemEl.innerHTML = '';
-                chartCreators[chartType](serial, jobName, dataSource, parameter);
+                chartCreators[chartType](serial, jobName, dataSource, parameter, true);
                 this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
             }
         
@@ -204,7 +204,7 @@ export class GridStackComponent implements OnInit {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
                 updateChart: (tileSerial) => {
                     if (!this.barChart.barRemoved) {
-                        this.barChart.updateChart(tileSerial, dataSource);
+                        this.barChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', false);
                     }
                 }
             },
