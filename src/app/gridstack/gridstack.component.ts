@@ -114,7 +114,7 @@ export class GridStackComponent implements OnInit {
         ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
             var chartCreators = {
                 'Bar Chart': this.barChart.createChart.bind(this.barChart),
-                'Pie Chart': this.pieChart.createChart.bind(this.pieChart),
+                'Pie Chart': this.pieChart.chartCreateOrUpdate.bind(this.pieChart),
             };
         
             var conditions = {
@@ -130,16 +130,16 @@ export class GridStackComponent implements OnInit {
                     this.majorInitImage = false;
                 }
                 if (conditions[chartType]) {
-                    serial = this.getTileSerial(chartType);
+                    serial = this.getTileSerial(chartType, dataSource);
                     console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
-                    chartCreators[chartType](serial, jobName, dataSource, parameter);
-                    // this.chartService.savePersistence(chartType, 'major-' + serial, dataSource, jobName, parameter);
+                    chartCreators[chartType](serial, jobName, dataSource, parameter, true);
+                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
                 }
             } else if (action === 'Edit') {
                 this.itemEl = document.getElementById(serial);
                 this.itemEl.innerHTML = '';
                 chartCreators[chartType](serial, jobName, dataSource, parameter);
-                // this.chartService.savePersistence(chartType, 'major-' + serial, dataSource, jobName, parameter);
+                this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
             }
         
             this.chartService.chartType.next('');
@@ -148,8 +148,10 @@ export class GridStackComponent implements OnInit {
 
         console.log(localStorage.length);
 
-        // this.chartService.loadPersistence();
+        this.chartService.loadPersistence();
         // localStorage.clear();
+
+        this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
             if (diagramFavorite.favorite) {
@@ -193,24 +195,24 @@ export class GridStackComponent implements OnInit {
         });
     }
 
-    private getTileSerial(chartType: string) {
+    private getTileSerial(chartType: string, dataSource: any[]) {
         var itemEl = this.majorGrid.addWidget(this.newTile);
         this.chartTypeNum[chartType]++;
         var contEl = itemEl.querySelector('.grid-stack-item-content');
         var chartActions = {
             'Bar Chart': {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
-                updateChart: () => {
+                updateChart: (tileSerial) => {
                     if (!this.barChart.barRemoved) {
-                        this.barChart.updateChart();
+                        this.barChart.updateChart(tileSerial, dataSource);
                     }
                 }
             },
             'Pie Chart': {
                 setTileSerial: () => 'dash-pie-' + this.chartTypeNum[chartType],
-                updateChart: () => {
+                updateChart: (tileSerial) => {
                     if (!this.pieChart.pieRemoved) {
-                        this.pieChart.updateChart();
+                        this.pieChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', false);
                     }
                 }
             }
@@ -218,10 +220,27 @@ export class GridStackComponent implements OnInit {
         var tileSerial = chartActions[chartType].setTileSerial();
         contEl.setAttribute('id', tileSerial);
         var resizeObserver = new ResizeObserver(entries => {
-            chartActions[chartType].updateChart();
+            chartActions[chartType].updateChart(tileSerial);
         });
         resizeObserver.observe(contEl);
         return tileSerial;
+    }
+
+    private mergeItem(event, items) {
+        var nodes = this.majorGrid.getGridItems();
+        for (var i = 0; i < nodes.length; i++) {
+            for (var j = i + 1; j < nodes.length; j++) {
+                if (this.isOverlap(nodes[i], nodes[j])) {
+                    // console.log('overlap');
+                    break;
+                }
+            }
+        }
+    }
+    
+    private isOverlap(item1, item2) {
+        return !(item2.x >= item1.x + item1.width || item2.x + item2.width <= item1.x ||
+                 item2.y >= item1.y + item1.height || item2.y + item2.height <= item1.y);
     }
 
 }

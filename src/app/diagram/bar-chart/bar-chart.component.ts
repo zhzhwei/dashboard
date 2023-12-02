@@ -14,41 +14,46 @@ export class BarChartComponent implements OnInit {
     constructor(private dialogService: DialogService, private chartService: ChartService,
         private iconService: IconService) { }
 
-    private svg: any;
+    // private svg: any;
     private margin = 70;
-    private barEL: any;
-    private x: any;
-    private y: any;
+    // private barEL: any;
+    // private x: any;
+    // private y: any;
     public barRemoved = false;
 
     ngOnInit(): void { }
 
     public createChart(tileSerial: string, jobName: string, dataSource: any[], titleCount: any): void {
-        this.barEL = document.getElementById(tileSerial);
-        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+        var barEL = document.getElementById(tileSerial);
+        // console.log(barEL.clientWidth, barEL.clientHeight);
 
-        this.svg = d3.select('#' + tileSerial)
+        // Clear the item's content
+        while (barEL.firstChild) {
+            // console.log(barEL.firstChild);
+            barEL.removeChild(barEL.firstChild);
+        }
+
+        var svg = d3.select('#' + tileSerial)
             .append('svg')
-            .attr('width', this.barEL.clientWidth)
-            .attr('height', this.barEL.clientHeight)
+            .attr('width', barEL.clientWidth)
+            .attr('height', barEL.clientHeight)
 
-        var g = this.svg.append('g')
+        var g = svg.append('g')
             .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
 
-        this.iconService.createTitle(this.svg, this.barEL.clientWidth / 2, this.margin / 2,
-            `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
-
-        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 20, 'pencil', () => {
+        this.iconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+        
+        this.iconService.createIcon(svg, barEL.clientWidth - 38, 20, 'pencil', () => {
             this.dialogService.openBarChartEditor('Edit', tileSerial, jobName, titleCount);
             this.chartService.chartType.next('Bar Chart');
         });
 
-        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 45, 'download', () => {
+        this.iconService.createIcon(svg, barEL.clientWidth - 38, 45, 'download', () => {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
 
         const self = this;
-        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 38, 70, 'heart', function () {
+        this.iconService.createIcon(svg, barEL.clientWidth - 38, 70, 'heart', function () {
             const heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
                 heart.style('color', '');
@@ -61,47 +66,47 @@ export class BarChartComponent implements OnInit {
             }
         });
 
-        this.iconService.createIcon(this.svg, this.barEL.clientWidth - 36, 95, 'trash', () => {
+        this.iconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
             this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
         });
 
-        this.iconService.hoverSVG(this.svg);
+        this.iconService.hoverSVG(svg);
 
         // Create the X-axis band scale
-        this.x = d3.scaleBand()
-            .range([0, this.barEL.clientWidth - this.margin * 2])
+        var x = d3.scaleBand()
+            .range([0, barEL.clientWidth - this.margin * 2])
             .domain(dataSource.map(d => d.skill))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
         g.append('g')
             .attr('class', 'x-axis')
-            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
-            .call(d3.axisBottom(this.x).tickSizeOuter(0))
+            .attr('transform', 'translate(0,' + (barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(x).tickSizeOuter(0))
             .selectAll('text')
             // .attr('transform', 'translate(-10,0)rotate(-45)')
             .style('text-anchor', 'middle');
 
         // Create the Y-axis band scale
         var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
-        this.y = d3.scaleLinear()
+        var y = d3.scaleLinear()
             .domain([0, maxSkillCount + 1])
-            .range([this.barEL.clientHeight - this.margin * 2, 0]);
+            .range([barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
         g.append('g')
             .attr('class', 'y-axis')
-            .call(d3.axisLeft(this.y))
+            .call(d3.axisLeft(y))
 
         // Create and fill the bars
         g.selectAll('bars')
             .data(dataSource)
             .enter()
             .append('rect')
-            .attr('x', (d: any) => this.x(d.skill))
-            .attr('y', (d: any) => this.y(d.skillCount))
-            .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.skillCount))
+            .attr('x', (d: any) => x(d.skill))
+            .attr('y', (d: any) => y(d.skillCount))
+            .attr('width', x.bandwidth())
+            .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.skillCount))
             .attr('fill', 'steelblue')
             .on('mouseover', (d, i, nodes) => {
                 // Get the current bar element
@@ -152,55 +157,63 @@ export class BarChartComponent implements OnInit {
 
     }
 
-    public updateChart(): void {
-        this.svg.attr('width', this.barEL.clientWidth)
-            .attr('height', this.barEL.clientHeight);
-        // console.log(this.barEL.clientWidth, this.barEL.clientHeight);
+    public updateChart(tileSerial: string, dataSource: any[]): void {
+        var barEL = document.getElementById(tileSerial);
 
-        this.svg.select("text.title")
-            .attr("x", (this.barEL.clientWidth / 2))
+        var svg = d3.select('#' + tileSerial).select('svg')
+            .attr('width', barEL.clientWidth)
+            .attr('height', barEL.clientHeight)
+
+        svg.select("text.title")
+            .attr("x", (barEL.clientWidth / 2))
             .attr("y", this.margin / 2)
 
-        this.svg.select('foreignObject.pencil')
-            .attr('x', this.barEL.clientWidth - 38)
+        svg.select('foreignObject.pencil')
+            .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)
 
-        this.svg.select('foreignObject.download')
-            .attr('x', this.barEL.clientWidth - 38)
+        svg.select('foreignObject.download')
+            .attr('x', barEL.clientWidth - 38)
             .attr('y', 45)
 
-        this.svg.select('foreignObject.heart')
-            .attr('x', this.barEL.clientWidth - 38)
+        svg.select('foreignObject.heart')
+            .attr('x', barEL.clientWidth - 38)
             .attr('y', 70)
 
-        this.svg.select('foreignObject.trash')
-            .attr('x', this.barEL.clientWidth - 36)
+        svg.select('foreignObject.trash')
+            .attr('x', barEL.clientWidth - 36)
             .attr('y', 95)
 
         // Update the X-axis scale range
-        this.x.range([0, this.barEL.clientWidth - this.margin * 2]);
+        var x = d3.scaleBand()
+            .range([0, barEL.clientWidth - this.margin * 2])
+            .domain(dataSource.map(d => d.skill))
+            .padding(0.2);
 
         // Redraw the X-axis on the DOM
-        this.svg.select('g.x-axis')
-            .attr('transform', 'translate(0,' + (this.barEL.clientHeight - this.margin * 2) + ')')
-            .call(d3.axisBottom(this.x).tickSizeOuter(0))
+        svg.select('g.x-axis')
+            .attr('transform', 'translate(0,' + (barEL.clientHeight - this.margin * 2) + ')')
+            .call(d3.axisBottom(x).tickSizeOuter(0))
             .selectAll('text')
             // .attr('transform', 'translate(-10,0)rotate(-45)')
             .style('text-anchor', 'middle');
 
         // Update the Y-axis scale range
-        this.y.range([this.barEL.clientHeight - this.margin * 2, 0]);
-
+        var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
+        var y = d3.scaleLinear()
+            .domain([0, maxSkillCount + 1])
+            .range([barEL.clientHeight - this.margin * 2, 0]);
+            
         // Redraw the Y-axis on the DOM
-        this.svg.select('g.y-axis')
-            .call(d3.axisLeft(this.y));
+        svg.select('g.y-axis')
+            .call(d3.axisLeft(y));
 
         // Redraw the bars on the DOM
-        this.svg.selectAll('rect')
-            .attr('x', (d: any) => this.x(d.skill))
-            .attr('y', (d: any) => this.y(d.skillCount))
-            .attr('width', this.x.bandwidth())
-            .attr('height', (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.skillCount));
+        svg.selectAll('rect')
+            .attr('x', (d: any) => x(d.skill))
+            .attr('y', (d: any) => y(d.skillCount))
+            .attr('width', x.bandwidth())
+            .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.skillCount));
     }
 
 }
