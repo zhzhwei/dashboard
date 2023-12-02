@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogService } from 'src/app/services/dialog.service';
+import { DialogService } from '../../services/dialog.service';
 
 import * as d3 from 'd3';
 

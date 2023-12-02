@@ -27,7 +27,7 @@ export class AppComponent {
         });
     }
 
-    toggleShowDiagrams() {
+    toggleShowCharts() {
         let minorGridEl= document.querySelector('#minor-grid') as GridHTMLElement;
         if (minorGridEl.style.display === 'none') {
             minorGridEl.style.display = 'block';
@@ -36,7 +36,7 @@ export class AppComponent {
         }
     }
 
-    loadDiagram() {
+    loadChart() {
         this.chartService.loadJsonFile();
     }
 

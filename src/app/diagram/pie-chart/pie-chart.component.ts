@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
-import { IconService } from 'src/app/services/icon.sevice';
+import { TitleIconService } from '../../services/icon.sevice';
 
 import * as d3 from 'd3';
 
@@ -22,7 +22,7 @@ export class PieChartComponent implements OnInit {
     public pieRemoved = false;
 
     constructor(private dialogService: DialogService, private chartService: ChartService,
-        private iconService: IconService) { }
+        private titleIconService: TitleIconService) { }
 
     ngOnInit(): void { }
 
@@ -43,7 +43,7 @@ export class PieChartComponent implements OnInit {
         if (isCreate) {
             this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
         } else {
-            this.updateTitleIcon(pieEL);
+            this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
         }
 
         var radius = Math.min(pieEL.clientWidth, pieEL.clientHeight) / 2 - this.margin;
@@ -132,58 +132,37 @@ export class PieChartComponent implements OnInit {
     }
 
     private addTitleIcon(svg, pieEL, tileSerial, jobName, dataSource, pieLabel): void {
-        this.iconService.createTitle(svg, pieEL.clientWidth / 2, this.margin / 2 + 5,
+        this.titleIconService.createTitle(svg, pieEL.clientWidth / 2, this.margin / 2 + 5,
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
-        this.iconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
+        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
             this.dialogService.openPieChartEditor('Edit', tileSerial, jobName);
             this.chartService.chartType.next('Pie Chart');
         });
 
-        this.iconService.createIcon(svg, pieEL.clientWidth - 38, 45, 'download', () => {
+        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 45, 'download', () => {
             this.chartService.saveJsonFile('Pie Chart', dataSource, jobName, pieLabel);
         });
 
         const self = this;
-        this.iconService.createIcon(svg, pieEL.clientWidth - 38, 70, 'heart', function () {
+        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 70, 'heart', function () {
             const heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
                 heart.style('color', '');
-                self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
+                self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
             } else {
                 heart.style('color', 'red');
-                self.chartService.diagramFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
+                self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             }
         });
 
-        this.iconService.createIcon(svg, pieEL.clientWidth - 36, 95, 'trash', () => {
+        this.titleIconService.createIcon(svg, pieEL.clientWidth - 36, 95, 'trash', () => {
             this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
         });
 
-        this.iconService.hoverSVG(svg);
+        this.titleIconService.hoverSVG(svg);
     }
 
-    private updateTitleIcon(pieEL): void {
-        this.svg.select("text.title")
-            .attr("x", (pieEL.clientWidth / 2))
-            .attr("y", this.margin / 2 + 5)
-
-        this.svg.select('foreignObject.pencil')
-            .attr('x', pieEL.clientWidth - 38)
-            .attr('y', 20)
-
-        this.svg.select('foreignObject.download')
-            .attr('x', pieEL.clientWidth - 38)
-            .attr('y', 45)
-
-        this.svg.select('foreignObject.heart')
-            .attr('x', pieEL.clientWidth - 38)
-            .attr('y', 70)
-
-        this.svg.select('foreignObject.trash')
-            .attr('x', pieEL.clientWidth - 36)
-            .attr('y', 95)
-    }
 }

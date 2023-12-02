@@ -4,9 +4,9 @@ import * as d3 from 'd3';
 @Injectable({
     providedIn: 'root'
 })
-export class IconService {
+export class TitleIconService {
 
-    createTitle(svg, x, y, text) {
+    public createTitle(svg, x, y, text) {
         svg.append("text")
             .attr("class", "title")
             .attr("x", x)
@@ -16,7 +16,7 @@ export class IconService {
             .text(text);
     }
 
-    createIcon(svg, x, y, icon, clickHandler) {
+    public createIcon(svg, x, y, icon, clickHandler) {
         svg.append('foreignObject')
             .attr('class', icon)
             .attr('x', x)
@@ -27,13 +27,35 @@ export class IconService {
             .on('click', clickHandler);
     }
 
-    hoverSVG(svg) {
+    public hoverSVG(svg) {
         svg.on('mouseover', function() {
             d3.select(this).selectAll('foreignObject').style('display', 'block');
         })
         .on('mouseout', function() {
             d3.select(this).selectAll('foreignObject').style('display', 'none');
         });
+    }
+
+    public updateTitleIcon(svg, barEL, margin): void {
+        svg.select("text.title")
+            .attr("x", (barEL.clientWidth / 2))
+            .attr("y", margin / 2)
+
+        svg.select('foreignObject.pencil')
+            .attr('x', barEL.clientWidth - 38)
+            .attr('y', 20)
+
+        svg.select('foreignObject.download')
+            .attr('x', barEL.clientWidth - 38)
+            .attr('y', 45)
+
+        svg.select('foreignObject.heart')
+            .attr('x', barEL.clientWidth - 38)
+            .attr('y', 70)
+
+        svg.select('foreignObject.trash')
+            .attr('x', barEL.clientWidth - 36)
+            .attr('y', 95)
     }
     
 }

@@ -153,33 +153,33 @@ export class GridStackComponent implements OnInit {
 
         this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
-        this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
-            if (diagramFavorite.favorite) {
+        this.chartService.currentChartFavorite.subscribe(chartFavorite => {
+            if (chartFavorite.favorite) {
                 if (this.minorInitImage) {
                     this.minorGrid.removeAll();
                     this.minorInitImage = false;
                 }
-                // console.log('diagramFavorite:', diagramFavorite);
-                let element = document.getElementById(diagramFavorite.serial);
+                // console.log('chartFavorite:', chartFavorite);
+                let element = document.getElementById(chartFavorite.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
                 var itemEl = this.minorGrid.addWidget(gridItemElementClone);
                 var contEl = itemEl.querySelector('.grid-stack-item-content');
-                contEl.setAttribute('id', 'minor-' + diagramFavorite.serial);
-                // this.chartService.savePersistence(diagramFavorite.type, 'minor' + diagramFavorite.serial, [], '', '');
+                contEl.setAttribute('id', 'minor-' + chartFavorite.serial);
+                // this.chartService.savePersistence(chartFavorite.type, 'minor' + chartFavorite.serial, [], '', '');
             }
             else {
                 if (!this.minorInitImage) {
-                    let element = document.getElementById(diagramFavorite.serial);
+                    let element = document.getElementById(chartFavorite.serial);
                     let gridItemElement = element.closest('.grid-stack-item');
                     this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                 }
             }
         });
 
-        this.chartService.currentDiagramRemoved.subscribe(diagramRemoved => {
-            if (diagramRemoved.removed) {
-                switch (diagramRemoved.type) {
+        this.chartService.currentChartRemoved.subscribe(chartRemoved => {
+            if (chartRemoved.removed) {
+                switch (chartRemoved.type) {
                     case 'Bar Chart':
                         this.barChart.barRemoved = true;
                         break;
@@ -187,10 +187,10 @@ export class GridStackComponent implements OnInit {
                         this.pieChart.pieRemoved = true;
                         break;
                 }
-                let element = document.getElementById(diagramRemoved.serial);
+                let element = document.getElementById(chartRemoved.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-                this.chartService.removePersistence(diagramRemoved.serial);
+                this.chartService.removePersistence(chartRemoved.serial);
             }
         });
     }

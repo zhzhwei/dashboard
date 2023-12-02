@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
-import { IconService } from 'src/app/services/icon.sevice';
+import { TitleIconService } from '../../services/icon.sevice';
 
 import * as d3 from 'd3';
 
@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 export class BarChartComponent implements OnInit {
 
     constructor(private dialogService: DialogService, private chartService: ChartService,
-        private iconService: IconService) { }
+        private titleIconService: TitleIconService) { }
 
     private svg: any;
     private g: any;
@@ -38,7 +38,7 @@ export class BarChartComponent implements OnInit {
         if (isCreate) {
             this.addTitleIcon(this.svg, barEL, tileSerial, jobName, dataSource, titleCount);
         } else {
-            this.updateTitleIcon(barEL);
+            this.titleIconService.updateTitleIcon(this.svg, barEL, this.margin);
         }
 
         var x = d3.scaleBand()
@@ -143,58 +143,36 @@ export class BarChartComponent implements OnInit {
     }
 
     private addTitleIcon(svg, barEL, tileSerial, jobName, dataSource, titleCount): void {   
-        this.iconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+        this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
         
-        this.iconService.createIcon(svg, barEL.clientWidth - 38, 20, 'pencil', () => {
+        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 20, 'pencil', () => {
             this.dialogService.openBarChartEditor('Edit', tileSerial, jobName, titleCount);
             this.chartService.chartType.next('Bar Chart');
         });
 
-        this.iconService.createIcon(svg, barEL.clientWidth - 38, 45, 'download', () => {
+        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 45, 'download', () => {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
 
         const self = this;
-        this.iconService.createIcon(svg, barEL.clientWidth - 38, 70, 'heart', function () {
+        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 70, 'heart', function () {
             const heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
                 heart.style('color', '');
-                self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
+                self.chartService.chartFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
             } else {
                 heart.style('color', 'red');
-                self.chartService.diagramFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
+                self.chartService.chartFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: true });
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             }
         });
 
-        this.iconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
+        this.titleIconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
             this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
         });
 
-        this.iconService.hoverSVG(svg);
-    }
-
-    private updateTitleIcon(barEL): void {
-        this.svg.select("text.title")
-            .attr("x", (barEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
-
-        this.svg.select('foreignObject.pencil')
-            .attr('x', barEL.clientWidth - 38)
-            .attr('y', 20)
-
-        this.svg.select('foreignObject.download')
-            .attr('x', barEL.clientWidth - 38)
-            .attr('y', 45)
-
-        this.svg.select('foreignObject.heart')
-            .attr('x', barEL.clientWidth - 38)
-            .attr('y', 70)
-
-        this.svg.select('foreignObject.trash')
-            .attr('x', barEL.clientWidth - 36)
-            .attr('y', 95)
+        this.titleIconService.hoverSVG(svg);
     }
 
 }

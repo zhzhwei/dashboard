@@ -9,16 +9,16 @@ interface ChartAction {
     pieLabel?: string;
 }
 
-interface DiagramRemove {
-    type: string;
-    serial: string;
-    removed: boolean;
-}
-
-interface DiagramFavorite {
+interface ChartFavorite {
     type: string;
     serial: string;
     favorite: boolean;
+}
+
+interface ChartRemove {
+    type: string;
+    serial: string;
+    removed: boolean;
 }
 
 @Injectable({
@@ -37,11 +37,11 @@ export class ChartService {
     public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', jobName: '' });
     currentChartAction = this.chartAction.asObservable();
 
-    public diagramFavorite = new BehaviorSubject<DiagramFavorite>({type: '', serial: '', favorite: false});
-    currentDiagramFavorite = this.diagramFavorite.asObservable();
+    public chartFavorite = new BehaviorSubject<ChartFavorite>({type: '', serial: '', favorite: false});
+    currentChartFavorite = this.chartFavorite.asObservable();
 
-    public diagramRemoved = new BehaviorSubject<DiagramRemove>({type: '', serial: '', removed: false});
-    currentDiagramRemoved = this.diagramRemoved.asObservable();
+    public chartRemoved = new BehaviorSubject<ChartRemove>({type: '', serial: '', removed: false});
+    currentChartRemoved = this.chartRemoved.asObservable();
 
     public barFavorite = new BehaviorSubject<boolean>(false);
     currentBarFavorite = this.barFavorite.asObservable();
