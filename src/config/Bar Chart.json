@@ -63,6 +63,7 @@
         }
     ],
     "action": "Create",
+    "serial": "",
     "jobName": "Polymechaniker",
     "titleCount": 8
 }

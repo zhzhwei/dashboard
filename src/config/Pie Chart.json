@@ -1,6 +1,5 @@
 {
     "chartType": "Pie Chart",
-    "jobName": "Polymechaniker",
     "dataSource": [
         {
             "label": "Fulltime=True",
@@ -15,5 +14,8 @@
             "value": 1
         }
     ],
+    "action": "Create",
+    "serial": "",
+    "jobName": "Polymechaniker",
     "pieLabel": "isFulltimeJob"
 }

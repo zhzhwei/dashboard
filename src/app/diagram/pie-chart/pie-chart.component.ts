@@ -47,7 +47,7 @@ export class PieChartComponent implements OnInit {
         });
 
         this.iconService.createIcon(this.svg, this.pieEL.clientWidth - 38, 45, 'download', () => {
-            this.chartService.saveJsonFile('Pie Chart', jobName, dataSource, pieLabel);
+            this.chartService.saveJsonFile('Pie Chart', dataSource, jobName, pieLabel);
         });
 
         const self = this;

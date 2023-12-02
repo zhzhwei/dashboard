@@ -54,6 +54,7 @@ export class ChartService {
             chartType: chartType,
             dataSource: dataSource,
             action: 'Create',
+            serial: '',
             jobName: jobName
         };
         if (chartType === 'Bar Chart') {
@@ -103,12 +104,13 @@ export class ChartService {
         input.click();
     }
 
-    public savePersistence(chartType: string, tileSerial: string, jobName: string, dataSource: any[], parameter: any) {
+    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any) {
         const chartData = {
             chartType: chartType,
+            dataSource: dataSource,
+            action: 'Create',
             tileSerial: tileSerial,
-            jobName: jobName,
-            dataSource: dataSource
+            jobName: jobName
         };
         if (chartType === 'Bar Chart') {
             chartData['titleCount'] = parameter;
@@ -123,35 +125,34 @@ export class ChartService {
         localStorage.removeItem(tileSerial);
     }
 
-    // public loadPersistence() {
-    //     if (localStorage.length > 0) {
-    //         var chartActions = {
-    //             'dash-bar': {
-    //                 nextActions: {
-    //                     titleCount: this.titleCount
-    //                 }
-    //             },
-    //             'dash-pie': {
-    //                 nextActions: {
-    //                     pieLabel: this.pieLabel
-    //                 }
-    //             }
-    //         };
-    
-    //         for (let i = 0; i < localStorage.length; i++) {
-    //             var key = localStorage.key(i);
-    //             var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
-    //             if (chartActions[chartType]) {
-    //                 var chartData = JSON.parse(localStorage.getItem(key));
-    //                 this.chartAction.next({ action: 'Load', serial: chartData.tileSerial });
-    //                 this.chartType.next(chartData.chartType);
-    //                 this.jobName.next(chartData.jobName);
-    //                 this.dataSource.next(chartData.dataSource);
-    //                 for (var action in chartActions[chartType].nextActions) {
-    //                     chartActions[chartType].nextActions[action].next(chartData[action]);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    public loadPersistence() {
+        if (localStorage.length > 0) {
+            for (let i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
+                if (chartType === 'dash-bar') {
+                    var chartData = JSON.parse(localStorage.getItem(key));
+                    this.chartAction.next({
+                        action: chartData.action,
+                        serial: chartData.tileSerial,
+                        jobName: chartData.jobName,
+                        titleCount: chartData.titleCount
+                    });
+                    this.chartType.next(chartData.chartType);
+                    this.dataSource.next(chartData.dataSource);
+                }
+                else if (chartType === 'dash-pie') {
+                    var chartData = JSON.parse(localStorage.getItem(key));
+                    this.chartAction.next({
+                        action: chartData.action,
+                        serial: chartData.tileSerial,
+                        jobName: chartData.jobName,
+                        pieLabel: chartData.pieLabel
+                    });
+                    this.chartType.next(chartData.chartType);
+                    this.dataSource.next(chartData.dataSource);
+                }
+            }
+        }
+    }
 }

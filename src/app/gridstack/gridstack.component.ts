@@ -116,11 +116,13 @@ export class GridStackComponent implements OnInit {
                         serial = this.getTileSerial(chartType);
                         console.log('chartAction', { chartType, dataSource, action, serial, jobName, titleCount });
                         this.barChart.createChart(serial, jobName, dataSource, titleCount);
+                        this.chartService.savePersistence(chartType, serial, dataSource, jobName, titleCount);
                     }
                 } else if (action === 'Edit') {
                     this.itemEl = document.getElementById(serial);
                     this.itemEl.innerHTML = '';
                     this.barChart.createChart(serial, jobName, dataSource, titleCount);
+                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, titleCount);
                 }
             } else if (chartType === 'Pie Chart') {
                 if (action === 'Create') {
@@ -132,18 +134,20 @@ export class GridStackComponent implements OnInit {
                         serial = this.getTileSerial(chartType);
                         console.log('chartAction', { chartType, dataSource, action, serial, jobName, pieLabel });
                         this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
+                        this.chartService.savePersistence(chartType, serial, dataSource, jobName, pieLabel);
                     }
                 } else if (action === 'Edit') {
                     this.itemEl = document.getElementById(serial);
                     this.itemEl.innerHTML = '';
                     this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
+                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, pieLabel);
                 }
             }
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
         });
 
-        // this.chartService.loadPersistence();
+        this.chartService.loadPersistence();
         // localStorage.clear();
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
