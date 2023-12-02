@@ -126,7 +126,7 @@ export class ChartService {
     }
 
     public loadPersistence() {
-        if (localStorage.length > 0) {
+        if (localStorage.length > 0 && localStorage.length < 10) {
             for (let i = 0; i < localStorage.length; i++) {
                 var key = localStorage.key(i);
                 var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';

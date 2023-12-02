@@ -99,55 +99,56 @@ export class GridStackComponent implements OnInit {
             switchMap(([chartType, dataSource]) => {
                 if (chartType && dataSource.length > 0) {
                     return this.chartService.chartAction.pipe(
-                        map(chartAction => ({ chartType, dataSource, ...chartAction }))
+                        map((chartAction): { chartType: string, dataSource: any[], action?: string, serial?: string, jobName?: string, titleCount?: number, pieLabel?: string } => {
+                            if (chartAction && typeof chartAction === 'object') {
+                                return { chartType, dataSource, ...chartAction };
+                            } else {
+                                return { chartType, dataSource };
+                            }
+                        })
                     );
                 } else {
                     return EMPTY;
                 }
             })
         ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
-            if (chartType === 'Bar Chart') {
-                if (action === 'Create') {
-                    if (this.majorInitImage) {
-                        this.majorGrid.removeAll();
-                        this.majorInitImage = false;
-                    }
-                    if (jobName && titleCount > 0) {
-                        serial = this.getTileSerial(chartType);
-                        console.log('chartAction', { chartType, dataSource, action, serial, jobName, titleCount });
-                        this.barChart.createChart(serial, jobName, dataSource, titleCount);
-                        this.chartService.savePersistence(chartType, serial, dataSource, jobName, titleCount);
-                    }
-                } else if (action === 'Edit') {
-                    this.itemEl = document.getElementById(serial);
-                    this.itemEl.innerHTML = '';
-                    this.barChart.createChart(serial, jobName, dataSource, titleCount);
-                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, titleCount);
+            var chartCreators = {
+                'Bar Chart': this.barChart.createChart.bind(this.barChart),
+                'Pie Chart': this.pieChart.createChart.bind(this.pieChart),
+            };
+        
+            var conditions = {
+                'Bar Chart': jobName && titleCount > 0,
+                'Pie Chart': jobName && pieLabel
+            };
+        
+            var parameter = chartType === 'Bar Chart' ? titleCount : pieLabel;
+        
+            if (action === 'Create') {
+                if (this.majorInitImage) {
+                    this.majorGrid.removeAll();
+                    this.majorInitImage = false;
                 }
-            } else if (chartType === 'Pie Chart') {
-                if (action === 'Create') {
-                    if (this.majorInitImage) {
-                        this.majorGrid.removeAll();
-                        this.majorInitImage = false;
-                    }
-                    if (jobName && pieLabel) {
-                        serial = this.getTileSerial(chartType);
-                        console.log('chartAction', { chartType, dataSource, action, serial, jobName, pieLabel });
-                        this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
-                        this.chartService.savePersistence(chartType, serial, dataSource, jobName, pieLabel);
-                    }
-                } else if (action === 'Edit') {
-                    this.itemEl = document.getElementById(serial);
-                    this.itemEl.innerHTML = '';
-                    this.pieChart.createChart(serial, jobName, dataSource, pieLabel);
-                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, pieLabel);
+                if (conditions[chartType]) {
+                    serial = this.getTileSerial(chartType);
+                    console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
+                    chartCreators[chartType](serial, jobName, dataSource, parameter);
+                    // this.chartService.savePersistence(chartType, 'major-' + serial, dataSource, jobName, parameter);
                 }
+            } else if (action === 'Edit') {
+                this.itemEl = document.getElementById(serial);
+                this.itemEl.innerHTML = '';
+                chartCreators[chartType](serial, jobName, dataSource, parameter);
+                // this.chartService.savePersistence(chartType, 'major-' + serial, dataSource, jobName, parameter);
             }
+        
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
         });
 
-        this.chartService.loadPersistence();
+        console.log(localStorage.length);
+
+        // this.chartService.loadPersistence();
         // localStorage.clear();
 
         this.chartService.currentDiagramFavorite.subscribe(diagramFavorite => {
@@ -160,7 +161,10 @@ export class GridStackComponent implements OnInit {
                 let element = document.getElementById(diagramFavorite.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
-                this.minorGrid.addWidget(gridItemElementClone);
+                var itemEl = this.minorGrid.addWidget(gridItemElementClone);
+                var contEl = itemEl.querySelector('.grid-stack-item-content');
+                contEl.setAttribute('id', 'minor-' + diagramFavorite.serial);
+                // this.chartService.savePersistence(diagramFavorite.type, 'minor' + diagramFavorite.serial, [], '', '');
             }
             else {
                 if (!this.minorInitImage) {
