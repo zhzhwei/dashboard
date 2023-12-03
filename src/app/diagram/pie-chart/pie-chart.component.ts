@@ -29,7 +29,7 @@ export class PieChartComponent implements OnInit {
     public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
         var pieEL = document.getElementById(tileSerial);
 
-        if (action === 'Create') {
+        if (action === 'create') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', pieEL.clientWidth)
@@ -40,7 +40,7 @@ export class PieChartComponent implements OnInit {
                 .attr('height', pieEL.clientHeight)
         }
 
-        if (action === 'Create') {
+        if (action === 'create') {
             this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
         } else {
             this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
@@ -63,7 +63,7 @@ export class PieChartComponent implements OnInit {
             .innerRadius(0)
             .outerRadius(radius);
 
-        if (action === 'Create') {
+        if (action === 'create') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + pieEL.clientWidth / 2 + ',' + pieEL.clientHeight / 2 + ')');
         } else {
@@ -72,7 +72,7 @@ export class PieChartComponent implements OnInit {
         }
 
         // Bind the data to the pie chart and draw the arcs
-        if (action === 'Create') {
+        if (action === 'create') {
             this.g.selectAll('path')
                 .data(pie(dataSource))
                 .enter()
@@ -136,7 +136,7 @@ export class PieChartComponent implements OnInit {
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
 
         this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openPieChartEditor('Edit', tileSerial, jobName);
+            this.dialogService.openPieChartEditor('edit', tileSerial, jobName);
             this.chartService.chartType.next('Pie Chart');
         });
 

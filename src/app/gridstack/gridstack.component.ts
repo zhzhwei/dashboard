@@ -124,21 +124,21 @@ export class GridStackComponent implements OnInit {
         
             var parameter = chartType === 'Bar Chart' ? titleCount : pieLabel;
         
-            if (action === 'Create') {
+            if (action === 'create') {
                 if (this.majorInitImage) {
                     this.majorGrid.removeAll();
                     this.majorInitImage = false;
                 }
                 if (conditions[chartType]) {
                     serial = this.getTileSerial(chartType, dataSource);
-                    // console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
-                    chartCreators[chartType](serial, jobName, dataSource, parameter, 'Create');
+                    console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
+                    chartCreators[chartType](serial, jobName, dataSource, parameter, 'create');
                     this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
                 }
-            } else if (action === 'Edit') {
+            } else if (action === 'edit') {
                 this.itemEl = document.getElementById(serial);
                 this.itemEl.innerHTML = '';
-                chartCreators[chartType](serial, jobName, dataSource, parameter, 'Create');
+                chartCreators[chartType](serial, jobName, dataSource, parameter, 'create');
                 this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
             }
         
@@ -204,7 +204,7 @@ export class GridStackComponent implements OnInit {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
                 updateChart: (tileSerial) => {
                     if (!this.barChart.barRemove) {
-                        this.barChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'Update');
+                        this.barChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'update');
                     }
                 }
             },
@@ -212,7 +212,7 @@ export class GridStackComponent implements OnInit {
                 setTileSerial: () => 'dash-pie-' + this.chartTypeNum[chartType],
                 updateChart: (tileSerial) => {
                     if (!this.pieChart.pieRemove) {
-                        this.pieChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'Update');
+                        this.pieChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'update');
                     }
                 }
             }

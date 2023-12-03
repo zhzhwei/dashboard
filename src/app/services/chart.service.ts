@@ -53,7 +53,7 @@ export class ChartService {
         let exportObj = {
             chartType: chartType,
             dataSource: dataSource,
-            action: 'Create',
+            action: 'create',
             serial: '',
             jobName: jobName
         };
@@ -133,7 +133,7 @@ export class ChartService {
                 if (chartType === 'dash-bar') {
                     var chartData = JSON.parse(localStorage.getItem(key));
                     this.chartAction.next({
-                        action: 'Create',
+                        action: 'create',
                         serial: chartData.tileSerial,
                         jobName: chartData.jobName,
                         titleCount: chartData.titleCount
@@ -144,7 +144,7 @@ export class ChartService {
                 else if (chartType === 'dash-pie') {
                     var chartData = JSON.parse(localStorage.getItem(key));
                     this.chartAction.next({
-                        action: 'Create',
+                        action: 'create',
                         serial: chartData.tileSerial,
                         jobName: chartData.jobName,
                         pieLabel: chartData.pieLabel
