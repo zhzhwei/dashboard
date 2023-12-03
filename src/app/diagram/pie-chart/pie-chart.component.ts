@@ -29,20 +29,20 @@ export class PieChartComponent implements OnInit {
     public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
         var pieEL = document.getElementById(tileSerial);
 
-        if (action === 'create') {
+        if (action === 'create' || action === 'edit') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', pieEL.clientWidth)
                 .attr('height', pieEL.clientHeight)
-        } else {
+        } else if (action === 'update') {
             this.svg = d3.select('#' + tileSerial).select('svg')
                 .attr('width', pieEL.clientWidth)
                 .attr('height', pieEL.clientHeight)
         }
 
-        if (action === 'create') {
+        if (action === 'create' || action === 'edit') {
             this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
-        } else {
+        } else if (action === 'update') {
             this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
         }
 
@@ -63,16 +63,16 @@ export class PieChartComponent implements OnInit {
             .innerRadius(0)
             .outerRadius(radius);
 
-        if (action === 'create') {
+        if (action === 'create' || action === 'edit') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + pieEL.clientWidth / 2 + ',' + pieEL.clientHeight / 2 + ')');
-        } else {
+        } else if (action === 'update') {
             this.g = d3.select('#' + tileSerial).select('g') // define the g element as the existing g element
                 .attr('transform', 'translate(' + pieEL.clientWidth / 2 + ',' + pieEL.clientHeight / 2 + ')');
         }
 
         // Bind the data to the pie chart and draw the arcs
-        if (action === 'create') {
+        if (action === 'create' || action === 'edit') {
             this.g.selectAll('path')
                 .data(pie(dataSource))
                 .enter()
@@ -124,7 +124,7 @@ export class PieChartComponent implements OnInit {
                     // Change the color of the bar back to the original color
                     // bar.style('fill', color(d.data.label));
                 });
-        } else {
+        } else if (action === 'update') {
             this.g.selectAll('path')
                 .attr('d', (d: any) => arc(d))
                 .attr('fill', (d: any) => color((d as any).data.label) as string);
