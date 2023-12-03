@@ -33,7 +33,7 @@ export class DialogService {
         dialogRef.afterClosed().subscribe((confirmed: boolean) => {
             if (confirmed) {
                 // console.log('Delete confirmed');
-                this.chartService.chartRemoved.next({ type: chartType, serial: tileSerial, removed: true });
+                this.chartService.chartRemove.next({ type: chartType, serial: tileSerial, removed: true });
             }
         });
     }

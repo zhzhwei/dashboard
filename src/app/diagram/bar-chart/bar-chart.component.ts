@@ -17,14 +17,14 @@ export class BarChartComponent implements OnInit {
     private svg: any;
     private g: any;
     private margin = 70;
-    public barRemoved = false;
+    public barRemove = false;
 
     ngOnInit(): void { }
 
-    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, isCreate: boolean): void {
+    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, action: string): void {
         var barEL = document.getElementById(tileSerial);
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', barEL.clientWidth)
@@ -35,7 +35,7 @@ export class BarChartComponent implements OnInit {
                 .attr('height', barEL.clientHeight)
         }
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.addTitleIcon(this.svg, barEL, tileSerial, jobName, dataSource, titleCount);
         } else {
             this.titleIconService.updateTitleIcon(this.svg, barEL, this.margin);
@@ -51,12 +51,12 @@ export class BarChartComponent implements OnInit {
             .domain([0, maxSkillCount + 1])
             .range([barEL.clientHeight - this.margin * 2, 0]);
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
         }
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.g.append('g')
                 .attr('class', 'x-axis')
                 .attr('transform', 'translate(0,' + (barEL.clientHeight - this.margin * 2) + ')')

@@ -40,8 +40,8 @@ export class ChartService {
     public chartFavorite = new BehaviorSubject<ChartFavorite>({type: '', serial: '', favorite: false});
     currentChartFavorite = this.chartFavorite.asObservable();
 
-    public chartRemoved = new BehaviorSubject<ChartRemove>({type: '', serial: '', removed: false});
-    currentChartRemoved = this.chartRemoved.asObservable();
+    public chartRemove = new BehaviorSubject<ChartRemove>({type: '', serial: '', removed: false});
+    currentChartRemove = this.chartRemove.asObservable();
 
     public barFavorite = new BehaviorSubject<boolean>(false);
     currentBarFavorite = this.barFavorite.asObservable();

@@ -131,14 +131,14 @@ export class GridStackComponent implements OnInit {
                 }
                 if (conditions[chartType]) {
                     serial = this.getTileSerial(chartType, dataSource);
-                    console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
-                    chartCreators[chartType](serial, jobName, dataSource, parameter, true);
+                    // console.log('chartAction', { chartType, dataSource, action, serial, jobName, parameter });
+                    chartCreators[chartType](serial, jobName, dataSource, parameter, 'Create');
                     this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
                 }
             } else if (action === 'Edit') {
                 this.itemEl = document.getElementById(serial);
                 this.itemEl.innerHTML = '';
-                chartCreators[chartType](serial, jobName, dataSource, parameter, true);
+                chartCreators[chartType](serial, jobName, dataSource, parameter, 'Create');
                 this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
             }
         
@@ -163,9 +163,9 @@ export class GridStackComponent implements OnInit {
                 let element = document.getElementById(chartFavorite.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
-                var itemEl = this.minorGrid.addWidget(gridItemElementClone);
-                var contEl = itemEl.querySelector('.grid-stack-item-content');
-                contEl.setAttribute('id', 'minor-' + chartFavorite.serial);
+                this.minorGrid.addWidget(gridItemElementClone);
+                // var contEl = itemEl.querySelector('.grid-stack-item-content');
+                // contEl.setAttribute('id', chartFavorite.serial);
                 // this.chartService.savePersistence(chartFavorite.type, 'minor' + chartFavorite.serial, [], '', '');
             }
             else {
@@ -177,20 +177,20 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        this.chartService.currentChartRemoved.subscribe(chartRemoved => {
-            if (chartRemoved.removed) {
-                switch (chartRemoved.type) {
+        this.chartService.currentChartRemove.subscribe(chartRemove => {
+            if (chartRemove.removed) {
+                switch (chartRemove.type) {
                     case 'Bar Chart':
-                        this.barChart.barRemoved = true;
+                        this.barChart.barRemove = true;
                         break;
                     case 'Pie Chart':
-                        this.pieChart.pieRemoved = true;
+                        this.pieChart.pieRemove = true;
                         break;
                 }
-                let element = document.getElementById(chartRemoved.serial);
+                let element = document.getElementById(chartRemove.serial);
                 let gridItemElement = element.closest('.grid-stack-item');
                 this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-                this.chartService.removePersistence(chartRemoved.serial);
+                this.chartService.removePersistence(chartRemove.serial);
             }
         });
     }
@@ -203,16 +203,16 @@ export class GridStackComponent implements OnInit {
             'Bar Chart': {
                 setTileSerial: () => 'dash-bar-' + this.chartTypeNum[chartType],
                 updateChart: (tileSerial) => {
-                    if (!this.barChart.barRemoved) {
-                        this.barChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', false);
+                    if (!this.barChart.barRemove) {
+                        this.barChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'Update');
                     }
                 }
             },
             'Pie Chart': {
                 setTileSerial: () => 'dash-pie-' + this.chartTypeNum[chartType],
                 updateChart: (tileSerial) => {
-                    if (!this.pieChart.pieRemoved) {
-                        this.pieChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', false);
+                    if (!this.pieChart.pieRemove) {
+                        this.pieChart.chartCreateOrUpdate(tileSerial, '', dataSource, '', 'Update');
                     }
                 }
             }

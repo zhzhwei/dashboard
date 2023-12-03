@@ -19,17 +19,17 @@ export class PieChartComponent implements OnInit {
     private svg: any;
     private g: any;
     private margin = 60;
-    public pieRemoved = false;
+    public pieRemove = false;
 
     constructor(private dialogService: DialogService, private chartService: ChartService,
         private titleIconService: TitleIconService) { }
 
     ngOnInit(): void { }
 
-    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, isCreate: boolean): void {
+    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
         var pieEL = document.getElementById(tileSerial);
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', pieEL.clientWidth)
@@ -40,7 +40,7 @@ export class PieChartComponent implements OnInit {
                 .attr('height', pieEL.clientHeight)
         }
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
         } else {
             this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
@@ -63,7 +63,7 @@ export class PieChartComponent implements OnInit {
             .innerRadius(0)
             .outerRadius(radius);
 
-        if (isCreate) {
+        if (action === 'Create') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + pieEL.clientWidth / 2 + ',' + pieEL.clientHeight / 2 + ')');
         } else {
@@ -72,7 +72,7 @@ export class PieChartComponent implements OnInit {
         }
 
         // Bind the data to the pie chart and draw the arcs
-        if (isCreate) {
+        if (action === 'Create') {
             this.g.selectAll('path')
                 .data(pie(dataSource))
                 .enter()
