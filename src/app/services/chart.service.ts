@@ -53,7 +53,7 @@ export class ChartService {
         let exportObj = {
             chartType: chartType,
             dataSource: dataSource,
-            action: 'create',
+            action: '',
             serial: '',
             jobName: jobName
         };
@@ -82,7 +82,7 @@ export class ChartService {
                 var exportObj = JSON.parse(event.target.result);
                 if (exportObj.chartType === 'Bar Chart') {
                     this.chartAction.next({
-                        action: exportObj.action,
+                        action: 'create',
                         serial: '',
                         jobName: exportObj.jobName,
                         titleCount: exportObj.titleCount
@@ -90,7 +90,7 @@ export class ChartService {
                 }
                 else if (exportObj.chartType === 'Pie Chart') {
                     this.chartAction.next({
-                        action: exportObj.action,
+                        action: 'create',
                         serial: '',
                         jobName: exportObj.jobName,
                         pieLabel: exportObj.pieLabel
@@ -109,7 +109,7 @@ export class ChartService {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
-            tileSerial: '',
+            tileSerial: tileSerial,
             jobName: jobName
         };
         if (chartType === 'Bar Chart') {
@@ -137,7 +137,7 @@ export class ChartService {
                     console.log('Loaded data:', chartData);
                     this.chartAction.next({
                         action: 'load',
-                        serial: '',
+                        serial: chartData.tileSerial,
                         jobName: chartData.jobName,
                         titleCount: chartData.titleCount
                     });

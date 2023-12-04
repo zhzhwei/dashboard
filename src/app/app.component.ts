@@ -19,6 +19,11 @@ export class AppComponent {
 
     }
 
+    welcomeToApp() {
+        console.log('Welcome to App!');
+        // this.chartService.loadPersistence();
+    }
+
     openVisGenDialog() {
         this.dialog.open(VisGenDialogComponent, {
             width: '1500px',
@@ -43,6 +48,7 @@ export class AppComponent {
     }
 
     removeAllCharts() {
+        console.log('Remove all charts');
         // this.chartService.removeAllCharts();
     }
 

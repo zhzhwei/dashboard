@@ -147,13 +147,15 @@ export class GridStackComponent implements OnInit {
                     this.majorGrid.removeAll();
                     this.majorInitImage = false;
                 }
-                if (conditions[chartType]) {
-                    tileSerial = this.getTileSerial(chartType);
-                    contEl = document.getElementById(tileSerial);
-                    console.log('load', tileSerial);
-                    chartCreators[chartType](tileSerial, jobName, dataSource, parameter, 'load');
-                    // this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter);
+                tileSerial = serial;
+                var itemEl = this.majorGrid.addWidget(this.newTile);
+                var serialNum = Number(tileSerial.split('-')[2]);
+                if (this.chartTypeNum[chartType] < serialNum) {
+                    this.chartTypeNum[chartType] = serialNum;
                 }
+                contEl = itemEl.querySelector('.grid-stack-item-content');
+                contEl.setAttribute('id', tileSerial);
+                chartCreators[chartType](serial, jobName, dataSource, parameter, 'load');
             }
 
             // Update the dataSource for this contEl
@@ -177,7 +179,7 @@ export class GridStackComponent implements OnInit {
     
         });
 
-        // console.log(localStorage.length);
+        console.log(localStorage.length);
 
         this.chartService.loadPersistence();
         // localStorage.clear();
