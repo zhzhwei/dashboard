@@ -29,7 +29,7 @@ export class PieChartComponent implements OnInit {
     public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
         var pieEL = document.getElementById(tileSerial);
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', pieEL.clientWidth)
@@ -40,7 +40,7 @@ export class PieChartComponent implements OnInit {
                 .attr('height', pieEL.clientHeight)
         }
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
         } else if (action === 'update') {
             this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
@@ -72,7 +72,7 @@ export class PieChartComponent implements OnInit {
         }
 
         // Bind the data to the pie chart and draw the arcs
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.g.selectAll('path')
                 .data(pie(dataSource))
                 .enter()

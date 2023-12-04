@@ -128,14 +128,34 @@ export class GridStackComponent implements OnInit {
                     tileSerial = this.getTileSerial(chartType);
                     contEl = document.getElementById(tileSerial);
                     chartCreators[chartType](tileSerial, jobName, dataSource, parameter, 'create');
+                    this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter);
                 }
             } else if (action === 'edit') {
                 tileSerial = serial;
                 contEl = document.getElementById(serial);
                 contEl.innerHTML = '';
                 chartCreators[chartType](serial, jobName, dataSource, parameter, 'edit');
+                this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter);
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    console.log(key);
+                    var chartData = JSON.parse(localStorage.getItem(key));
+                    console.log('Loaded data:', chartData);
+                }
+            } else if (action === 'load') {
+                if (this.majorInitImage) {
+                    this.majorGrid.removeAll();
+                    this.majorInitImage = false;
+                }
+                if (conditions[chartType]) {
+                    tileSerial = this.getTileSerial(chartType);
+                    contEl = document.getElementById(tileSerial);
+                    console.log('load', tileSerial);
+                    chartCreators[chartType](tileSerial, jobName, dataSource, parameter, 'load');
+                    // this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter);
+                }
             }
-    
+
             // Update the dataSource for this contEl
             this.dataSources.set(tileSerial, dataSource);
     
@@ -155,6 +175,54 @@ export class GridStackComponent implements OnInit {
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
     
+        });
+
+        // console.log(localStorage.length);
+
+        this.chartService.loadPersistence();
+        // localStorage.clear();
+
+        this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
+
+        this.chartService.currentChartFavorite.subscribe(chartFavorite => {
+            if (chartFavorite.favorite) {
+                if (this.minorInitImage) {
+                    this.minorGrid.removeAll();
+                    this.minorInitImage = false;
+                }
+                // console.log('chartFavorite:', chartFavorite);
+                let element = document.getElementById(chartFavorite.serial);
+                let gridItemElement = element.closest('.grid-stack-item');
+                let gridItemElementClone = gridItemElement.cloneNode(true) as GridStackElement;
+                this.minorGrid.addWidget(gridItemElementClone);
+                // var contEl = itemEl.querySelector('.grid-stack-item-content');
+                // contEl.setAttribute('id', chartFavorite.serial);
+                // this.chartService.savePersistence(chartFavorite.type, 'minor' + chartFavorite.serial, [], '', '');
+            }
+            else {
+                if (!this.minorInitImage) {
+                    let element = document.getElementById(chartFavorite.serial);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    this.minorGrid.removeWidget(gridItemElement as GridStackElement);
+                }
+            }
+        });
+
+        this.chartService.currentChartRemove.subscribe(chartRemove => {
+            if (chartRemove.removed) {
+                switch (chartRemove.type) {
+                    case 'Bar Chart':
+                        this.barChart.barRemove = true;
+                        break;
+                    case 'Pie Chart':
+                        this.pieChart.pieRemove = true;
+                        break;
+                }
+                let element = document.getElementById(chartRemove.serial);
+                let gridItemElement = element.closest('.grid-stack-item');
+                this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+                this.chartService.removePersistence(chartRemove.serial);
+            }
         });
     }
 

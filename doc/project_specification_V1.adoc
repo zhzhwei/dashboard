@@ -381,7 +381,7 @@ This section will be expanded upon in V2.
 === Libraries and Frameworks
 - Angular for the app
 - gridstack for the dashboard tile logic
-- Bootstrap for the styling
+- Bootstrap and Angular FxFlex for the layout styling
 - D3 for the visualizations
 - GraphDB for the SPARQL queries
 

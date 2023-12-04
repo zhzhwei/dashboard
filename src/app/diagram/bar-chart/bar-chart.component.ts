@@ -24,20 +24,20 @@ export class BarChartComponent implements OnInit {
     public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, action: string): void {
         var barEL = document.getElementById(tileSerial);
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.svg = d3.select('#' + tileSerial)
                 .append('svg')
                 .attr('width', barEL.clientWidth)
                 .attr('height', barEL.clientHeight)
-        } else if (action === 'update'){
+        } else if (action === 'update') {
             this.svg = d3.select('#' + tileSerial).select('svg')
                 .attr('width', barEL.clientWidth)
                 .attr('height', barEL.clientHeight)
         }
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.addTitleIcon(this.svg, barEL, tileSerial, jobName, dataSource, titleCount);
-        } else if (action === 'update'){
+        } else if (action === 'update') {
             this.titleIconService.updateTitleIcon(this.svg, barEL, this.margin);
         }
 
@@ -51,12 +51,12 @@ export class BarChartComponent implements OnInit {
             .domain([0, maxSkillCount + 1])
             .range([barEL.clientHeight - this.margin * 2, 0]);
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + (this.margin + 10) + ',' + this.margin + ')');
         }
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.g.append('g')
                 .attr('class', 'x-axis')
                 .attr('transform', 'translate(0,' + (barEL.clientHeight - this.margin * 2) + ')')
@@ -123,7 +123,7 @@ export class BarChartComponent implements OnInit {
                     // Change the color of the bar back to the original color
                     bar.style('fill', 'steelblue');
                 });
-        } else if (action === 'update'){
+        } else if (action === 'update') {
             this.svg.select('g.x-axis')
                 .attr('transform', 'translate(0,' + (barEL.clientHeight - this.margin * 2) + ')')
                 .call(d3.axisBottom(x).tickSizeOuter(0))

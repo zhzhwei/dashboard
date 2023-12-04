@@ -105,11 +105,11 @@ export class ChartService {
     }
 
     public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any) {
-        const chartData = {
+        var chartData = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
-            tileSerial: tileSerial,
+            tileSerial: '',
             jobName: jobName
         };
         if (chartType === 'Bar Chart') {
@@ -118,6 +118,7 @@ export class ChartService {
         else if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
         }
+        console.log('Saving data:', chartData);
         localStorage.setItem(tileSerial, JSON.stringify(chartData));
     }
 
@@ -128,26 +129,17 @@ export class ChartService {
     public loadPersistence() {
         if (localStorage.length > 0 && localStorage.length < 10) {
             for (let i = 0; i < localStorage.length; i++) {
-                var key = localStorage.key(i);
+                const key = localStorage.key(i);
+                console.log(key);
                 var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
                 if (chartType === 'dash-bar') {
                     var chartData = JSON.parse(localStorage.getItem(key));
+                    console.log('Loaded data:', chartData);
                     this.chartAction.next({
-                        action: 'create',
-                        serial: chartData.tileSerial,
+                        action: 'load',
+                        serial: '',
                         jobName: chartData.jobName,
                         titleCount: chartData.titleCount
-                    });
-                    this.chartType.next(chartData.chartType);
-                    this.dataSource.next(chartData.dataSource);
-                }
-                else if (chartType === 'dash-pie') {
-                    var chartData = JSON.parse(localStorage.getItem(key));
-                    this.chartAction.next({
-                        action: 'create',
-                        serial: chartData.tileSerial,
-                        jobName: chartData.jobName,
-                        pieLabel: chartData.pieLabel
                     });
                     this.chartType.next(chartData.chartType);
                     this.dataSource.next(chartData.dataSource);
