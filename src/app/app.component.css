@@ -46,6 +46,19 @@ section {
     background-color: rgb(115, 105, 148);
 }
 
+.logo-button {
+    border-radius: 5px;
+}
+
+.logo-button:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+
+.logo-button:active {
+    transform: scale(0.95);
+}
+
 .newWidget>.grid-stack-item-content {
     background-color: #6cad84;
 }

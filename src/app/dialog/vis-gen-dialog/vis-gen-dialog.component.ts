@@ -57,8 +57,7 @@ export class VisGenDialogComponent implements OnInit {
     chartTypeSelect(event: any) {
         // console.log(event.target);
         d3.select(event.target)
-            .style('border', '3px solid gray')
-            .style('border-radius', '5px');
+            .style('border', '3px solid gray');
         d3.selectAll('.img-button')
             .filter(function () {
                 return this !== event.target;

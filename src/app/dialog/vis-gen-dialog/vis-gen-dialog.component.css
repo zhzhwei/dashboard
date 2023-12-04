@@ -2,12 +2,26 @@
     margin: 20px;
 }
 
-.to-editor-btn {
-    margin: 20px;
+.to-dashboard-btn{
+    font-size: 16px;
 }
 
-.img-button:active {
+.to-editor-btn {
+    margin: 20px;
+    font-size: 16px;
+}
+
+/* .img-button:active {
     transform: scale(0.95);
+} */
+
+.img-button {
+    border-radius: 5px;
+}
+
+.img-button:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    cursor: pointer;
 }
 
 .search-container {

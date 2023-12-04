@@ -4,6 +4,8 @@ import { VisGenDialogComponent } from './dialog/vis-gen-dialog/vis-gen-dialog.co
 import { ChartService } from './services/chart.service';
 import { GridHTMLElement } from 'gridstack';
 
+import * as d3 from 'd3';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -38,6 +40,10 @@ export class AppComponent {
 
     loadChart() {
         this.chartService.loadJsonFile();
+    }
+
+    removeAllCharts() {
+        // this.chartService.removeAllCharts();
     }
 
 }
