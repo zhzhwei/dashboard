@@ -14,7 +14,7 @@
 |Zhiwei Zhan, Undine Stelter
 
 |Supervision
-|Dr.-Ing. Annett Mitschick, Tom Horak, Sarah Alaghbari
+|Dr.-Ing. Annett Mitschick, Dr.-Ing. Tom Horak, Sarah Alaghbari
 
 |Course
 |Team Project User Interface Engineering [KPUIE]
@@ -442,6 +442,16 @@ a|
 - the user can directly interact with visualizations, e.g. adjusting the portrayed time frame, without going to the editor page (<<FO0015>>)
 |===
 
+==== Tile Interaction
+One of the ideas we found really interesting is the concept of combining visualizations by combining the tiles containing them. One of the more obvious examples for this would be to drag two bar charts on top of each other to create a stacked bar chart:
+
+image::images/tile interaction.png[]
+
+In the concept drawing, the edges of the two tiles are hightlighted, indicating that it is possible to combine them. These edge highlights would only appear, if the user moves one tile closer to another. Finding rules for combineability seemed trivial at first, but with the possibility of different axis domains, units and even visualization types, this idea quickly went beyond the scope of this project.  
+
+Another interesting aspect of this tile interaction is how to communicate combineability to the user, especially if there is more than one way of combining two tiles (like combining two bar charts at the side to have the bars next to each other). Different colored edge highlights or a half-transparent new tile with a preview of the end result could help distinguish the different combination methods. If the user tries to combine two tiles which are incompatible, the reason of this incompatibility should be outputted to the user. Since the user moves tiles per drag and drop, the output shouldn't interfere with their action, so a toast message would be preferrable to a popup in the middle of the screen. 
+
+One could also add a "combination mode" the user has to switch on, to prevent accidental combination of tiles (especially if combining tiles removes them from the grid and only leaves the resulting tile). The mode being activated should also be visually indicated, to avoid confusion. This "combination mode" could then also display a popup which briefly explains the different combination methods.
 
 === Visualizations
 
@@ -503,9 +513,13 @@ a|
 - display an overlay for an ideal starplot shape or the medium of all starplot shapes
 |===
 
-"ideal shape" for a starplot in grey:
+"Ideal shape" for a starplot in grey:
 
-image::images/Pasted image 20231101133328.png[]
+image::images/starplot with overlay.png[]
+
+Small multiples as multiple or single tile:
+
+image::images/small multiples.png[]
 
 ==== Pie Chart
 - good for getting a general sense of how the data is composed and exact amounts are less important
@@ -591,8 +605,6 @@ a|
 |===
 
 == Implementation
-This section will be expanded upon in V2.
-
 === Libraries and Frameworks
 - Angular for the app, since elevait is already using Angular
 - gridstack.js for the dashboard tile logic
@@ -619,7 +631,30 @@ We ultimately landed on gridstack.js, since it provides the same tile functional
 image::images/tla_v2.png[]
 
 === GUI Prototype
-For the GUI prototype images, please look into the doc/images folder in the GitLab repository.
+This section covers prototypes for various aspects of the application.
+
+An early protype for the Visualization Editor. It illustrates our idea of displaying the edited visualization on the left and the settings on the right. It also shows the editor as an overlay over the dashboard, as opposed to being a separate page.
+
+image::images/editor open.png[]
+
+This is a concept for a Line Chart Editor. Most notable here are the use of date picker fields for the x-axis domain and the table for the different lines in the chart. The + button would lead to a popup, where the user can choose filters for the data. The "problem" with this concept is, that it calls into question which aspects of the visualization are and are not immutable. So with this idea, the Wizard would merely define the x-axis' time units, as opposed to the Bar Chart Wizard, which does a lot more of the filtering work. 
+
+image::images/linechart data select.png[]
+
+This protype for the Bar Chart Wizard was directly inspired by the filtering function in the GraphDB results table, especially how it functions like a live preview of the data.
+
+image::images/bar chart data set selection.png[]
+
+image::images/data select inspiration.png[]
+
+The prototype for the favorites system is an evolution of a very early concept that already included an area for unused tiles. With this version, clicking on the red "Favorites" button causes the favorites menu to become visible, pushing the tile grid downwards. The user can drag and drop tiles between the menu and main tile grid. Clicking the "Favorite" button on the tile also toggles whether the tile appears in the favorites menu. Favorited tiles are safe from deletion and their config files are saved locally for as long as they are favorited.
+
+image::images/favorites.png[]
+
+The early concept:
+
+image::images/prototype_dashboard_alt.png[]
+
 
 === Implementation Plan
 - build a running Hello World application
