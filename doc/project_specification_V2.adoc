@@ -70,7 +70,7 @@ WHERE { +
     FILTER (?skillName IN ("CNC-Schleifen"@de, "Steuerungskenntnisse"@de, "Selbstständigkeit"@de, "Qualitätsbewusstsein"@de, "Problemlösungsfähigkeit"@de, ...)) +
 } +
 GROUP BY ?skillName` +
-| Notes | Since the total number of skills in the data set is quite large, the user should be prompted to select a specific job title to do this particular analysis for.
+| Notes | Since the total number of skills in the data set is quite large, the user should be prompted to select a specific job name to do this particular analysis for.
 |===
 
 [cols="1h, 3"]
@@ -136,9 +136,9 @@ WHERE {  +
 |===
 | ID | **<<UC0040>>**
 | Visualization | Star Plot
-| Data to be visualized | For multiple job titles, compare how many of their Job Postings have a user-made selection of "soft skills" listed.
+| Data to be visualized | For multiple job names, compare how many of their Job Postings have a user-made selection of "soft skills" listed.
 | Process | 
-For each of the job titles +
+For each of the job names +
 1. Count the total number of Job Postings +
 2. Get the skill counts for the set of "soft skills" +
 3. Divide each of the skill counts with the total number of Job Postings to "normalize" it to a number between 0 and 1 +
@@ -223,7 +223,7 @@ The user is able to arrange the tiles representing visualizations (<<FR0020>>) f
 |[[FR0022]]<<FR0022>>
 |Resizeable tiles
 a|
-The dashboard tiles can be resized freely by the user, in unit steps. The minimum size is 1x1 unit.
+The dashboard tiles can be resized freely by the user, in unit steps. The minimum tile size depends on the visualization type.
 
 |[[FR0023]]<<FR0023>>
 |Labeled visualizations
@@ -355,7 +355,7 @@ This section will detail the different components of the applications, our desig
 General Rule: Immutable aspects of the visualization are picked in the Wizard, the rest is done in the Editor.
 
 - a page with multiple sections that build onto another
-- user clicks on "Generate new Visualization" to navigate there
+- user clicks on "Forward to Editor" to navigate there
 - its purpose is to guide the user through generating a visualization and help them explore the data
 - first step: choosing the visualization type
 - the further steps and their layout depend on the visualization type, to not overwhealm the user with potentially irrelevant options
@@ -381,8 +381,8 @@ a|
 |===
 
 === Visualization Editor
-- user gets to the Editor by completing the Wizard
-- when clicking the "Edit" button in a tile, they also get taken there
+- user gets to the Editor by completing the Wizard with "Forward to Editor"
+- when clicking the "Edit" button in a tile (the pencil symbol), they also get taken to the Editor
 - user can choose the attributes to visualize and how they are mapped
 - user can also choose the time frame to visualize, if applicable
 - this is a lot of settings, so related settings should be grouped together
@@ -394,7 +394,7 @@ a|
 |Minimum
 a|
 - user assembles a SPARQL query with assistance (e.g. using dropdown menus) 
-- settings and query are saved in a config file
+- settings and query parameters are saved in a config file
 - when pressing "Apply changes", the editor is closed and a tile containing the visualization is generated (<<FR0010>>)
 - user can apply/change filters to define the range of the axes (<<FR0012>>)
 - user can choose which attributes to display as data points (<<FR0011>>)
@@ -421,6 +421,7 @@ a|
 - performance overall will likely be an issue here
 - use inbuilt gridstack.js functionality
 - the page can expand downwards as needed, no limited grid size
+- tiles have a minimum tile size depending on the visualization type
 
 [cols="2h, 12"]
 |===
@@ -447,7 +448,7 @@ One of the ideas we found really interesting is the concept of combining visuali
 
 image::images/tile interaction.png[]
 
-In the concept drawing, the edges of the two tiles are hightlighted, indicating that it is possible to combine them. These edge highlights would only appear, if the user moves one tile closer to another. Finding rules for combineability seemed trivial at first, but with the possibility of different axis domains, units and even visualization types, this idea quickly went beyond the scope of this project.  
+In the concept drawing, the edges of the two tiles are hightlighted, indicating that it is possible to combine them. These edge highlights would only appear, if the user moves one tile closer to another. Alternatively, the user could click and hold one tile and all compatible tiles get hightlighted. Finding rules for combineability seemed trivial at first, but with the possibility of different axis domains, units and even visualization types, this idea quickly went beyond the scope of this project.  
 
 Another interesting aspect of this tile interaction is how to communicate combineability to the user, especially if there is more than one way of combining two tiles (like combining two bar charts at the side to have the bars next to each other). Different colored edge highlights or a half-transparent new tile with a preview of the end result could help distinguish the different combination methods. If the user tries to combine two tiles which are incompatible, the reason of this incompatibility should be outputted to the user. Since the user moves tiles per drag and drop, the output shouldn't interfere with their action, so a toast message would be preferrable to a popup in the middle of the screen. 
 
@@ -477,7 +478,7 @@ a|
 - good for nominal data
 - easy to understand
 - the number of bars that can comfortably be understood by the user is limited, so if there are too many values for the x-axis, the user should be prompted to filter more (most likely in the Wizard, since this counts towards data pre-selection)
-- our skill count example already implements this limitation by having the user input a job title (with a required text field)
+- our skill count example already implements this limitation by having the user input a job name (with a required text field)
 
 [cols="2h, 12"]
 |===
@@ -550,7 +551,7 @@ a|
 a|
 - the query gets generated from settings the user made in the Visualization Editor (<<FR0030>>)
 - the user gets shown all available attributes
-- the query gets saves inside the config file
+- the query parameters gets saves inside the config file
 |Possible improvements
 a|
 - available attributes are filtered, depending on whether they can be visualized
@@ -570,20 +571,22 @@ a|
 |===
 |Minimum
 a|
-- settings and SPARQL query get saved in config file
+- settings and parameters for SPARQL query get saved in config file
 - fixed file path for the config file directory
 - import config files by copying them into the config file directory (<<FO0014>>)
 |Implementation Goal
 a|
-- imported visualizations can be selected from a list and dragged onto the dashboard
-- the user can specify the config file name
-
+- config files can be uploaded into the application to re-generate visualizations (<<FO0014>>)
+- favorite tiles section contains resizeable tiles
 |Ideal
 a|
-- config files can be uploaded into the applocation to re-generate visualizations (<<FO0014>>)
-- favorite tiles section contains tiles with preview images
+- the user can specify the config file name
+- user can define custom file path for the config file directory
 |===
 
+Sample config file:
+
+image::images/config file sample.png[]
 
 === User Interface
 - since the focus lies on the visualizations, the majority of the screen space should be dedicated to them
@@ -601,14 +604,13 @@ a|
 |Ideal
 a|
 - mouse and touchscreen support (<<FO0020>>)
-- the interface is reactive (<<NF0021>>) and provides feedback to the user
 |===
 
 == Implementation
 === Libraries and Frameworks
 - Angular for the app, since elevait is already using Angular
 - gridstack.js for the dashboard tile logic
-- Bootstrap for the styling
+- Bootstrap and FxFlex for the styling
 - D3 for the visualizations
 - GraphDB for the SPARQL queries
 
@@ -647,6 +649,10 @@ image::images/bar chart data set selection.png[]
 
 image::images/data select inspiration.png[]
 
+The implementation:
+
+image::images/bar chart data set selection real.png[]
+
 The prototype for the favorites system is an evolution of a very early concept that already included an area for unused tiles. With this version, clicking on the red "Favorites" button causes the favorites menu to become visible, pushing the tile grid downwards. The user can drag and drop tiles between the menu and main tile grid. Clicking the "Favorite" button on the tile also toggles whether the tile appears in the favorites menu. Favorited tiles are safe from deletion and their config files are saved locally for as long as they are favorited.
 
 image::images/favorites.png[]
@@ -671,7 +677,7 @@ image::images/prototype_dashboard_alt.png[]
 
 --- presentation on the 6th of November ---
 
-- start on config file system, save query to config file
+- start on config file system, save query parameters to config file
 - generate visualization from config file (with sample attributes)
 - plan out Wizard and Editor for each visualization type
 - start implementing Wizards and Editors
@@ -679,4 +685,10 @@ image::images/prototype_dashboard_alt.png[]
 
 --- hand in project description V2 ---
 
+- improve size scaling of axis labels, title and tile icons
+- add more tooltips, warning and error messages to support user
+- work on line chart and star plot editor
+- add delete all tiles from dashboard function
+- add introductory/tutorial/help page on the top left button
 
+--- end of 2023 ---
