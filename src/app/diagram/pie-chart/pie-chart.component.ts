@@ -26,7 +26,7 @@ export class PieChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
+    public copeChartAction(tileSerial: string, jobName: string, dataSource: any, pieLabel: string, action: string): void {
         var pieEL = document.getElementById(tileSerial);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -63,7 +63,7 @@ export class PieChartComponent implements OnInit {
             .innerRadius(0)
             .outerRadius(radius);
 
-        if (action === 'create' || action === 'edit') {
+        if (action === 'create' || action === 'edit' || action === 'load') {
             this.g = this.svg.append('g')
                 .attr('transform', 'translate(' + pieEL.clientWidth / 2 + ',' + pieEL.clientHeight / 2 + ')');
         } else if (action === 'update') {
@@ -159,7 +159,7 @@ export class PieChartComponent implements OnInit {
         });
 
         this.titleIconService.createIcon(svg, pieEL.clientWidth - 36, 95, 'trash', () => {
-            this.dialogService.openDeleteConfirmation('Pie Chart', tileSerial);
+            this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
         });
 
         this.titleIconService.hoverSVG(svg);

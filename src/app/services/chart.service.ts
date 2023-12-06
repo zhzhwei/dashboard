@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 interface ChartAction {
     action: string;
     serial: string;
-    jobName: string;
+    jobName?: string;
     titleCount?: number;
     pieLabel?: string;
 }
@@ -118,7 +118,7 @@ export class ChartService {
         else if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
         }
-        console.log('Saving data:', chartData);
+        // console.log('Saving data:', chartData);
         localStorage.setItem(tileSerial, JSON.stringify(chartData));
     }
 
@@ -130,16 +130,26 @@ export class ChartService {
         if (localStorage.length > 0 && localStorage.length < 10) {
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                console.log(key);
                 var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
                 if (chartType === 'dash-bar') {
+                    var chartData = JSON.parse(localStorage.getItem(key));
+                    // console.log('Loaded data:', key, chartData);
+                    this.chartAction.next({
+                        action: 'load',
+                        serial: chartData.tileSerial,
+                        jobName: chartData.jobName,
+                        titleCount: chartData.titleCount
+                    });
+                    this.chartType.next(chartData.chartType);
+                    this.dataSource.next(chartData.dataSource);
+                } else if (chartType === 'dash-pie') {
                     var chartData = JSON.parse(localStorage.getItem(key));
                     console.log('Loaded data:', chartData);
                     this.chartAction.next({
                         action: 'load',
                         serial: chartData.tileSerial,
                         jobName: chartData.jobName,
-                        titleCount: chartData.titleCount
+                        pieLabel: chartData.pieLabel
                     });
                     this.chartType.next(chartData.chartType);
                     this.dataSource.next(chartData.dataSource);

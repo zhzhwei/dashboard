@@ -8,47 +8,25 @@
                 <h5>1. Select Visualization Type</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 text-center" (click)="chartType = 'Line Chart';">
-                            <img src="assets/line-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                        <div class="col-md-3 text-center">
+                            <img src="assets/line-chart.png" (click)="chartType = 'Line Chart'; chartTypeSelect($event)" class="img-button"
                                 width="100" height="100">
                             <p>Line Chart</p>
                         </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Bar Chart';">
-                            <img src="assets/bar-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                        <div class="col-md-3 text-center">
+                            <img src="assets/bar-chart.png" (click)="chartType = 'Bar Chart'; chartTypeSelect($event)" class="img-button"
                                 width="100" height="100">
                             <p>Bar Chart</p>
                         </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Pie Chart';">
-                            <img src="assets/pie-chart.png" (click)="chartTypeSelect($event)" class="img-button"
+                        <div class="col-md-3 text-center">
+                            <img src="assets/pie-chart.png" (click)="chartType = 'Pie Chart'; chartTypeSelect($event)" class="img-button"
                                 width="100" height="100">
                             <p>Pie Chart</p>
                         </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Star Plot';">
-                            <img src="assets/star-plot.png" (click)="chartTypeSelect($event)" class="img-button"
+                        <div class="col-md-3 text-center">
+                            <img src="assets/star-plot.png" (click)="chartType = 'Star Plot'; chartTypeSelect($event)" class="img-button"
                                 width="100" height="100">
                             <p>Star Plot</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 text-center" (click)="chartType = 'Stacked Line Chart';">
-                            <img src="assets/line-charts.png" (click)="chartTypeSelect($event)" class="img-button"
-                                width="100" height="100">
-                            <p>Line Charts</p>
-                        </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Stacked Bar Chart';">
-                            <img src="assets/stacked-bar-chart.png" (click)="chartTypeSelect($event)" class="img-button"
-                                width="100" height="100">
-                            <p>Stacked Bar</p>
-                        </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Doughnut';">
-                            <img src="assets/doughnut.png" (click)="chartTypeSelect($event)" class="img-button"
-                                width="100" height="100">
-                            <p>Doughnut</p>
-                        </div>
-                        <div class="col-md-3 text-center" (click)="chartType = 'Star Plots';">
-                            <img src="assets/star-plots.png" (click)="chartTypeSelect($event)" class="img-button"
-                                width="100" height="100">
-                            <p>Star Plots</p>
                         </div>
                     </div>
                 </div>

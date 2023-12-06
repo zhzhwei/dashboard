@@ -21,7 +21,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public chartCreateOrUpdate(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, action: string): void {
+    public copeChartAction(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, action: string): void {
         var barEL = document.getElementById(tileSerial);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -169,7 +169,8 @@ export class BarChartComponent implements OnInit {
         });
 
         this.titleIconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
-            this.dialogService.openDeleteConfirmation('Bar Chart', tileSerial);
+            this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
+            this.chartService.chartType.next('remove');
         });
 
         this.titleIconService.hoverSVG(svg);

@@ -43,7 +43,7 @@ export class GridStackComponent implements OnInit {
         cellHeight: "auto",
         disableOneColumnMode: true,
         acceptWidgets: true,
-        removable: '#trash',
+        // removable: '#trash',
         removeTimeout: 100
     };
 
@@ -70,13 +70,13 @@ export class GridStackComponent implements OnInit {
         // GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
         this.majorGrid = GridStack.init(this.options, '#major-grid');
         this.majorGrid.addWidget({
-            w: 3, h: 3, minW: 12, minH: 3,
-            content: '<ion-icon name="help-buoy-outline" style="color: white; background-color: #5763cc; height: 100%; width: 100%"></ion-icon>',
+            w: 12, h: 6, minW: 12, minH: 6,
+            content: '<div style="background-color: #5763cc; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center;"><p style="color: white; font-size: 70px; text-align: center;">Welcome to Dashboard for <br> Semantic Data Visualization!</p></div>',
             noResize: true,
-        });
+          });
         this.minorGrid = GridStack.init(this.options, '#minor-grid');
         this.minorGrid.addWidget({
-            w: 3, h: 3, minW: 12, minH: 3,
+            w: 12, h: 3, minW: 12, minH: 3,
             content: '<ion-icon name="heart" style="color: white; background-color: rgb(115, 105, 148); height: 100%; width: 100%"></ion-icon>',
             noResize: true,
         });
@@ -105,9 +105,12 @@ export class GridStackComponent implements OnInit {
                 }
             })
         ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
+            console.log('subscribe callback called with action:', action);
+            console.log(chartType, dataSource, action, serial, jobName, titleCount, pieLabel)
+
             var chartCreators = {
-                'Bar Chart': this.barChart.chartCreateOrUpdate.bind(this.barChart),
-                'Pie Chart': this.pieChart.chartCreateOrUpdate.bind(this.pieChart),
+                'Bar Chart': this.barChart.copeChartAction.bind(this.barChart),
+                'Pie Chart': this.pieChart.copeChartAction.bind(this.pieChart),
             };
 
             var conditions = {
@@ -119,7 +122,10 @@ export class GridStackComponent implements OnInit {
             
             var contEl, tileSerial;
 
-            if (action === 'create') {
+            if (action === 'remove') {
+                console.log(action);
+                this.removeOneChart(serial);
+            } else if (action === 'create') {
                 if (this.majorInitImage) {
                     this.majorGrid.removeAll();
                     this.majorInitImage = false;
@@ -136,12 +142,6 @@ export class GridStackComponent implements OnInit {
                 contEl.innerHTML = '';
                 chartCreators[chartType](serial, jobName, dataSource, parameter, 'edit');
                 this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter);
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    console.log(key);
-                    var chartData = JSON.parse(localStorage.getItem(key));
-                    console.log('Loaded data:', chartData);
-                }
             } else if (action === 'load') {
                 if (this.majorInitImage) {
                     this.majorGrid.removeAll();
@@ -166,10 +166,14 @@ export class GridStackComponent implements OnInit {
                 this.resizeObservers.get(tileSerial).disconnect();
             }
     
+            var currentAction = action;
             // Create a new ResizeObserver and start observing the new contEl
             var resizeObserver = new ResizeObserver(entries => {
-                var latestDataSource = this.dataSources.get(tileSerial);
-                chartCreators[chartType](tileSerial, jobName, latestDataSource, parameter, 'update');
+                console.log(currentAction)
+                if (currentAction != 'remove') {
+                    var latestDataSource = this.dataSources.get(tileSerial);
+                    chartCreators[chartType](tileSerial, jobName, latestDataSource, parameter, 'update');
+                }
             });
             resizeObserver.observe(contEl);
             this.resizeObservers.set(tileSerial, resizeObserver);
@@ -210,22 +214,32 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        this.chartService.currentChartRemove.subscribe(chartRemove => {
-            if (chartRemove.removed) {
-                switch (chartRemove.type) {
-                    case 'Bar Chart':
-                        this.barChart.barRemove = true;
-                        break;
-                    case 'Pie Chart':
-                        this.pieChart.pieRemove = true;
-                        break;
-                }
-                let element = document.getElementById(chartRemove.serial);
-                let gridItemElement = element.closest('.grid-stack-item');
-                this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-                this.chartService.removePersistence(chartRemove.serial);
-            }
-        });
+        // this.chartService.currentChartRemove.subscribe(chartRemove => {
+        //     if (chartRemove.removed) {
+        //         console.log('chartRemove:', chartRemove);
+        //         let element = document.getElementById(chartRemove.serial);
+        //         let gridItemElement = element.closest('.grid-stack-item');
+        //         this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+        //         this.chartService.removePersistence(chartRemove.serial);
+        //     }
+        // });
+
+        // this.chartService.currentChartAction.subscribe(chartAction => {
+        //     if (chartAction.action === 'remove') {
+        //         console.log('chartAction:', chartAction);
+        //         let element = document.getElementById(chartAction.serial);
+        //         let gridItemElement = element.closest('.grid-stack-item');
+        //         this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+        //         this.chartService.removePersistence(chartAction.serial);
+        //     }
+        // });
+    }
+
+    private removeOneChart(serial: string) {
+        let element = document.getElementById(serial);
+        let gridItemElement = element.closest('.grid-stack-item');
+        this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+        this.chartService.removePersistence(serial);
     }
 
     private getTileSerial(chartType: string) {

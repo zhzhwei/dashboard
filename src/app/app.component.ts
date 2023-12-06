@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { VisGenDialogComponent } from './dialog/vis-gen-dialog/vis-gen-dialog.component';
 import { ChartService } from './services/chart.service';
 import { GridHTMLElement } from 'gridstack';
 
 import * as d3 from 'd3';
+import { GridStackComponent } from './gridstack/gridstack.component';
 
 @Component({
     selector: 'app-root',
@@ -13,15 +14,17 @@ import * as d3 from 'd3';
 })
 export class AppComponent {
 
+    @ViewChild(GridStackComponent) gridStack: GridStackComponent;
+
     constructor(public dialog: MatDialog, private chartService: ChartService) { }
     
-    ngOnInit() {
-
-    }
+    ngOnInit() { }
 
     welcomeToApp() {
-        console.log('Welcome to App!');
-        // this.chartService.loadPersistence();
+        if(this.gridStack.majorInitImage) {
+            this.gridStack.majorInitImage = false;
+        }
+        window.location.reload();
     }
 
     openVisGenDialog() {
