@@ -105,9 +105,6 @@ export class GridStackComponent implements OnInit {
                 }
             })
         ).subscribe(({ chartType, dataSource, action, serial, jobName, titleCount, pieLabel }) => {
-            console.log('subscribe callback called with action:', action);
-            console.log(chartType, dataSource, action, serial, jobName, titleCount, pieLabel)
-
             var chartCreators = {
                 'Bar Chart': this.barChart.copeChartAction.bind(this.barChart),
                 'Pie Chart': this.pieChart.copeChartAction.bind(this.pieChart),
@@ -121,10 +118,8 @@ export class GridStackComponent implements OnInit {
             var parameter = chartType === 'Bar Chart' ? titleCount : pieLabel;
             
             var contEl, tileSerial;
-            // var currentAction = action;
 
             if (action === 'remove') {
-                console.log(action);
                 this.removeOneChart(serial);
             } else if (action === 'create') {
                 if (this.majorInitImage) {
@@ -215,25 +210,6 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        // this.chartService.currentChartRemove.subscribe(chartRemove => {
-        //     if (chartRemove.removed) {
-        //         console.log('chartRemove:', chartRemove);
-        //         let element = document.getElementById(chartRemove.serial);
-        //         let gridItemElement = element.closest('.grid-stack-item');
-        //         this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-        //         this.chartService.removePersistence(chartRemove.serial);
-        //     }
-        // });
-
-        // this.chartService.currentChartAction.subscribe(chartAction => {
-        //     if (chartAction.action === 'remove') {
-        //         console.log('chartAction:', chartAction);
-        //         let element = document.getElementById(chartAction.serial);
-        //         let gridItemElement = element.closest('.grid-stack-item');
-        //         this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-        //         this.chartService.removePersistence(chartAction.serial);
-        //     }
-        // });
     }
 
     private removeOneChart(serial: string) {

@@ -126,6 +126,10 @@ export class ChartService {
         localStorage.removeItem(tileSerial);
     }
 
+    public clearPersistence() {
+        localStorage.clear();
+    }
+
     public loadPersistence() {
         if (localStorage.length > 0 && localStorage.length < 10) {
             for (let i = 0; i < localStorage.length; i++) {

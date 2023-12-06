@@ -52,7 +52,8 @@ export class AppComponent {
 
     removeAllCharts() {
         console.log('Remove all charts');
-        // this.chartService.removeAllCharts();
+        this.chartService.clearPersistence();
+        window.location.reload();
     }
 
 }
