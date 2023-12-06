@@ -121,6 +121,7 @@ export class GridStackComponent implements OnInit {
             var parameter = chartType === 'Bar Chart' ? titleCount : pieLabel;
             
             var contEl, tileSerial;
+            // var currentAction = action;
 
             if (action === 'remove') {
                 console.log(action);
@@ -158,25 +159,25 @@ export class GridStackComponent implements OnInit {
                 chartCreators[chartType](serial, jobName, dataSource, parameter, 'load');
             }
 
-            // Update the dataSource for this contEl
-            this.dataSources.set(tileSerial, dataSource);
-    
-            // Stop observing the old contEl
-            if (this.resizeObservers.has(tileSerial)) {
-                this.resizeObservers.get(tileSerial).disconnect();
-            }
-    
-            var currentAction = action;
-            // Create a new ResizeObserver and start observing the new contEl
-            var resizeObserver = new ResizeObserver(entries => {
-                console.log(currentAction)
-                if (currentAction != 'remove') {
-                    var latestDataSource = this.dataSources.get(tileSerial);
-                    chartCreators[chartType](tileSerial, jobName, latestDataSource, parameter, 'update');
+            if (action != 'remove') {
+                // Update the dataSource for this contEl
+                this.dataSources.set(tileSerial, dataSource);
+                
+                // Stop observing the old contEl
+                if (this.resizeObservers.has(tileSerial)) {
+                    this.resizeObservers.get(tileSerial).disconnect();
                 }
-            });
-            resizeObserver.observe(contEl);
-            this.resizeObservers.set(tileSerial, resizeObserver);
+                // Create a new ResizeObserver and start observing the new contEl
+                var resizeObserver = new ResizeObserver(entries => {
+                    var latestAction = this.chartService.chartAction.value.action;
+                    if (latestAction != 'remove') {
+                        var latestDataSource = this.dataSources.get(tileSerial);
+                        chartCreators[chartType](tileSerial, jobName, latestDataSource, parameter, 'update');
+                    }
+                });
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(tileSerial, resizeObserver);
+            }
 
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
