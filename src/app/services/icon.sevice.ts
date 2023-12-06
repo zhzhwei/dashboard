@@ -36,11 +36,13 @@ export class TitleIconService {
         });
     }
 
-    public updateTitleIcon(svg, barEL, margin): void {
+    public updateTitle(svg, barEL, margin): void {
         svg.select("text.title")
             .attr("x", (barEL.clientWidth / 2))
             .attr("y", margin / 2)
-
+    }
+        
+    public updateIcons(svg, barEL): void {
         svg.select('foreignObject.pencil')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)

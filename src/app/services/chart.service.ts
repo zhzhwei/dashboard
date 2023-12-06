@@ -148,7 +148,7 @@ export class ChartService {
                     this.dataSource.next(chartData.dataSource);
                 } else if (chartType === 'dash-pie') {
                     var chartData = JSON.parse(localStorage.getItem(key));
-                    console.log('Loaded data:', chartData);
+                    // console.log('Loaded data:', chartData);
                     this.chartAction.next({
                         action: 'load',
                         serial: chartData.tileSerial,

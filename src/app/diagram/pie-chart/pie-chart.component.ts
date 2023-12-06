@@ -40,10 +40,20 @@ export class PieChartComponent implements OnInit {
                 .attr('height', pieEL.clientHeight)
         }
 
-        if (action === 'create' || action === 'edit' || action === 'load') {
-            this.addTitleIcon(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
-        } else if (action === 'update') {
-            this.titleIconService.updateTitleIcon(this.svg, pieEL, this.margin);
+        if (!tileSerial.includes('minor')) {
+            if (action === 'create' || action === 'edit' || action === 'load') {
+                this.addTitle(this.svg, pieEL, jobName, pieLabel);
+                this.addIcons(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
+            } else if (action === 'update') {
+                this.titleIconService.updateTitle(this.svg, pieEL, this.margin);
+                this.titleIconService.updateIcons(this.svg, pieEL);
+            }
+        } else {
+            if (action === 'create' || action === 'load') {
+                this.addTitle(this.svg, pieEL, jobName, pieLabel);
+            } else if (action === 'update') {
+                this.titleIconService.updateTitle(this.svg, pieEL, this.margin);
+            }
         }
 
         var radius = Math.min(pieEL.clientWidth, pieEL.clientHeight) / 2 - this.margin;
@@ -131,10 +141,12 @@ export class PieChartComponent implements OnInit {
         }
     }
 
-    private addTitleIcon(svg, pieEL, tileSerial, jobName, dataSource, pieLabel): void {
+    private addTitle(svg, pieEL, jobName, pieLabel): void {
         this.titleIconService.createTitle(svg, pieEL.clientWidth / 2, this.margin / 2 + 5,
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
+    }
 
+    private addIcons(svg, pieEL, tileSerial, jobName, dataSource, pieLabel): void {
         this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
             this.dialogService.openPieChartEditor('edit', tileSerial, jobName);
             this.chartService.chartType.next('Pie Chart');
