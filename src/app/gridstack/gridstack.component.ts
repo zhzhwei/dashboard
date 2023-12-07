@@ -33,6 +33,7 @@ export class GridStackComponent implements OnInit {
     private majorGrid: GridStack;
     public majorInitImage: boolean = true;
     public minorInitImage: boolean = true;
+    private minorGridEl: any;
 
     private dataSources = new Map();
     private resizeObservers = new Map();
@@ -80,8 +81,8 @@ export class GridStackComponent implements OnInit {
             content: '<ion-icon name="heart" style="color: white; background-color: rgb(115, 105, 148); height: 100%; width: 100%"></ion-icon>',
             noResize: true,
         });
-        let minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
-        minorGridEl.style.display = 'none';
+        this.minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
+        this.minorGridEl.style.display = 'none';
     }
 
     ngAfterViewInit() {
@@ -144,47 +145,67 @@ export class GridStackComponent implements OnInit {
                         this.majorGrid.removeAll();
                         this.majorInitImage = false;
                     }
-                    tileSerial = serial;
-                    var itemEl = this.majorGrid.addWidget(this.newTile);
-                    var serialNum = Number(tileSerial.split('-')[2]);
-                    if (this.chartTypeNum[chartType] < serialNum) {
-                        this.chartTypeNum[chartType] = serialNum;
-                    }
-                    contEl = itemEl.querySelector('.grid-stack-item-content');
-                    contEl.setAttribute('id', tileSerial);
-                    chartCreators[chartType](serial, jobName, dataSource, parameter, 'load');
-                },
-                'remove': () => {
-                    this.removeOneChart(serial);
-                },
-                'favorite': () => {
                     if (this.minorInitImage) {
                         this.minorGrid.removeAll();
                         this.minorInitImage = false;
                     }
+                    tileSerial = serial;
+                    if (serial.includes('major')) {
+                        console.log(serial);
+                        var itemEl = this.majorGrid.addWidget(this.newTile);
+                        var serialNum = Number(tileSerial.split('-')[2]);
+                        if (this.chartTypeNum[chartType] < serialNum) {
+                            this.chartTypeNum[chartType] = serialNum;
+                        }
+                    } else if (serial.includes('minor')) {
+                        console.log(serial);
+                        // this.minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
+                        // this.minorGridEl.style.display = 'block';
+                        // if (this.minorGridEl.style.display === 'block') {
+                            var itemEl = this.minorGrid.addWidget(this.newTile);
+                        // }
+                    }
+                    contEl = itemEl.querySelector('.grid-stack-item-content');
+                    contEl.setAttribute('id', tileSerial);
+                    // chartCreators[chartType](serial, jobName, dataSource, parameter, 'load');
+                    chartCreators[chartType](serial, jobName, dataSource, parameter, 'load', () => {
+                        this.minorGridEl.style.display = 'none';
+                    });
+                },
+                'favor': () => {
+                    if (this.minorInitImage) {
+                        this.minorGrid.removeAll();
+                        this.minorInitImage = false;
+                        this.minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
+                        this.minorGridEl.style.display = 'block';
+                    }
                     console.log(action, chartType, dataSource, serial, jobName, parameter)
                     tileSerial = serial;
-                    // contEl = document.getElementById(tileSerial);
-                    this.newTile['noResize'] = true;
                     var itemEl = this.minorGrid.addWidget(this.newTile);
                     // this.chartTypeNum[chartType]++;
-                    var contEl = itemEl.querySelector('.grid-stack-item-content');
-                    // var tileSerial = 'dash-' + (chartType === 'Bar Chart' ? 'bar-' : 'pie-') + this.chartTypeNum[chartType];
+                    contEl = itemEl.querySelector('.grid-stack-item-content');
                     contEl.setAttribute('id', serial);
                     chartCreators[chartType](serial, jobName, dataSource, parameter, 'create');
-                    // this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
+                    this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter);
+                },
+                'disfavor': () => {
+                    tileSerial = serial.replace('minor', 'major');
+                    let element = document.getElementById(serial);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    this.minorGrid.removeWidget(gridItemElement as GridStackElement);
+                    this.chartService.removePersistence(serial);
+                },
+                'remove': () => {
+                    this.removeOneChart(serial);
                 }
             };
-
             // Call the corresponding function
             if (chartActions[action]) {
                 chartActions[action]();
             }
-
-            if (action != 'remove') {
+            if (action != 'remove' && action != 'disfavor') {
                 // Update the dataSource for this contEl
                 this.dataSources.set(tileSerial, dataSource);
-
                 // Stop observing the old contEl
                 if (this.resizeObservers.has(tileSerial)) {
                     this.resizeObservers.get(tileSerial).disconnect();
@@ -192,7 +213,8 @@ export class GridStackComponent implements OnInit {
                 // Create a new ResizeObserver and start observing the new contEl
                 var resizeObserver = new ResizeObserver(entries => {
                     var latestAction = this.chartService.chartAction.value.action;
-                    if (latestAction != 'remove') {
+                    console.log('latestAction', latestAction);
+                    if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         chartCreators[chartType](tileSerial, jobName, latestDataSource, parameter, 'update');
                     }
@@ -200,40 +222,19 @@ export class GridStackComponent implements OnInit {
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(tileSerial, resizeObserver);
             }
-
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
-
         });
-
         console.log(localStorage.length);
-
+                        this.minorGridEl.style.display = 'block';
         this.chartService.loadPersistence();
+        setTimeout(() => {
+            this.minorGridEl.style.display = 'none';
+          }, 0);
+
         // localStorage.clear();
 
         this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
-
-        // this.chartService.currentChartFavorite.subscribe(chartFavorite => {
-        //     if (chartFavorite.favorite) {
-        //         if (this.minorInitImage) {
-        //             this.minorGrid.removeAll();
-        //             this.minorInitImage = false;
-        //         }
-        //         var itemEl = this.majorGrid.addWidget(this.newTile);
-        //         var contEl = itemEl.querySelector('.grid-stack-item-content');
-        //         var tileSerial = 'minor-dash-' + (chartFavorite.type === 'Bar Chart' ? 'bar-' : 'pie-') + 1;
-        //         contEl.setAttribute('id', tileSerial);
-        //         this.barChart.copeChartAction(tileSerial, chartFavorite.jobName, [], 0, 'create');
-        //         // this.chartService.savePersistence(chartFavorite.type, 'minor' + chartFavorite.serial, [], '', '');
-        //     }
-        //     else {
-        //         if (!this.minorInitImage) {
-        //             let element = document.getElementById(chartFavorite.serial);
-        //             let gridItemElement = element.closest('.grid-stack-item');
-        //             this.minorGrid.removeWidget(gridItemElement as GridStackElement);
-        //         }
-        //     }
-        // });
 
     }
 
@@ -248,7 +249,7 @@ export class GridStackComponent implements OnInit {
         var itemEl = this.majorGrid.addWidget(this.newTile);
         this.chartTypeNum[chartType]++;
         var contEl = itemEl.querySelector('.grid-stack-item-content');
-        var tileSerial = 'dash-' + (chartType === 'Bar Chart' ? 'bar-' : 'pie-') + this.chartTypeNum[chartType];
+        var tileSerial = 'major-dash-' + (chartType === 'Bar Chart' ? 'bar-' : 'pie-') + this.chartTypeNum[chartType];
         contEl.setAttribute('id', tileSerial);
         return tileSerial;
     }

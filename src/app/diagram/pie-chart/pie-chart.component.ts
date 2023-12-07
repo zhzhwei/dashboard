@@ -156,9 +156,9 @@ export class PieChartComponent implements OnInit {
             this.chartService.saveJsonFile('Pie Chart', dataSource, jobName, pieLabel);
         });
 
-        const self = this;
+        var self = this;
         this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 70, 'heart', function () {
-            const heart = d3.select(this).select('i');
+            var heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
                 heart.style('color', '');
                 self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });

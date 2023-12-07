@@ -154,7 +154,7 @@ export class BarChartComponent implements OnInit {
 
     private addTitle(svg, barEL, jobName, titleCount): void {
         this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, 
-            `${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+            `${jobName}` + " " + `${titleCount}` + " Stellenangebote");
     }
 
     private addIcons(svg, barEL, tileSerial, jobName, dataSource, titleCount): void {   
@@ -167,16 +167,18 @@ export class BarChartComponent implements OnInit {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
 
-        const self = this;
+        var self = this;
         this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 70, 'heart', function () {
-            const heart = d3.select(this).select('i');
+            var heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
                 heart.style('color', '');
-                self.chartService.chartFavorite.next({ type: 'Bar Chart', serial: tileSerial, favorite: false });
+                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial.replace('major', 'minor'), jobName: jobName, titleCount: titleCount });
+                self.chartService.chartType.next('disfavor');
+                self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
             } else {
                 heart.style('color', 'red');
-                self.chartService.chartAction.next({ action: 'favorite', serial: 'minor-' + tileSerial, jobName: jobName, titleCount: titleCount });
+                self.chartService.chartAction.next({ action: 'favor', serial: tileSerial.replace('major', 'minor'), jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
@@ -185,7 +187,6 @@ export class BarChartComponent implements OnInit {
 
         this.titleIconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
             this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
-            this.chartService.chartType.next('remove');
         });
 
         this.titleIconService.hoverSVG(svg);

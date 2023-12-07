@@ -17,7 +17,7 @@ export class DialogService {
     constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar) { }
 
     openDeleteConfirmation(action: string, tileSerial, dataSource) {
-        const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+        var dialogRef = this.dialog.open(DeleteConfirmationComponent, {
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true,
@@ -33,7 +33,7 @@ export class DialogService {
         dialogRef.afterClosed().subscribe((confirmed: boolean) => {
             if (confirmed) {
                 this.chartService.chartAction.next({ action: action, serial: tileSerial });
-                // this.chartService.chartType.next('remove');
+                this.chartService.chartType.next('remove');
                 this.chartService.dataSource.next(dataSource);
             }
         });

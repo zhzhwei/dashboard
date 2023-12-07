@@ -174,7 +174,7 @@ export class BarChartEditorComponent implements OnInit {
             .style('text-anchor', 'middle');
 
         // Create the Y-axis band scale
-        const maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
+        var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
         this.y = d3.scaleLinear()
             .domain([0, maxSkillCount + 1])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);

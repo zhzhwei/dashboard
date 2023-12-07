@@ -12,7 +12,7 @@ export class TitleIconService {
             .attr("x", x)
             .attr("y", y)
             .attr("text-anchor", "middle")
-            .style("font-size", "16px")
+            .style("font-size", "14px")
             .text(text);
     }
 
@@ -21,8 +21,8 @@ export class TitleIconService {
             .attr('class', icon)
             .attr('x', x)
             .attr('y', y)
-            .attr('width', 25)
-            .attr('height', 25)
+            .attr('width', 22)
+            .attr('height', 22)
             .html(`<i class="fas fa-${icon}"></i>`)
             .on('click', clickHandler);
     }
