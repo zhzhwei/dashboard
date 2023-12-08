@@ -21,7 +21,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public copeChartAction(tileSerial: string, jobName: string, dataSource: any[], titleCount: any, action: string): void {
+    public copeChartAction(action: string, tileSerial: string, jobName: string, dataSource: any[], titleCount: any, color: any): void {
         var barEL = document.getElementById(tileSerial);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -38,7 +38,10 @@ export class BarChartComponent implements OnInit {
         if (!tileSerial.includes('minor')) {
             if (action === 'create' || action === 'edit' || action === 'load') {
                 this.addTitle(this.svg, barEL, jobName, titleCount);
-                this.addIcons(this.svg, barEL, tileSerial, jobName, dataSource, titleCount);
+                this.addPencil(this.svg, barEL, tileSerial, jobName, titleCount, color);
+                this.addDownload(this.svg, barEL, jobName, dataSource, titleCount);
+                this.addHeart(this.svg, barEL, tileSerial, jobName, dataSource, titleCount, color);
+                this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 95);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
                 this.titleIconService.updateIcons(this.svg, barEL);
@@ -46,10 +49,14 @@ export class BarChartComponent implements OnInit {
         } else {
             if (action === 'create' || action === 'load') {
                 this.addTitle(this.svg, barEL, jobName, titleCount);
+                this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 20);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
+                this.titleIconService.updateTrash(this.svg, barEL);
             }
         }
+
+        this.titleIconService.hoverSVG(this.svg);
 
         var x = d3.scaleBand()
             .range([0, barEL.clientWidth - this.margin * 2])
@@ -90,7 +97,7 @@ export class BarChartComponent implements OnInit {
                 .on('mouseover', (d, i, nodes) => {
                     // Get the current bar element
                     var bar = d3.select(nodes[i]);
-    
+
                     // Create the tooltip element
                     var tooltip = d3.select('#' + tileSerial)
                         .append('div')
@@ -102,7 +109,7 @@ export class BarChartComponent implements OnInit {
                         .style('border-radius', '5px')
                         .style('padding', '10px')
                         .style('opacity', 0);
-    
+
                     // Show the tooltip element
                     d3.select('.tooltip')
                         // .text(`${d.skill}: ${d.skillCount}`)
@@ -110,10 +117,10 @@ export class BarChartComponent implements OnInit {
                         .transition()
                         .duration(200)
                         .style('opacity', 1);
-    
+
                     // Change the color of the bar
                     bar.style('fill', 'orange');
-    
+
                     // Add a mousemove event listener to update the position of the tooltip element
                     d3.select('body')
                         .on('mousemove', () => {
@@ -126,10 +133,10 @@ export class BarChartComponent implements OnInit {
                 .on('mouseout', (d, i, nodes) => {
                     // Get the current bar element
                     var bar = d3.select(nodes[i]);
-    
+
                     // Hide the tooltip element
                     d3.select('.tooltip').remove();
-    
+
                     // Change the color of the bar back to the original color
                     bar.style('fill', 'steelblue');
                 });
@@ -149,47 +156,53 @@ export class BarChartComponent implements OnInit {
                 .attr('width', x.bandwidth())
                 .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.skillCount));
         }
-        
+
     }
 
     private addTitle(svg, barEL, jobName, titleCount): void {
-        this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, 
+        this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2,
             `${jobName}` + " " + `${titleCount}` + " Stellenangebote");
     }
 
-    private addIcons(svg, barEL, tileSerial, jobName, dataSource, titleCount): void {   
-        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openBarChartEditor('edit', tileSerial, jobName, titleCount);
+    private addPencil(svg, barEL, tileSerial, jobName, titleCount, color): void {
+        this.titleIconService.createPencil(svg, barEL.clientWidth - 38, 20, () => {
+            this.dialogService.openBarChartEditor('edit', tileSerial, jobName, titleCount, color);
             this.chartService.chartType.next('Bar Chart');
         });
+    }
 
-        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 45, 'download', () => {
+    private addDownload(svg, barEL, jobName, dataSource, titleCount): void {
+        this.titleIconService.createDownload(svg, barEL.clientWidth - 38, 45, () => {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
+    }
 
-        var self = this;
-        this.titleIconService.createIcon(svg, barEL.clientWidth - 38, 70, 'heart', function () {
+    private addHeart(svg, barEL, tileSerial, jobName, dataSource, titleCount, color): void {
+        const self = this;
+        this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
             var heart = d3.select(this).select('i');
             if (heart.style('color') === 'red') {
-                heart.style('color', '');
+                heart.style('color', 'black');
                 self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial.replace('major', 'minor'), jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('disfavor');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+                self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
             } else {
                 heart.style('color', 'red');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial.replace('major', 'minor'), jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
+                self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'red');
             }
         });
+    }
 
-        this.titleIconService.createIcon(svg, barEL.clientWidth - 36, 95, 'trash', () => {
+    private addTrash(svg, tileSerial, dataSource, x, y): void {
+        this.titleIconService.createTrash(svg, x, y, () => {
             this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
         });
-
-        this.titleIconService.hoverSVG(svg);
     }
 
 }

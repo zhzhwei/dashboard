@@ -6,6 +6,8 @@ import { GridHTMLElement } from 'gridstack';
 
 import * as d3 from 'd3';
 import { GridStackComponent } from './gridstack/gridstack.component';
+import { GridStackService } from './services/gridstack.service';
+import { DialogService } from './services/dialog.service';
 
 @Component({
     selector: 'app-root',
@@ -16,14 +18,12 @@ export class AppComponent {
 
     @ViewChild(GridStackComponent) gridStack: GridStackComponent;
 
-    constructor(public dialog: MatDialog, private chartService: ChartService) { }
+    constructor(public dialog: MatDialog, private chartService: ChartService, 
+        private gridService: GridStackService, private dialogService: DialogService) { }
     
     ngOnInit() { }
 
     welcomeToApp() {
-        if(this.gridStack.majorInitImage) {
-            this.gridStack.majorInitImage = false;
-        }
         window.location.reload();
     }
 
@@ -47,11 +47,20 @@ export class AppComponent {
     }
 
     loadChart() {
-        this.chartService.loadJsonFile();
+        // this.chartService.loadJsonFile();
     }
 
     removeAllCharts() {
-        console.log('Remove all charts');
+        // this.dialogService.openDeleteConfirmation('','','Are you sure to delete all charts?');
+        // let majorGridEl = document.querySelector('#major-grid') as GridHTMLElement;
+        // majorGridEl.innerHTML = '';
+        // this.gridStack.majorGrid.addWidget(this.gridService.majorInitImage);
+        // let keys = Object.keys(localStorage);
+        // keys.forEach(key => {
+        //     if (key.includes('major')) {
+        //         localStorage.removeItem(key);
+        //     }
+        // });
         this.chartService.clearPersistence();
         window.location.reload();
     }

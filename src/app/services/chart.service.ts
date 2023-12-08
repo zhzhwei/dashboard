@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { color } from 'highcharts';
 import { BehaviorSubject } from 'rxjs';
 
 interface ChartAction {
@@ -7,6 +8,7 @@ interface ChartAction {
     jobName?: string;
     titleCount?: number;
     pieLabel?: string;
+    color?: string;
 }
 
 interface ChartFavorite {
@@ -15,36 +17,21 @@ interface ChartFavorite {
     favorite: boolean;
 }
 
-interface ChartRemove {
-    type: string;
-    serial: string;
-    removed: boolean;
-}
-
 @Injectable({
     providedIn: 'root'
 })
 export class ChartService {
-    public tileSerial = new BehaviorSubject<string>('');
-    currentTileSerial = this.tileSerial.asObservable();
-
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
 
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', jobName: '' });
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' });
     currentChartAction = this.chartAction.asObservable();
 
     public chartFavorite = new BehaviorSubject<ChartFavorite>({type: '', serial: '', favorite: false});
     currentChartFavorite = this.chartFavorite.asObservable();
-
-    public chartRemove = new BehaviorSubject<ChartRemove>({type: '', serial: '', removed: false});
-    currentChartRemove = this.chartRemove.asObservable();
-
-    public barFavorite = new BehaviorSubject<boolean>(false);
-    currentBarFavorite = this.barFavorite.asObservable();
 
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
@@ -72,45 +59,46 @@ export class ChartService {
         downloadAnchorNode.remove();
     }
 
-    public loadJsonFile() {
-        var input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/json';
-        input.onchange = (event: any) => {
-            var reader = new FileReader();
-            reader.onload = (event: any) => {
-                var exportObj = JSON.parse(event.target.result);
-                if (exportObj.chartType === 'Bar Chart') {
-                    this.chartAction.next({
-                        action: 'create',
-                        serial: '',
-                        jobName: exportObj.jobName,
-                        titleCount: exportObj.titleCount
-                    });
-                }
-                else if (exportObj.chartType === 'Pie Chart') {
-                    this.chartAction.next({
-                        action: 'create',
-                        serial: '',
-                        jobName: exportObj.jobName,
-                        pieLabel: exportObj.pieLabel
-                    });
-                };
-                this.chartType.next(exportObj.chartType);
-                this.dataSource.next(exportObj.dataSource);
-            };
-            reader.readAsText(event.target.files[0]);
-        };
-        input.click();
-    }
+    // public loadJsonFile() {
+    //     var input = document.createElement('input');
+    //     input.type = 'file';
+    //     input.accept = 'application/json';
+    //     input.onchange = (event: any) => {
+    //         var reader = new FileReader();
+    //         reader.onload = (event: any) => {
+    //             var exportObj = JSON.parse(event.target.result);
+    //             if (exportObj.chartType === 'Bar Chart') {
+    //                 this.chartAction.next({
+    //                     action: 'create',
+    //                     serial: '',
+    //                     jobName: exportObj.jobName,
+    //                     titleCount: exportObj.titleCount,
+    //                 });
+    //             }
+    //             else if (exportObj.chartType === 'Pie Chart') {
+    //                 this.chartAction.next({
+    //                     action: 'create',
+    //                     serial: '',
+    //                     jobName: exportObj.jobName,
+    //                     pieLabel: exportObj.pieLabel
+    //                 });
+    //             };
+    //             this.chartType.next(exportObj.chartType);
+    //             this.dataSource.next(exportObj.dataSource);
+    //         };
+    //         reader.readAsText(event.target.files[0]);
+    //     };
+    //     input.click();
+    // }
 
-    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any) {
+    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any, color: string) {
         var chartData = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             tileSerial: tileSerial,
-            jobName: jobName
+            jobName: jobName,
+            color: color
         };
         if (chartType === 'Bar Chart') {
             chartData['titleCount'] = parameter;
@@ -142,7 +130,8 @@ export class ChartService {
                         action: 'load',
                         serial: chartData.tileSerial,
                         jobName: chartData.jobName,
-                        titleCount: chartData.titleCount
+                        titleCount: chartData.titleCount,
+                        color: chartData.color
                     });
                     this.chartType.next(chartData.chartType);
                     this.dataSource.next(chartData.dataSource);
@@ -153,7 +142,8 @@ export class ChartService {
                         action: 'load',
                         serial: chartData.tileSerial,
                         jobName: chartData.jobName,
-                        pieLabel: chartData.pieLabel
+                        pieLabel: chartData.pieLabel,
+                        color: chartData.color
                     });
                     this.chartType.next(chartData.chartType);
                     this.dataSource.next(chartData.dataSource);

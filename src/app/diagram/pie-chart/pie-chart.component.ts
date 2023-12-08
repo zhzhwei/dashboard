@@ -43,7 +43,7 @@ export class PieChartComponent implements OnInit {
         if (!tileSerial.includes('minor')) {
             if (action === 'create' || action === 'edit' || action === 'load') {
                 this.addTitle(this.svg, pieEL, jobName, pieLabel);
-                this.addIcons(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
+                // this.addIcons(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, pieEL, this.margin);
                 this.titleIconService.updateIcons(this.svg, pieEL);
@@ -146,35 +146,35 @@ export class PieChartComponent implements OnInit {
             (jobName ? jobName : "JobPosting") + " --- " + pieLabel);
     }
 
-    private addIcons(svg, pieEL, tileSerial, jobName, dataSource, pieLabel): void {
-        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
-            this.dialogService.openPieChartEditor('edit', tileSerial, jobName);
-            this.chartService.chartType.next('Pie Chart');
-        });
+    // private addIcons(svg, pieEL, tileSerial, jobName, dataSource, pieLabel): void {
+    //     this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 20, 'pencil', () => {
+    //         this.dialogService.openPieChartEditor('edit', tileSerial, jobName);
+    //         this.chartService.chartType.next('Pie Chart');
+    //     });
 
-        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 45, 'download', () => {
-            this.chartService.saveJsonFile('Pie Chart', dataSource, jobName, pieLabel);
-        });
+    //     this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 45, 'download', () => {
+    //         this.chartService.saveJsonFile('Pie Chart', dataSource, jobName, pieLabel);
+    //     });
 
-        var self = this;
-        this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 70, 'heart', function () {
-            var heart = d3.select(this).select('i');
-            if (heart.style('color') === 'red') {
-                heart.style('color', '');
-                self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
-                self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-            } else {
-                heart.style('color', 'red');
-                self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
-                self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
-            }
-        });
+    //     var self = this;
+    //     this.titleIconService.createIcon(svg, pieEL.clientWidth - 38, 70, 'heart', function () {
+    //         var heart = d3.select(this).select('i');
+    //         if (heart.style('color') === 'red') {
+    //             heart.style('color', '');
+    //             self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: false });
+    //             self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+    //         } else {
+    //             heart.style('color', 'red');
+    //             self.chartService.chartFavorite.next({ type: 'Pie Chart', serial: tileSerial, favorite: true });
+    //             self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
+    //         }
+    //     });
 
-        this.titleIconService.createIcon(svg, pieEL.clientWidth - 36, 95, 'trash', () => {
-            this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
-        });
+    //     this.titleIconService.createIcon(svg, pieEL.clientWidth - 36, 95, 'trash', () => {
+    //         this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
+    //     });
 
-        this.titleIconService.hoverSVG(svg);
-    }
+    //     this.titleIconService.hoverSVG(svg);
+    // }
 
 }
