@@ -59,37 +59,37 @@ export class ChartService {
         downloadAnchorNode.remove();
     }
 
-    // public loadJsonFile() {
-    //     var input = document.createElement('input');
-    //     input.type = 'file';
-    //     input.accept = 'application/json';
-    //     input.onchange = (event: any) => {
-    //         var reader = new FileReader();
-    //         reader.onload = (event: any) => {
-    //             var exportObj = JSON.parse(event.target.result);
-    //             if (exportObj.chartType === 'Bar Chart') {
-    //                 this.chartAction.next({
-    //                     action: 'create',
-    //                     serial: '',
-    //                     jobName: exportObj.jobName,
-    //                     titleCount: exportObj.titleCount,
-    //                 });
-    //             }
-    //             else if (exportObj.chartType === 'Pie Chart') {
-    //                 this.chartAction.next({
-    //                     action: 'create',
-    //                     serial: '',
-    //                     jobName: exportObj.jobName,
-    //                     pieLabel: exportObj.pieLabel
-    //                 });
-    //             };
-    //             this.chartType.next(exportObj.chartType);
-    //             this.dataSource.next(exportObj.dataSource);
-    //         };
-    //         reader.readAsText(event.target.files[0]);
-    //     };
-    //     input.click();
-    // }
+    public loadJsonFile() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = (event: any) => {
+            var reader = new FileReader();
+            reader.onload = (event: any) => {
+                var exportObj = JSON.parse(event.target.result);
+                if (exportObj.chartType === 'Bar Chart') {
+                    this.chartAction.next({
+                        action: 'create',
+                        serial: '',
+                        jobName: exportObj.jobName,
+                        titleCount: exportObj.titleCount
+                    });
+                }
+                else if (exportObj.chartType === 'Pie Chart') {
+                    this.chartAction.next({
+                        action: 'create',
+                        serial: '',
+                        jobName: exportObj.jobName,
+                        pieLabel: exportObj.pieLabel
+                    });
+                };
+                this.chartType.next(exportObj.chartType);
+                this.dataSource.next(exportObj.dataSource);
+            };
+            reader.readAsText(event.target.files[0]);
+        };
+        input.click();
+    }
 
     public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any, color: string) {
         var chartData = {
