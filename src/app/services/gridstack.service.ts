@@ -5,8 +5,11 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class GridStackService {
-    public gridEmpty = new BehaviorSubject<boolean>(false);
-    currentGridEmpty = this.gridEmpty.asObservable();
+    public majorEmpty = new BehaviorSubject<boolean>(false);
+    currentMajorEmpty = this.majorEmpty.asObservable();
+
+    public minorEmpty = new BehaviorSubject<boolean>(false);
+    currentMinorEmpty = this.minorEmpty.asObservable();
 
     public newTile = {
         w: 3, h: 3,

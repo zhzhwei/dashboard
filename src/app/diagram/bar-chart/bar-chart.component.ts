@@ -164,14 +164,14 @@ export class BarChartComponent implements OnInit {
             `${jobName}` + " " + `${titleCount}` + " Stellenangebote");
     }
 
-    private addPencil(svg, barEL, tileSerial, jobName, titleCount, color): void {
+    public addPencil(svg, barEL, tileSerial, jobName, titleCount, color): void {
         this.titleIconService.createPencil(svg, barEL.clientWidth - 38, 20, () => {
             this.dialogService.openBarChartEditor('edit', tileSerial, jobName, titleCount, color);
             this.chartService.chartType.next('Bar Chart');
         });
     }
 
-    private addDownload(svg, barEL, jobName, dataSource, titleCount, color): void {
+    public addDownload(svg, barEL, jobName, dataSource, titleCount, color): void {
         this.titleIconService.createDownload(svg, barEL.clientWidth - 38, 45, () => {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
@@ -187,7 +187,7 @@ export class BarChartComponent implements OnInit {
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-                self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
             } else {
                 heart.style('color', 'rgb(255, 0, 0)');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial, jobName: jobName, titleCount: titleCount });

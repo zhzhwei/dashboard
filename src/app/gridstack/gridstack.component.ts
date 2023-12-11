@@ -82,11 +82,18 @@ export class GridStackComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        this.gridService.gridEmpty.subscribe((isEmpty: boolean) => {
+        this.gridService.currentMajorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
                 this.majorGrid.removeAll();
                 this.majorGrid.addWidget(this.gridService.majorInitImage);
                 this.majorInitImage = true;
+            }
+        });
+
+        this.gridService.currentMinorEmpty.subscribe((isEmpty: boolean) => {
+            if (isEmpty) {
+                this.minorGrid.addWidget(this.gridService.minorInitImage);
+                this.minorInitImage = true;
             }
         });
         
@@ -193,14 +200,13 @@ export class GridStackComponent implements OnInit {
                     console.log(chartType, serial);
                     this.minorChartTypeNum[chartType]--;
                     if (this.minorGrid.getGridItems().length === 0) {
-                        this.minorGrid.addWidget(this.gridService.minorInitImage);
-                        this.minorInitImage = true;
+                        this.gridService.minorEmpty.next(true);
                     }
                 },
                 'remove': () => {
                     this.removeOneChart(serial);
                     if (this.majorGrid.getGridItems().length === 0) {
-                        this.gridService.gridEmpty.next(true);
+                        this.gridService.majorEmpty.next(true);
                     }
                 }
 
@@ -239,6 +245,24 @@ export class GridStackComponent implements OnInit {
         this.chartService.loadPersistence();
         this.minorGridEl.style.display = 'none';
         // localStorage.clear();
+
+        this.minorGrid.on('removed', (event, items) => {
+            var serial = items[0].el.querySelector('.grid-stack-item-content').id;
+            serial = serial.replace('minor', 'major');
+            if (serial.includes('bar')) {
+                this.majorChartTypeNum['Bar Chart']++;
+                serial = serial.replace(serial.split('-')[3], this.majorChartTypeNum['Bar Chart']);
+                console.log(serial);
+                
+            }
+        });
+
+        this.minorGrid.on('change', (event, items) => {
+            if (this.minorGrid.getGridItems().length === 0) {
+                console.log('minorGrid is empty');
+                this.gridService.minorEmpty.next(true);
+            }
+        });
 
         this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 

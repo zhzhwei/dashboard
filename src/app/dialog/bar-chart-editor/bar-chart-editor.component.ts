@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RdfDataService } from '../../services/rdf-data.service';
 import { ChartService } from '../../services/chart.service';
+import { SystemService } from '../../services/system.service';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
 
@@ -49,7 +50,7 @@ export class BarChartEditorComponent implements OnInit {
     };
 
     constructor(private rdfDataService: RdfDataService, private chartService:
-        ChartService, private dialog: MatDialog) {
+        ChartService, private dialog: MatDialog, private systemService: SystemService) {
         this.chartService.currentChartAction.subscribe( chartAction => {
             this.jobName = chartAction.jobName;
             this.titleCount = chartAction.titleCount;

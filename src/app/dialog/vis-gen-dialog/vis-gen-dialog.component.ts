@@ -6,6 +6,7 @@ import { DialogService } from '../../services/dialog.service';
 import { RdfDataService } from '../../services/rdf-data.service';
 
 import * as d3 from 'd3';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
     selector: 'app-vis-gen-dialog',
@@ -15,7 +16,7 @@ import * as d3 from 'd3';
 export class VisGenDialogComponent implements OnInit {
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
-        private rdfDataService: RdfDataService) { }
+        private rdfDataService: RdfDataService, private systemService: SystemService) { }
 
     public chartType: string;
     public gridStack: GridStackComponent;
@@ -74,7 +75,7 @@ export class VisGenDialogComponent implements OnInit {
     public forwardToEditor() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
-        if (this.barResults.length > 0) {
+        if (this.barResults.length > 0 && this.systemService.jobNames.includes(this.jobName)) {
             switch (this.chartType) {
                 case 'Bar Chart':
                     this.dialogService.openBarChartEditor('create', '', this.jobName, this.barResults.length, '');

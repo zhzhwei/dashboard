@@ -51,7 +51,7 @@ export class DialogService {
                             localStorage.removeItem(key);
                         }
                     });
-                    this.gridService.gridEmpty.next(true);
+                    this.gridService.majorEmpty.next(true);
                 }
             });
         }
