@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GridStackService {
+    public gridEmpty = new BehaviorSubject<boolean>(false);
+    currentGridEmpty = this.gridEmpty.asObservable();
+
     public newTile = {
         w: 3, h: 3,
         minW: 3, minH: 3,

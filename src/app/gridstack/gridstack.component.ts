@@ -70,18 +70,26 @@ export class GridStackComponent implements OnInit {
         'Star Plots': 0
     };
 
-    constructor(private chartService: ChartService, private gridstackService: GridStackService) { }
+    constructor(private chartService: ChartService, private gridService: GridStackService) { }
 
     ngOnInit(): void {
         this.majorGrid = GridStack.init(this.options, '#major-grid');
-        this.majorGrid.addWidget(this.gridstackService.majorInitImage);
+        this.majorGrid.addWidget(this.gridService.majorInitImage);
         this.minorGrid = GridStack.init(this.options, '#minor-grid');
-        this.minorGrid.addWidget(this.gridstackService.minorInitImage);
+        this.minorGrid.addWidget(this.gridService.minorInitImage);
         this.minorGridEl = document.querySelector('#minor-grid') as GridHTMLElement;
         this.minorGridEl.style.display = 'block';
     }
 
     ngAfterViewInit() {
+        this.gridService.gridEmpty.subscribe((isEmpty: boolean) => {
+            if (isEmpty) {
+                this.majorGrid.removeAll();
+                this.majorGrid.addWidget(this.gridService.majorInitImage);
+                this.majorInitImage = true;
+            }
+        });
+        
         combineLatest([
             this.chartService.currentChartType,
             this.chartService.currentDataSource
@@ -137,25 +145,23 @@ export class GridStackComponent implements OnInit {
                     this.chartService.savePersistence(chartType, serial, dataSource, jobName, parameter, 'rgb(0, 0, 0)');
                 },
                 'load': () => {
-                    if (this.majorInitImage) {
-                        this.majorGrid.removeAll();
-                        this.majorInitImage = false;
-                    }
-                    if (this.minorInitImage) {
-                        this.minorGrid.removeAll();
-                        this.minorInitImage = false;
-                    }
                     tileSerial = serial;
                     if (serial.includes('major')) {
-                        console.log(serial);
-                        var itemEl = this.majorGrid.addWidget(this.gridstackService.newTile);
+                        if (this.majorInitImage) {
+                            this.majorGrid.removeAll();
+                            this.majorInitImage = false;
+                        }
+                        var itemEl = this.majorGrid.addWidget(this.gridService.newTile);
                         var serialNum = Number(tileSerial.split('-')[3]);
                         if (this.majorChartTypeNum[chartType] < serialNum) {
                             this.majorChartTypeNum[chartType] = serialNum;
                         }
                     } else if (serial.includes('minor')) {
-                        console.log(serial);
-                        var itemEl = this.minorGrid.addWidget(this.gridstackService.newTile);
+                        if (this.minorInitImage) {
+                            this.minorGrid.removeAll();
+                            this.minorInitImage = false;
+                        }
+                        var itemEl = this.minorGrid.addWidget(this.gridService.newTile);
                         var serialNum = Number(tileSerial.split('-')[3]);
                         if (this.minorChartTypeNum[chartType] < serialNum) {
                             this.minorChartTypeNum[chartType] = serialNum;
@@ -170,21 +176,32 @@ export class GridStackComponent implements OnInit {
                         this.minorGrid.removeAll();
                         this.minorInitImage = false;
                     }
-                    console.log(action, chartType, dataSource, serial, jobName, parameter)
                     tileSerial = this.getMinorTileSerial(chartType, serial);
                     contEl = document.getElementById(tileSerial);
                     chartCreators[chartType]('create', tileSerial, jobName, dataSource, parameter, 'rgb(255, 0, 0)');
                     this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter, 'rgb(255, 0, 0)');
                 },
                 'disfavor': () => {
-                    // tileSerial = serial.replace('minor', 'major');
+                    if ( serial.includes('major') ) {
+                        serial = serial.replace('major', 'minor');
+                        serial = serial.replace(serial.split('-')[3], this.minorChartTypeNum[chartType]);
+                    }
                     let element = document.getElementById(serial);
                     let gridItemElement = element.closest('.grid-stack-item');
                     this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                     this.chartService.removePersistence(serial);
+                    console.log(chartType, serial);
+                    this.minorChartTypeNum[chartType]--;
+                    if (this.minorGrid.getGridItems().length === 0) {
+                        this.minorGrid.addWidget(this.gridService.minorInitImage);
+                        this.minorInitImage = true;
+                    }
                 },
                 'remove': () => {
                     this.removeOneChart(serial);
+                    if (this.majorGrid.getGridItems().length === 0) {
+                        this.gridService.gridEmpty.next(true);
+                    }
                 }
 
             };
@@ -197,10 +214,8 @@ export class GridStackComponent implements OnInit {
             if (action != 'remove' && action != 'disfavor') {
                 // Update the dataSource for this contEl
                 this.dataSources.set(tileSerial, dataSource);
-                console.log(tileSerial, this.dataSources.get(tileSerial));
                 // Stop observing the old contEl
                 if (this.resizeObservers.has(tileSerial)) {
-                    console.log('disconnect');
                     this.resizeObservers.get(tileSerial).disconnect();
                 }
                 // Create a new ResizeObserver and start observing the new contEl
@@ -237,7 +252,7 @@ export class GridStackComponent implements OnInit {
     }
 
     private getMajorTileSerial(chartType: string) {
-        var itemEl = this.majorGrid.addWidget(this.gridstackService.newTile);
+        var itemEl = this.majorGrid.addWidget(this.gridService.newTile);
         this.majorChartTypeNum[chartType]++;
         var contEl = itemEl.querySelector('.grid-stack-item-content');
         var tileSerial = 'major-dash-' + (chartType === 'Bar Chart' ? 'bar-' : 'pie-') + this.majorChartTypeNum[chartType];
@@ -246,10 +261,9 @@ export class GridStackComponent implements OnInit {
     }
 
     private getMinorTileSerial(chartType: string, tileSerial: string) {
-        var itemEl = this.minorGrid.addWidget(this.gridstackService.newTile);
+        var itemEl = this.minorGrid.addWidget(this.gridService.newTile);
         tileSerial = tileSerial.replace('major', 'minor');
         this.minorChartTypeNum[chartType]++;
-        console.log(this.minorChartTypeNum[chartType]);
         var serialNum = Number(tileSerial.split('-')[3]);
         tileSerial = tileSerial.replace('' + serialNum, '' + this.minorChartTypeNum[chartType]);
         var contEl = itemEl.querySelector('.grid-stack-item-content');

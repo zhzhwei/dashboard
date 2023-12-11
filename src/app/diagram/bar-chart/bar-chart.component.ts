@@ -184,10 +184,10 @@ export class BarChartComponent implements OnInit {
             if (heart.style('color') === 'rgb(255, 0, 0)') {
                 heart.style('color', 'rgb(0, 0, 0)');
                 self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
-                self.chartService.chartType.next('disfavor');
+                self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
+                self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
             } else {
                 heart.style('color', 'rgb(255, 0, 0)');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
@@ -201,7 +201,7 @@ export class BarChartComponent implements OnInit {
 
     private addTrash(svg, tileSerial, dataSource, x, y): void {
         this.titleIconService.createTrash(svg, x, y, () => {
-            this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource);
+            this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource, 'Are you sure to delete this widget?');
         });
     }
 

@@ -9,34 +9,52 @@ import { DoughnutEditorComponent } from '../dialog/doughnut-editor/doughnut-edit
 import { StarPlotEditorComponent } from '../dialog/star-plot-editor/star-plot-editor.component';
 import { LineChartEditorComponent } from '../dialog/line-chart-editor/line-chart-editor.component';
 import { ChartService } from './chart.service';
+import { GridStackService } from './gridstack.service';
+import { GridHTMLElement } from 'gridstack';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DialogService {
-    constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar) { }
+    constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar, private gridService: GridStackService) { }
 
-    openDeleteConfirmation(action: string, tileSerial, dataSource) {
+    openDeleteConfirmation(action: string, tileSerial, dataSource, message: string) {
         var dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+            width: '350px',
+            height: '150px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true,
             data:{
-                message: 'Are you sure to delete?',
+                message: message,
                 buttonText: {
                     ok: 'Yes',
                     cancel: 'Cancel'
                 }
             }
         });
-    
-        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-            if (confirmed) {
-                this.chartService.chartAction.next({ action: action, serial: tileSerial });
-                this.chartService.chartType.next('remove');
-                this.chartService.dataSource.next(dataSource);
-            }
-        });
+        
+        if (message === 'Are you sure to delete this widget?') {
+            dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+                if (confirmed) {
+                    this.chartService.chartAction.next({ action: action, serial: tileSerial });
+                    this.chartService.chartType.next('remove');
+                    this.chartService.dataSource.next(dataSource);
+                }
+            });
+        } else if (message === 'Are you sure to delete all widgets?') {
+            dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+                if (confirmed) {
+                    let keys = Object.keys(localStorage);
+                    keys.forEach(key => {
+                        if (key.includes('major')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    this.gridService.gridEmpty.next(true);
+                }
+            });
+        }
     }
 
     openSnackBar(message: string, action: string) {

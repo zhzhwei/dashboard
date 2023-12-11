@@ -9,18 +9,18 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class DeleteConfirmationComponent implements OnInit {
 
-    message: string = "Are you sure to delete?";
-    confirmButtonText = "Yes";
-    cancelButtonText = "Cancel";
+    private message: string;
+    private confirmButtonText: string;
+    private cancelButtonText: string;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private data: any,
         private dialogRef: MatDialogRef<DeleteConfirmationComponent>) {
         if (data) {
-            this.message = data.message || this.message;
+            this.message = data.message;
             if (data.buttonText) {
-                this.confirmButtonText = data.buttonText.ok || this.confirmButtonText;
-                this.cancelButtonText = data.buttonText.cancel || this.cancelButtonText;
+                this.confirmButtonText = data.buttonText.ok;
+                this.cancelButtonText = data.buttonText.cancel;
             }
         }
     }

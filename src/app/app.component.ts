@@ -51,18 +51,7 @@ export class AppComponent {
     }
 
     removeAllCharts() {
-        // this.dialogService.openDeleteConfirmation('','','Are you sure to delete all charts?');
-        // let majorGridEl = document.querySelector('#major-grid') as GridHTMLElement;
-        // majorGridEl.innerHTML = '';
-        // this.gridStack.majorGrid.addWidget(this.gridService.majorInitImage);
-        // let keys = Object.keys(localStorage);
-        // keys.forEach(key => {
-        //     if (key.includes('major')) {
-        //         localStorage.removeItem(key);
-        //     }
-        // });
-        this.chartService.clearPersistence();
-        window.location.reload();
+        this.dialogService.openDeleteConfirmation('','','', 'Are you sure to delete all widgets?');
     }
 
 }
