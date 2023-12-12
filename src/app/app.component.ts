@@ -41,8 +41,10 @@ export class AppComponent {
         let minorGridEl= document.querySelector('#minor-grid') as GridHTMLElement;
         if (minorGridEl.style.display === 'none') {
             minorGridEl.style.display = 'block';
+            this.gridService.minorGridEL.next(true);
         } else {
             minorGridEl.style.display = 'none';
+            this.gridService.minorGridEL.next(false);
         }
     }
 

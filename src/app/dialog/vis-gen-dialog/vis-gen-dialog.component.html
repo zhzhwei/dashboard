@@ -37,10 +37,10 @@
                     <div class="row" *ngIf="chartType === 'Bar Chart' || chartType === 'Pie Chart'">
                         <div class="search-container">
                             <input [(ngModel)]="searchTerm" (input)="onSearch(searchTerm)" type="text"
-                                [placeholder]="chartType === 'Bar Chart' ? 'Please enter the job name here*' : 'Please enter the job name here'"
+                                [placeholder]="chartType === 'Bar Chart' ? 'Please enter the complete job name here*' : 'Please enter the complete job name here'"
                                 [matTooltip]="chartType === 'Bar Chart' ? 'Job name is necessary, and before you go forward to the Visualization Editor, 
-                                please enter the full job name (case-sensitive)' : 'Job name is not necessary, but if you enter the job name and 
-                                before going forward to the Visualization Editor, please enter the full job name (case-sensitive)'">
+                                please enter the complete job name (case-sensitive)' : 'Job name is not necessary, but if you enter the job name and 
+                                before going forward to the Visualization Editor, please enter the complete job name (case-sensitive)'">
                             <p class="result-p">
                                 {{ barResults.length > 0 ? 'Showing job titles from 1 to ' + barResults.length : 'No job
                                 title Found' }}

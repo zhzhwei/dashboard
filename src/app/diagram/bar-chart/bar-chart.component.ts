@@ -194,7 +194,7 @@ export class BarChartComponent implements OnInit {
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
-                self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'red');
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'red');
             }
         });
     }

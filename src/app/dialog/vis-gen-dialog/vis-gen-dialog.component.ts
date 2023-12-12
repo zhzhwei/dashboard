@@ -75,28 +75,32 @@ export class VisGenDialogComponent implements OnInit {
     public forwardToEditor() {
         // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
-        if (this.barResults.length > 0 && this.systemService.jobNames.includes(this.jobName)) {
-            switch (this.chartType) {
-                case 'Bar Chart':
-                    this.dialogService.openBarChartEditor('create', '', this.jobName, this.barResults.length, '');
-                    break;
-                case 'Stacked Bar Chart':
-                    this.dialogService.openStackedBarChartEditor();
-                    break;
-                case 'Pie Chart':
-                    this.dialogService.openPieChartEditor('create', '', this.jobName);
-                    break;
-                case 'Doughnut Chart':
-                    this.dialogService.openDoughnutChartEditor();
-                    break;
-                case 'Star Plot':
-                    this.dialogService.openStarPlotEditor();
-                    break;
-                case 'Line Chart':
-                    this.dialogService.openLineChartEditor();
-                    break;
-                default:
-                    console.log('Invalid Chart Type');
+        if (this.barResults.length > 0) {
+            if (this.systemService.jobNames.includes(this.jobName)) {
+                switch (this.chartType) {
+                    case 'Bar Chart':
+                        this.dialogService.openBarChartEditor('create', '', this.jobName, this.barResults.length, '');
+                        break;
+                    case 'Stacked Bar Chart':
+                        this.dialogService.openStackedBarChartEditor();
+                        break;
+                    case 'Pie Chart':
+                        this.dialogService.openPieChartEditor('create', '', this.jobName);
+                        break;
+                    case 'Doughnut Chart':
+                        this.dialogService.openDoughnutChartEditor();
+                        break;
+                    case 'Star Plot':
+                        this.dialogService.openStarPlotEditor();
+                        break;
+                    case 'Line Chart':
+                        this.dialogService.openLineChartEditor();
+                        break;
+                    default:
+                        console.log('Invalid Chart Type');
+                }
+            } else {
+                this.dialogService.openSnackBar('Please enter the complete job name (case-sensitive)', 'close');
             }
         }
     }

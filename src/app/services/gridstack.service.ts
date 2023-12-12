@@ -11,6 +11,9 @@ export class GridStackService {
     public minorEmpty = new BehaviorSubject<boolean>(false);
     currentMinorEmpty = this.minorEmpty.asObservable();
 
+    public minorGridEL = new BehaviorSubject<boolean>(false);
+    currentMinorGridEl = this.minorGridEL.asObservable();
+
     public newTile = {
         w: 3, h: 3,
         minW: 3, minH: 3,

@@ -30,7 +30,7 @@ export class ChartService {
     public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' });
     currentChartAction = this.chartAction.asObservable();
 
-    public chartFavorite = new BehaviorSubject<ChartFavorite>({type: '', serial: '', favorite: false});
+    public chartFavorite = new BehaviorSubject<ChartFavorite>({ type: '', serial: '', favorite: false });
     currentChartFavorite = this.chartFavorite.asObservable();
 
     public pieLabel = new BehaviorSubject<string>('');
@@ -106,7 +106,7 @@ export class ChartService {
         else if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
         }
-        // console.log('Saving data:', chartData);
+        console.log('Saving data:', chartData);
         localStorage.setItem(tileSerial, JSON.stringify(chartData));
     }
 
@@ -114,41 +114,45 @@ export class ChartService {
         localStorage.removeItem(tileSerial);
     }
 
-    public clearPersistence() {
-        localStorage.clear();
+    public clearPersistence(gridType: string) {
+        // localStorage.clear();
+        let keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.includes(gridType)) {
+                localStorage.removeItem(key);
+            }
+        });
     }
 
-    public loadPersistence() {
+    public loadPersistence(gridType: string) {
         if (localStorage.length > 0 && localStorage.length < 10) {
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
-                if (chartType === 'dash-bar') {
+            let keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.includes(gridType)) {
+                    var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
                     var chartData = JSON.parse(localStorage.getItem(key));
-                    // console.log('Loaded data:', key, chartData);
-                    this.chartAction.next({
-                        action: 'load',
-                        serial: chartData.tileSerial,
-                        jobName: chartData.jobName,
-                        titleCount: chartData.titleCount,
-                        color: chartData.color
-                    });
-                    this.chartType.next(chartData.chartType);
-                    this.dataSource.next(chartData.dataSource);
-                } else if (chartType === 'dash-pie') {
-                    var chartData = JSON.parse(localStorage.getItem(key));
-                    // console.log('Loaded data:', chartData);
-                    this.chartAction.next({
-                        action: 'load',
-                        serial: chartData.tileSerial,
-                        jobName: chartData.jobName,
-                        pieLabel: chartData.pieLabel,
-                        color: chartData.color
-                    });
-                    this.chartType.next(chartData.chartType);
-                    this.dataSource.next(chartData.dataSource);
+                    this.loadChart(chartType, chartData);
                 }
-            }
+            });
         }
+    }
+    
+    private loadChart(chartType: string, chartData: any) {
+        let actionData: any = {
+            action: 'load',
+            serial: chartData.tileSerial,
+            jobName: chartData.jobName,
+            color: chartData.color
+        };
+    
+        if (chartType === 'dash-bar') {
+            actionData.titleCount = chartData.titleCount;
+        } else if (chartType === 'dash-pie') {
+            actionData.pieLabel = chartData.pieLabel;
+        }
+    
+        this.chartAction.next(actionData);
+        this.chartType.next(chartData.chartType);
+        this.dataSource.next(chartData.dataSource);
     }
 }
