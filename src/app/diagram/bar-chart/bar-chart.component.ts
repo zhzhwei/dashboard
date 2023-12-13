@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DialogService } from '../../services/dialog.service';
 import { ChartService } from '../../services/chart.service';
 import { TitleIconService } from '../../services/icon.sevice';
+import { GridStackService } from '../../services/gridstack.service';
 
 import * as d3 from 'd3';
 
@@ -12,7 +13,7 @@ import * as d3 from 'd3';
 export class BarChartComponent implements OnInit {
 
     constructor(private dialogService: DialogService, private chartService: ChartService,
-        private titleIconService: TitleIconService) { }
+        private titleIconService: TitleIconService, private gridService: GridStackService) { }
 
     private svg: any;
     private g: any;
@@ -181,21 +182,23 @@ export class BarChartComponent implements OnInit {
         const self = this;
         this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
             var heart = d3.select(this).select('i');
-            if (heart.style('color') === 'rgb(255, 0, 0)') {
-                heart.style('color', 'rgb(0, 0, 0)');
-                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
-                self.chartService.chartType.next('Bar Chart');
-                self.chartService.dataSource.next(dataSource);
-                self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'black');
-            } else {
+            self.chartService.removePersistence(tileSerial);
+            if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
+                tileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
+                self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'red');
-            }
+            } else {
+                heart.style('color', 'rgb(0, 0, 0)');
+                self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
+                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
+                self.chartService.chartType.next('Bar Chart');
+                self.chartService.dataSource.next(dataSource); 
+                self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
+            }   
         });
     }
 

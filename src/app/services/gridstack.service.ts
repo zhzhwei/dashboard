@@ -5,6 +5,28 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class GridStackService {
+    public majorChartTypeNum = {
+        'Line Chart': 0,
+        'Stacked Line Chart': 0,
+        'Bar Chart': 0,
+        'Stacked Bar Chart': 0,
+        'Pie Chart': 0,
+        'Doughnut': 0,
+        'Star Plot': 0,
+        'Star Plots': 0
+    };
+
+    public minorChartTypeNum = {
+        'Line Chart': 0,
+        'Stacked Line Chart': 0,
+        'Bar Chart': 0,
+        'Stacked Bar Chart': 0,
+        'Pie Chart': 0,
+        'Doughnut': 0,
+        'Star Plot': 0,
+        'Star Plots': 0
+    };
+
     public majorEmpty = new BehaviorSubject<boolean>(false);
     currentMajorEmpty = this.majorEmpty.asObservable();
 
@@ -31,4 +53,13 @@ export class GridStackService {
         content: '<ion-icon name="heart" style="color: white; background-color: rgb(115, 105, 148); height: 100%; width: 100%"></ion-icon>',
         noResize: true,
     };
+
+    public getMinorTileSerial(chartType: string, tileSerial: string) {
+        tileSerial = tileSerial.replace('major', 'minor');
+        this.minorChartTypeNum[chartType]++;
+        this.majorChartTypeNum[chartType] = this.minorChartTypeNum[chartType];
+        var serialNum = Number(tileSerial.split('-')[3]);
+        tileSerial = tileSerial.replace('' + serialNum, '' + this.minorChartTypeNum[chartType]);
+        return tileSerial;
+    }
 }
