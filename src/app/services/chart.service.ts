@@ -106,7 +106,7 @@ export class ChartService {
         else if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
         }
-        console.log('Saving data:', chartData);
+        // console.log('Saving data:', chartData);
         localStorage.setItem(tileSerial, JSON.stringify(chartData));
     }
 

@@ -178,14 +178,16 @@ export class BarChartComponent implements OnInit {
         });
     }
 
-    private addHeart(svg, barEL, tileSerial, jobName, dataSource, titleCount, color): void {
+    public addHeart(svg, barEL, tileSerial, jobName, dataSource, titleCount, color): void {
         const self = this;
         this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
             var heart = d3.select(this).select('i');
             self.chartService.removePersistence(tileSerial);
             if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
+                // var contEl = document.getElementById(tileSerial);
                 tileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
+                // contEl.setAttribute('id', tileSerial.replace('minor','major'));
                 self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
@@ -202,7 +204,7 @@ export class BarChartComponent implements OnInit {
         });
     }
 
-    private addTrash(svg, tileSerial, dataSource, x, y): void {
+    public addTrash(svg, tileSerial, dataSource, x, y): void {
         this.titleIconService.createTrash(svg, x, y, () => {
             this.dialogService.openDeleteConfirmation('remove', tileSerial, dataSource, 'Are you sure to delete this widget?');
         });
