@@ -197,8 +197,8 @@ export class BarChartComponent implements OnInit {
                 heart.style('color', 'rgb(0, 0, 0)');
                 self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
-                self.chartService.chartType.next('Bar Chart');
-                self.chartService.dataSource.next(dataSource); 
+                // self.chartService.chartType.next('Bar Chart');
+                // self.chartService.dataSource.next(dataSource); 
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
             }   
         });

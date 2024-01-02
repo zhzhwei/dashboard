@@ -177,14 +177,15 @@ export class GridStackComponent implements OnInit {
                     }
                 },
                 'disfavor': () => {
-                    if (serial.includes('major')) {
-                        serial = serial.replace('major', 'minor');
-                    }
+                    console.log(action,serial);
+                    console.log(chartType, dataSource);
+                    // tileSerial = serial.replace('minor', 'major');
+                    // contEl = document.getElementById(tileSerial);
                     let element = document.getElementById(serial);
+                    console.log(element);
                     let gridItemElement = element.closest('.grid-stack-item');
                     this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                     this.chartService.removePersistence(serial);
-                    console.log(action,serial);
                     this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                     if (this.minorGrid.getGridItems().length === 0) {
                         this.gridService.minorEmpty.next(true);
@@ -205,47 +206,65 @@ export class GridStackComponent implements OnInit {
                 chartActions[action]();
             }
 
-            if (action === 'favor') {
-                if (this.minorGridEl.style.display === 'block') {
-                    // Update the dataSource for this contEl
-                    this.dataSources.set(tileSerial, dataSource);
-                    // Stop observing the old contEl
-                    if (this.resizeObservers.has(tileSerial)) {
-                        this.resizeObservers.get(tileSerial).disconnect();
-                    }
-                    // Create a new ResizeObserver and start observing the new contEl
-                    var resizeObserver = new ResizeObserver(entries => {
-                        var latestAction = this.chartService.chartAction.value.action;
-                        // console.log('latestAction', latestAction);
-                        if (latestAction != 'remove' && latestAction != 'disfavor') {
-                            // console.log(latestAction);
-                            var latestDataSource = this.dataSources.get(tileSerial);
-                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
-                        }
-                    });
-                    resizeObserver.observe(contEl);
-                    this.resizeObservers.set(tileSerial, resizeObserver);
-                }
-            } else if (action != 'remove' && action != 'disfavor') {
-                // Update the dataSource for this contEl
-                this.dataSources.set(tileSerial, dataSource);
-                // Stop observing the old contEl
-                if (this.resizeObservers.has(tileSerial)) {
-                    this.resizeObservers.get(tileSerial).disconnect();
-                }
-                // Create a new ResizeObserver and start observing the new contEl
-                var resizeObserver = new ResizeObserver(entries => {
-                    var latestAction = this.chartService.chartAction.value.action;
-                    // console.log('latestAction', latestAction);
-                    if (latestAction != 'remove' && latestAction != 'disfavor') {
-                        // console.log(latestAction);
-                        var latestDataSource = this.dataSources.get(tileSerial);
-                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
-                    }
-                });
-                resizeObserver.observe(contEl);
-                this.resizeObservers.set(tileSerial, resizeObserver);
-            }
+            // if (action === 'favor') {
+            //     // if (this.minorGridEl.style.display === 'block') {
+            //     //     // Update the dataSource for this contEl
+            //     //     this.dataSources.set(tileSerial, dataSource);
+            //     //     // Stop observing the old contEl
+            //     //     if (this.resizeObservers.has(tileSerial)) {
+            //     //         this.resizeObservers.get(tileSerial).disconnect();
+            //     //     }
+            //     //     // Create a new ResizeObserver and start observing the new contEl
+            //     //     var resizeObserver = new ResizeObserver(entries => {
+            //     //         var latestAction = this.chartService.chartAction.value.action;
+            //     //         // console.log('latestAction', latestAction);
+            //     //         if (latestAction != 'remove' && latestAction != 'disfavor') {
+            //     //             // console.log(latestAction);
+            //     //             var latestDataSource = this.dataSources.get(tileSerial);
+            //     //             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
+            //     //         }
+            //     //     });
+            //     //     resizeObserver.observe(contEl);
+            //     //     this.resizeObservers.set(tileSerial, resizeObserver);
+            //     // }
+            // } else if (action === 'disfavor') {
+            //     // Update the dataSource for this contEl
+            //     // this.dataSources.set(tileSerial, dataSource);
+            //     // // Stop observing the old contEl
+            //     // if (this.resizeObservers.has(tileSerial)) {
+            //     //     this.resizeObservers.get(tileSerial).disconnect();
+            //     // }
+            //     // console.log(action,tileSerial);
+            //     // // Create a new ResizeObserver and start observing the new contEl
+            //     // var resizeObserver = new ResizeObserver(entries => {
+            //     //     var latestAction = this.chartService.chartAction.value.action;
+            //     //     console.log('latestAction', latestAction);
+            //     //     // console.log(latestAction);
+            //     //     var latestDataSource = this.dataSources.get(tileSerial);
+            //     //     chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
+            //     // });
+            //     // resizeObserver.observe(contEl);
+            //     // this.resizeObservers.set(tileSerial, resizeObserver);
+            // } else if (action != 'remove') {
+            //     // Update the dataSource for this contEl
+            //     // this.dataSources.set(tileSerial, dataSource);
+            //     // // Stop observing the old contEl
+            //     // if (this.resizeObservers.has(tileSerial)) {
+            //     //     this.resizeObservers.get(tileSerial).disconnect();
+            //     // }
+            //     // // Create a new ResizeObserver and start observing the new contEl
+            //     // var resizeObserver = new ResizeObserver(entries => {
+            //     //     var latestAction = this.chartService.chartAction.value.action;
+            //     //     // console.log('latestAction', latestAction);
+            //     //     if (latestAction != 'remove') {
+            //     //         // console.log(latestAction);
+            //     //         var latestDataSource = this.dataSources.get(tileSerial);
+            //     //         chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
+            //     //     }
+            //     // });
+            //     // resizeObserver.observe(contEl);
+            //     // this.resizeObservers.set(tileSerial, resizeObserver);
+            // }
 
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);

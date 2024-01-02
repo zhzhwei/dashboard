@@ -31,24 +31,6 @@ export class BarChartEditorComponent implements OnInit {
     private x: any;
     private y: any;
 
-    private skillAbbr = {
-        'Analytische Fähigkeiten': 'AF',
-        'Bewerbungsmanagement': 'BM',
-        'CNC-Schleifen': 'CS',
-        'Flexibilität': 'F',
-        'Kommunikationsfähigkeit': 'KF',
-        'Kundenorientierung': 'KO',
-        'Leitungsbereitschaft': 'LB',
-        'Organisationsfähigkeit': 'OF',
-        'Polymechanik': 'P',
-        'Problemlösungsfähigkeit': 'PLF',
-        'Qualitätsbewusstsein': 'QB',
-        'Selbstständigkeit': 'SS',
-        'Steuerungskenntnisse': 'SK',
-        'Teamfähigkeit': 'TF',
-        'Unternehmerisches Denken': 'UD',
-    };
-
     constructor(private rdfDataService: RdfDataService, private chartService:
         ChartService, private dialog: MatDialog, private systemService: SystemService) {
         this.chartService.currentChartAction.subscribe( chartAction => {
@@ -129,7 +111,7 @@ export class BarChartEditorComponent implements OnInit {
             //     console.log(item.skill, item.skillCount);
             // });
             this.dataSource.forEach(item => {
-                item.skill = this.skillAbbr[item.skill];
+                item.skill = this.systemService.skillAbbr[item.skill];
             });
             this.chartService.dataSource.next(this.dataSource);
             this.createChart(this.jobName, this.dataSource, this.titleCount);

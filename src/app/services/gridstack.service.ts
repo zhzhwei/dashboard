@@ -39,8 +39,8 @@ export class GridStackService {
     public infoPosition = new Map();
 
     public newTile = {
-        w: 3, h: 3,
-        minW: 3, minH: 3,
+        w: 4, h: 3,
+        minW: 4, minH: 3,
         autoPosition: true,
     };
 
