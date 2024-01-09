@@ -182,23 +182,33 @@ export class BarChartComponent implements OnInit {
         const self = this;
         this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
             var heart = d3.select(this).select('i');
-            self.chartService.removePersistence(tileSerial);
+            // self.chartService.removePersistence(tileSerial);
             if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
                 // var contEl = document.getElementById(tileSerial);
                 tileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 // contEl.setAttribute('id', tileSerial.replace('minor','major'));
-                self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
+                // self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
                 self.chartService.chartAction.next({ action: 'favor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');
-                self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
+                // if (tileSerial.includes('major')) {
+                //     heart.style('color', 'rgb(0, 0, 0)');
+                // } else {
+                //     var tempTile = tileSerial.replace('minor', 'major');
+                //     var tempEl = document.getElementById(tempTile);
+                //     console.log(tempTile);
+                //     var tempSvg = d3.select(tempEl);
+                //     var tempHeart = tempSvg.select('g').select('i');
+                //     tempHeart.style('color', 'rgb(0, 0, 0)');
+                // }
+                // self.chartService.savePersistence('Bar Chart', tileSerial.replace('minor','major'), dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
-                // self.chartService.chartType.next('Bar Chart');
-                // self.chartService.dataSource.next(dataSource); 
+                self.chartService.chartType.next('Bar Chart');
+                self.chartService.dataSource.next(dataSource); 
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
             }   
         });
