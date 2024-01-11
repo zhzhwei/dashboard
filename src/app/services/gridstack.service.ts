@@ -37,6 +37,7 @@ export class GridStackService {
     currentMinorGridEl = this.minorGridEL.asObservable();
 
     public infoPosition = new Map();
+    public tileSerialMap = new Map();
 
     public newTile = {
         w: 4, h: 3,
