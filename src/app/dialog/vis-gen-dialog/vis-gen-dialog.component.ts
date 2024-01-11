@@ -14,6 +14,8 @@ import { SystemService } from 'src/app/services/system.service';
     styleUrls: ['./vis-gen-dialog.component.css']
 })
 export class VisGenDialogComponent implements OnInit {
+    //important object
+    public queryParameters: any = {};
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
         private rdfDataService: RdfDataService, private systemService: SystemService) { }
@@ -22,6 +24,21 @@ export class VisGenDialogComponent implements OnInit {
     public gridStack: GridStackComponent;
     public barResults: any;
     public jobName: string;
+    public searchTerm: any;
+
+    //checkboxes
+    public jobNameCheckbox: boolean = false;
+    public jobNameInput: string = '';
+    public createdBeforeCheckbox: boolean = false;
+    public createdBeforeDate: string = '';
+    public createdAfterCheckbox: boolean = false;
+    public createdAfterDate: string = '';
+    public applicantNumberCheckbox: boolean = false;
+    public applicantNumber: number = 1;
+    public fulltimeJob: boolean = false;
+    public limitedJob: boolean = false;
+    public listsSkillCheckbox: boolean = false;
+    public skill: string = '';
 
     public barQuery = this.rdfDataService.prefixes + `
         select ?title where { 
@@ -32,6 +49,68 @@ export class VisGenDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.barResults = [];
+        this.onSearch("")
+    }
+
+    updateQueryParameters() {
+    if (this.jobNameCheckbox && this.jobNameInput != undefined) {
+        if(this.jobNameInput.trim() !== '') {
+            this.queryParameters['jobName'] = this.jobNameInput.trim();
+        }
+        else {
+            delete this.queryParameters['jobName'];
+        }
+    } else {
+      // If checkbox is unchecked or input is empty, remove the key from queryParameters
+        delete this.queryParameters['jobName'];
+    }
+    
+    // Update queryParameters for createdBefore
+    if (this.createdBeforeCheckbox && this.createdBeforeDate) {
+        this.queryParameters['createdBefore'] = this.createdBeforeDate;
+    } else {
+        delete this.queryParameters['createdBefore'];
+    }
+
+    // Update queryParameters for createdAfter
+    if (this.createdAfterCheckbox && this.createdAfterDate) {
+        this.queryParameters['createdAfter'] = this.createdAfterDate;
+    } else {
+        delete this.queryParameters['createdAfter'];
+    }
+    
+    // Update queryParameters for applicantNumber
+    if (this.applicantNumberCheckbox && this.applicantNumber !== undefined) {
+        this.queryParameters['applicantNumber'] = this.applicantNumber;
+    } else {
+        delete this.queryParameters['applicantNumber'];
+    }
+    
+    // fulltimeJob and limitedJob
+    if (this.fulltimeJob) {
+        this.queryParameters['fulltimeJob'] = true;
+    } else {
+        delete this.queryParameters['fulltimeJob'];
+    }
+    if (this.limitedJob) {
+        this.queryParameters['limitedJob'] = true;
+    } else {
+        delete this.queryParameters['limitedJob'];
+    }
+
+    // Update queryParameters for skill
+    if (this.listsSkillCheckbox  && this.skill != undefined) {
+        if(this.skill.trim() !== '') {
+            this.queryParameters['skill'] = this.skill.trim();
+        }
+        else {
+            delete this.queryParameters['skill'];
+        }
+    } else {
+        delete this.queryParameters['skill'];
+    }
+
+    console.log('Updated queryParameters:', this.queryParameters);
     }
 
     onSearch(jobName: string) {
