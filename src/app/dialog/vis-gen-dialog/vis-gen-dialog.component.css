@@ -98,3 +98,11 @@ th:last-child {
 .data_select_input input[type="number"] {
     width: 80px;
 }
+
+.data_select_input select {
+    vertical-align: top;
+    margin-top: 2px;
+    margin-left: 10px;
+    height: 34px;
+    padding: 1px 2px;
+}

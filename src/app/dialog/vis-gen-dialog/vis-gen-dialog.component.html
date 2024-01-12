@@ -26,26 +26,36 @@
                     <div class="data_select_input">
                         <input type="checkbox" id="applicantNumberCheckbox" [(ngModel)]="applicantNumberCheckbox" (change)="updateQueryParameters()" />
                         <label for="applicantNumberCheckbox">At least</label>
-                        <input type="number" [(ngModel)]="applicantNumber" [disabled]="!applicantNumberCheckbox" (input)="updateQueryParameters()" min="1"/>
-                        <label>applicants</label>
+                        <input type="number" [(ngModel)]="applicantNumber" [disabled]="!applicantNumberCheckbox" (input)="updateQueryParameters()" min="1" />
+                        <label>applicant(s)</label>
                     </div>
                     <div class="data_select_input">
-                        <input type="checkbox" class="data_select_input" id="fulltimeJobCheckbox" [(ngModel)]="fulltimeJob" (change)="updateQueryParameters()"  />
-                        <label for="fulltimeJobCheckbox">For a fulltime job</label>
+                        <input type="checkbox" id="fulltimeJobCheckbox" [(ngModel)]="fulltimeJobCheckbox" (change)="updateQueryParameters()" /> 
+                        <label for="fulltimeJobCheckbox">For a</label>
+                        <select [(ngModel)]="fulltimeJob" [disabled]="!fulltimeJobCheckbox" (change)="updateQueryParameters()">
+                            <option value="true">fulltime</option>
+                            <option value="false">parttime</option>
+                        </select>
+                        <label> job</label>
                     </div>
                     <div class="data_select_input">
-                        <input type="checkbox" class="data_select_input" id="limitedJobCheckbox" [(ngModel)]="limitedJob" (change)="updateQueryParameters()"  />
-                        <label for="limitedJobCheckbox">For a limited job</label>
+                        <input type="checkbox" id="limitedJobCheckbox" [(ngModel)]="limitedJobCheckbox" (change)="updateQueryParameters()" />
+                        <label for="limitedJobCheckbox">For a</label>
+                        <select [(ngModel)]="limitedJob" [disabled]="!limitedJobCheckbox" (change)="updateQueryParameters()">
+                            <option value="true">limited</option>
+                            <option value="false">unlimited</option>
+                        </select>
+                        <label> job</label>
                     </div>
                     <div class="data_select_input">
-                        <input type="checkbox" id="listsSkillCheckbox" [(ngModel)]="listsSkillCheckbox" (change)="updateQueryParameters()"> <label for="listsSkillCheckbox">Lists skill</label>
-                        <input type="text" [(ngModel)]="skill" [disabled]="!listsSkillCheckbox" (input)="updateQueryParameters()" placeholder="Enter skill">
+                        <input type="checkbox" id="listsSkillCheckbox" [(ngModel)]="listsSkillCheckbox" (change)="updateQueryParameters()" /> <label for="listsSkillCheckbox">Lists skill</label>
+                        <input type="text" [(ngModel)]="skill" [disabled]="!listsSkillCheckbox" (input)="updateQueryParameters()" placeholder="Enter skill" />
                     </div>
-                    <br>
+                    <br />
 
                     <div class="row">
                         <div class="search-container">
-                            <button id="preview button" (click)="onSearch(searchTerm)">Preview</button>
+                            <button id="preview button" (click)="onSearch()">Preview</button>
                             <!-- preview button to not absolutely spam the GraphDB with queries -->
                             <!-- <input
                                 [(ngModel)]="searchTerm"

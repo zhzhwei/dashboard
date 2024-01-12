@@ -35,8 +35,10 @@ export class VisGenDialogComponent implements OnInit {
     public createdAfterDate: string = '';
     public applicantNumberCheckbox: boolean = false;
     public applicantNumber: number = 1;
-    public fulltimeJob: boolean = false;
-    public limitedJob: boolean = false;
+    public fulltimeJobCheckbox = false;
+    public fulltimeJob: boolean = true;
+    public limitedJobCheckbox = false;
+    public limitedJob: boolean = true;
     public listsSkillCheckbox: boolean = false;
     public skill: string = '';
 
@@ -49,7 +51,7 @@ export class VisGenDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.barResults = [];
-        this.onSearch("")
+        this.onSearch()
     }
 
     updateQueryParameters() {
@@ -87,13 +89,14 @@ export class VisGenDialogComponent implements OnInit {
     }
     
     // fulltimeJob and limitedJob
-    if (this.fulltimeJob) {
-        this.queryParameters['fulltimeJob'] = true;
+    if (this.fulltimeJobCheckbox && this.fulltimeJob !== undefined) {
+        this.queryParameters['fulltimeJob'] = JSON.parse(this.fulltimeJob.toString());
     } else {
         delete this.queryParameters['fulltimeJob'];
     }
-    if (this.limitedJob) {
-        this.queryParameters['limitedJob'] = true;
+
+    if (this.limitedJobCheckbox && this.limitedJob !== undefined) {
+        this.queryParameters['limitedJob'] = JSON.parse(this.limitedJob.toString());
     } else {
         delete this.queryParameters['limitedJob'];
     }
@@ -113,7 +116,57 @@ export class VisGenDialogComponent implements OnInit {
     console.log('Updated queryParameters:', this.queryParameters);
     }
 
-    onSearch(jobName: string) {
+    generateQuery(): string {
+    let query = `SELECT ?title WHERE {
+        ?s rdf:type edm:JobPosting.
+        ?s edm:title ?title.`;
+
+    // Add statements based on queryParameters
+    if (this.queryParameters['jobName']) {
+        query += `
+        FILTER contains(?title, "${this.queryParameters['jobName']}").`;
+    }
+
+    if(this.queryParameters["createdBefore"]) {
+        query += `
+        ?s edm:dateCreated ?created.
+        FILTER (xsd:dateTime("${this.queryParameters['createdBefore']}T00:00:00Z") < xsd:dateTime(?created)).`;
+    }
+
+    if(this.queryParameters["createdAfter"]) {
+        query += `
+        ?s edm:dateCreated ?created.
+        FILTER (xsd:dateTime(?created) < xsd:dateTime("${this.queryParameters['createdAfter']}T00:00:00Z")).`;
+    }
+
+    //applicants
+
+    if (this.queryParameters.hasOwnProperty('fulltimeJob')) {
+        query += `
+        ?s mp:isFulltimeJob "${this.queryParameters["fulltimeJob"]}"^^xsd:boolean.`;
+    }
+
+    if (this.queryParameters.hasOwnProperty('limitedJob')) {
+        query += `
+        ?s mp:isLimitedJob "${this.queryParameters["limitedJob"]}"^^xsd:boolean.`;
+    }
+
+    if (this.queryParameters['skill']) {
+        query += `
+        ?s edm:hasSkill ?skill.
+		?skill edm:textField "${this.queryParameters['skill']}"@de`;  // doing this over the textfield, since the data:... value doesn't correlate to the skill name for some reason
+    }
+
+    // Close the query
+    query += `}`;
+    console.log(query)
+
+    return query;
+    }
+
+    onSearch() {
+        let query = this.generateQuery()
+        let jobName = ''
         if (jobName === '') {
             this.rdfDataService.getQueryResults(this.barQuery).then(data => {
                 this.barResults = data.results.bindings.map((item) => {
