@@ -71,6 +71,7 @@ export class GridStackComponent implements OnInit {
 
         this.gridService.currentMinorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
+                this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
                 this.minorInitImage = true;
             }
@@ -179,29 +180,30 @@ export class GridStackComponent implements OnInit {
                 'disfavor': () => {
                     if (serial.includes('major')) {
                         tileSerial = serial;
-                        contEl = document.getElementById(tileSerial);
                         var tempTileSerial = this.gridService.tileSerialMap.get(serial);
                         console.log(action, tempTileSerial);
+                        this.chartService.removePersistence(tempTileSerial);
+                        this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                         if (this.minorGridEl.style.display === 'block') {
+                            contEl = document.getElementById(tileSerial);
                             let element = document.getElementById(tempTileSerial);
                             let gridItemElement = element.closest('.grid-stack-item');
                             this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                         }
-                        this.chartService.removePersistence(tempTileSerial);
-                        this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                         if (this.minorGrid.getGridItems().length === 0) {
                             this.gridService.minorEmpty.next(true);
                         }
                     } else {
                         tileSerial = 'major-dash-bar-1';
                         contEl = document.getElementById(tileSerial);
+                        dataSource = this.dataSources.get(tileSerial);
+                        this.chartService.removePersistence(serial);
+                        this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                         if (this.minorGridEl.style.display === 'block') {
                             let element = document.getElementById(serial);
                             let gridItemElement = element.closest('.grid-stack-item');
                             this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                         }
-                        this.chartService.removePersistence(serial);
-                        this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                         if (this.minorGrid.getGridItems().length === 0) {
                             this.gridService.minorEmpty.next(true);
                         }
@@ -217,25 +219,20 @@ export class GridStackComponent implements OnInit {
 
             };
 
-            // Call the corresponding function
             if (chartActions[action]) {
                 chartActions[action]();
             }
 
             if (action === 'favor') {
                 if (this.minorGridEl.style.display === 'block') {
-                    // Update the dataSource for this contEl
                     this.dataSources.set(tileSerial, dataSource);
-                    // Stop observing the old contEl
                     if (this.resizeObservers.has(tileSerial)) {
                         this.resizeObservers.get(tileSerial).disconnect();
                     }
-                    // Create a new ResizeObserver and start observing the new contEl
                     var resizeObserver = new ResizeObserver(entries => {
-                        var latestAction = this.chartService.chartAction.value.action;
-                        // console.log('latestAction', latestAction);
+                        var latestAction = this.chartService.chartAction.value.action; // within the callback, this.chartService.chartAction.value is the latest value
+                        console.log(action, latestAction, tileSerial);
                         if (latestAction != 'remove' && latestAction != 'disfavor') {
-                            // console.log(latestAction);
                             var latestDataSource = this.dataSources.get(tileSerial);
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                         }
@@ -244,35 +241,29 @@ export class GridStackComponent implements OnInit {
                     this.resizeObservers.set(tileSerial, resizeObserver);
                 }
             } else if (action === 'disfavor') {
-                // Update the dataSource for this contEl
-                this.dataSources.set(tileSerial, dataSource);
-                // Stop observing the old contEl
-                if (this.resizeObservers.has(tileSerial)) {
-                    this.resizeObservers.get(tileSerial).disconnect();
+                if (this.minorGridEl.style.display === 'block') {
+                    this.dataSources.set(tileSerial, dataSource);
+                    if (this.resizeObservers.has(tileSerial)) {
+                        this.resizeObservers.get(tileSerial).disconnect();
+                    }
+                    var resizeObserver = new ResizeObserver(entries => {
+                        var latestAction = this.chartService.chartAction.value.action;
+                        console.log(action, latestAction, tileSerial);
+                        var latestDataSource = this.dataSources.get(tileSerial);
+                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
+                    });
+                    resizeObserver.observe(contEl);
+                    this.resizeObservers.set(tileSerial, resizeObserver);
                 }
-                // Create a new ResizeObserver and start observing the new contEl
-                var resizeObserver = new ResizeObserver(entries => {
-                    var latestAction = this.chartService.chartAction.value.action;
-                    // console.log('latestAction', latestAction);
-                    // console.log(latestAction);
-                    var latestDataSource = this.dataSources.get(tileSerial);
-                    chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
-                });
-                resizeObserver.observe(contEl);
-                this.resizeObservers.set(tileSerial, resizeObserver);
             } else if (action != 'remove') {
-                // Update the dataSource for this contEl
                 this.dataSources.set(tileSerial, dataSource);
-                // Stop observing the old contEl
                 if (this.resizeObservers.has(tileSerial)) {
                     this.resizeObservers.get(tileSerial).disconnect();
                 }
-                // Create a new ResizeObserver and start observing the new contEl
                 var resizeObserver = new ResizeObserver(entries => {
                     var latestAction = this.chartService.chartAction.value.action;
-                    // console.log('latestAction', latestAction);
+                    console.log(action, latestAction, tileSerial);
                     if (latestAction != 'remove') {
-                        // console.log(latestAction);
                         var latestDataSource = this.dataSources.get(tileSerial);
                         chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                     }
@@ -301,7 +292,7 @@ export class GridStackComponent implements OnInit {
                     }
                 });
                 if (this.minorInitImage) {
-                    this.minorGrid.addWidget(this.gridService.minorInitContent);
+                    this.gridService.minorEmpty.next(true);
                 } else {
                     this.chartService.loadPersistence('minor');
                 }

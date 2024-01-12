@@ -100,9 +100,6 @@ export class TitleIconService {
         svg.select('foreignObject.heart')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 70)
-        //     .style('color', 'rgb(0, 0, 0)')
-        
-        // console.log(svg.select('foreignObject.heart').style('color'))
 
         svg.select('foreignObject.trash')
             .attr('x', barEL.clientWidth - 36)

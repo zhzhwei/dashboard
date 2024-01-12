@@ -185,7 +185,7 @@ export class BarChartComponent implements OnInit {
             var tempTileSerial: string;
             if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
-                console.log(tileSerial);  
+                // console.log(tileSerial);  
                 // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  
                 tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
