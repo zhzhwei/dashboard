@@ -117,7 +117,7 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     generateQuery(): string {
-    let query = `SELECT ?title WHERE {
+    let query = this.rdfDataService.prefixes + `SELECT ?title WHERE {
         ?s rdf:type edm:JobPosting.
         ?s edm:title ?title.`;
 
@@ -165,26 +165,19 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     onSearch() {
-        let query = this.generateQuery()
-        let jobName = ''
-        if (jobName === '') {
-            this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-                this.barResults = data.results.bindings.map((item) => {
-                    return item.title.value;
-                });
-            });
-        } else {
-            this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-                this.barResults = data.results.bindings.map((item) => {
-                    return item.title.value;
-                }).filter((item) => {
-                    return item.toLowerCase().includes(jobName.toLowerCase());
-                });
-            });
-        }
-        if (this.chartType === 'Bar Chart' || this.chartType === 'Pie Chart') {
-            this.jobName = jobName;
-        }
+    let query = this.generateQuery()
+    this.rdfDataService.getQueryResults(query).then(data => {
+        this.barResults = data.results.bindings.map((item) => {
+            return item.title.value;
+        });
+    });
+        // this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+        //     this.barResults = data.results.bindings.map((item) => {
+        //         return item.title.value;
+        //     }).filter((item) => {
+        //         return item.toLowerCase().includes(jobName.toLowerCase());
+        //     });
+        // });
     }
 
     chartTypeSelect(event: any) {
