@@ -71,6 +71,7 @@ export class GridStackComponent implements OnInit {
 
         this.gridService.currentMinorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
+                console.log('minorGrid is empty');
                 this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
                 this.minorInitImage = true;
@@ -190,7 +191,14 @@ export class GridStackComponent implements OnInit {
                             let gridItemElement = element.closest('.grid-stack-item');
                             this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                         }
-                        if (this.minorGrid.getGridItems().length === 0) {
+                        let keys = Object.keys(localStorage);
+                        keys.forEach(key => {
+                            if (key.includes('minor')) {
+                                this.minorInitImage = false;
+                            }
+                        });
+                        if (this.minorInitImage || this.minorGrid.getGridItems().length === 0) {
+                            // console.log('minorGrid is empty');
                             this.gridService.minorEmpty.next(true);
                         }
                     } else {
@@ -204,7 +212,14 @@ export class GridStackComponent implements OnInit {
                             let gridItemElement = element.closest('.grid-stack-item');
                             this.minorGrid.removeWidget(gridItemElement as GridStackElement);
                         }
-                        if (this.minorGrid.getGridItems().length === 0) {
+                        let keys = Object.keys(localStorage);
+                        keys.forEach(key => {
+                            if (key.includes('minor')) {
+                                this.minorInitImage = false;
+                            }
+                        });
+                        if (this.minorInitImage || this.minorGrid.getGridItems().length === 0) {
+                            // console.log('minorGrid is empty');
                             this.gridService.minorEmpty.next(true);
                         }
                     }
@@ -231,7 +246,7 @@ export class GridStackComponent implements OnInit {
                     }
                     var resizeObserver = new ResizeObserver(entries => {
                         var latestAction = this.chartService.chartAction.value.action; // within the callback, this.chartService.chartAction.value is the latest value
-                        console.log(action, latestAction, tileSerial);
+                        // console.log(action, latestAction, tileSerial);
                         if (latestAction != 'remove' && latestAction != 'disfavor') {
                             var latestDataSource = this.dataSources.get(tileSerial);
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
@@ -248,7 +263,7 @@ export class GridStackComponent implements OnInit {
                     }
                     var resizeObserver = new ResizeObserver(entries => {
                         var latestAction = this.chartService.chartAction.value.action;
-                        console.log(action, latestAction, tileSerial);
+                        // console.log(action, latestAction, tileSerial);
                         var latestDataSource = this.dataSources.get(tileSerial);
                         chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                     });
@@ -262,8 +277,8 @@ export class GridStackComponent implements OnInit {
                 }
                 var resizeObserver = new ResizeObserver(entries => {
                     var latestAction = this.chartService.chartAction.value.action;
-                    console.log(action, latestAction, tileSerial);
-                    if (latestAction != 'remove') {
+                    // console.log(action, latestAction, tileSerial);
+                    if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                     }
@@ -294,6 +309,7 @@ export class GridStackComponent implements OnInit {
                 if (this.minorInitImage) {
                     this.gridService.minorEmpty.next(true);
                 } else {
+                    // console.log('minorGrid is not empty');
                     this.chartService.loadPersistence('minor');
                 }
             } else {

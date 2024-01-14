@@ -186,8 +186,9 @@ export class BarChartComponent implements OnInit {
             if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
                 // console.log(tileSerial);  
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  
+                // self.chartService.removePersistence(tileSerial);
                 tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
                 self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
@@ -195,6 +196,8 @@ export class BarChartComponent implements OnInit {
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');
+                // self.chartService.removePersistence(tileSerial);
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource); 
