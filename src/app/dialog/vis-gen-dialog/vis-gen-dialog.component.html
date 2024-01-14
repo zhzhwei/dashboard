@@ -82,7 +82,10 @@
                                 </tr>
                                 <tr *ngFor="let result of barResults; let i = index">
                                     <td>{{ i + 1 }}</td>
-                                    <td>{{ result }}</td>
+                                    <td>
+                                        {{ result.title }}
+                                        <a href="{{ result.link }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                                    </td>
                                 </tr>
                             </table>
                         </div>

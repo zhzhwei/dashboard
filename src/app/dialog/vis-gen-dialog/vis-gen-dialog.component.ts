@@ -117,7 +117,7 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     generateQuery(): string {
-    let query = this.rdfDataService.prefixes + `SELECT ?title WHERE {
+    let query = this.rdfDataService.prefixes + `SELECT ?s ?title WHERE {
         ?s rdf:type edm:JobPosting.
         ?s edm:title ?title.`;
 
@@ -168,7 +168,9 @@ export class VisGenDialogComponent implements OnInit {
     let query = this.generateQuery()
     this.rdfDataService.getQueryResults(query).then(data => {
         this.barResults = data.results.bindings.map((item) => {
-            return item.title.value;
+            let linkParts = item.s.value.split("/")
+            let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1]
+            return {"title": item.title.value, "link": link};
         });
     });
         // this.rdfDataService.getQueryResults(this.barQuery).then(data => {
