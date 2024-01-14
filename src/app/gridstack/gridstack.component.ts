@@ -71,7 +71,7 @@ export class GridStackComponent implements OnInit {
 
         this.gridService.currentMinorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
-                console.log('minorGrid is empty');
+                // console.log('minorGrid is empty');
                 this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
                 this.minorInitImage = true;
@@ -202,9 +202,23 @@ export class GridStackComponent implements OnInit {
                             this.gridService.minorEmpty.next(true);
                         }
                     } else {
-                        tileSerial = 'major-dash-bar-1';
-                        contEl = document.getElementById(tileSerial);
-                        dataSource = this.dataSources.get(tileSerial);
+                        let serialFound;
+                        for (let [key, value] of this.gridService.tileSerialMap.entries()) {
+                            if (value === serial) {
+                                serialFound = key;
+                                break;
+                            }
+                        }
+                        if (serialFound) {
+                            console.log(serialFound);
+                            tileSerial = serialFound;
+                            contEl = document.getElementById(tileSerial);
+                            dataSource = this.dataSources.get(tileSerial);
+                        } else {
+                            // tileSerial = 'major-dash-bar-2';
+                            // contEl = document.getElementById(tileSerial);
+                            // dataSource = this.dataSources.get(tileSerial);
+                        }
                         this.chartService.removePersistence(serial);
                         this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
                         if (this.minorGridEl.style.display === 'block') {
