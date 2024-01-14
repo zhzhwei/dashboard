@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { GridStackComponent } from '../../gridstack/gridstack.component';
 
 import { ChartService } from '../../services/chart.service';
@@ -18,7 +19,7 @@ export class VisGenDialogComponent implements OnInit {
     public queryParameters: any = {};
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
-        private rdfDataService: RdfDataService, private systemService: SystemService) { }
+        private rdfDataService: RdfDataService, private systemService: SystemService, private http: HttpClient) { }
 
     public chartType: string;
     public gridStack: GridStackComponent;
@@ -42,6 +43,8 @@ export class VisGenDialogComponent implements OnInit {
     public listsSkillCheckbox: boolean = false;
     public skill: string = '';
 
+    public allSuggestions: string[] = [];
+
     public barQuery = this.rdfDataService.prefixes + `
         select ?title where { 
             ?s rdf:type edm:JobPosting.
@@ -52,6 +55,10 @@ export class VisGenDialogComponent implements OnInit {
     ngOnInit(): void {
         this.barResults = [];
         this.onSearch()
+        this.http.get('assets/job_name_suggestions.txt', { responseType: 'text' }).subscribe(data => {
+        // Split the content into an array of suggestions (assuming one suggestion per line)
+            this.allSuggestions = data.split('\n').map(suggestion => suggestion.trim());
+    });
     }
 
     updateQueryParameters() {
