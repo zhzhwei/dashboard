@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GridStackComponent } from '../../gridstack/gridstack.component';
 
@@ -44,6 +44,9 @@ export class VisGenDialogComponent implements OnInit {
     public skill: string = '';
 
     public allSuggestions: string[] = [];
+    public selectProperties: string[] = [];
+
+    @ViewChildren('propertyCheckbox') propertyCheckboxes!: QueryList<ElementRef<HTMLInputElement>>;
 
     public barQuery = this.rdfDataService.prefixes + `
         select ?title where { 
@@ -59,6 +62,10 @@ export class VisGenDialogComponent implements OnInit {
         // Split the content into an array of suggestions (assuming one suggestion per line)
             this.allSuggestions = data.split('\n').map(suggestion => suggestion.trim());
     });
+    }
+
+    ngAfterViewInit(): void {
+        this.updateProperties()
     }
 
     updateQueryParameters() {
@@ -190,7 +197,8 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     chartTypeSelect(event: any) {
-        // console.log(event.target);
+        console.log(event.target.id);
+        this.chartType = event.target.id
         d3.select(event.target)
             .style('border', '3px solid gray');
         d3.selectAll('.img-button')
@@ -198,12 +206,25 @@ export class VisGenDialogComponent implements OnInit {
                 return this !== event.target;
             })
             .style('border', 'none');
-        this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-            this.barResults = data.results.bindings.map((item) => {
-                return item.title.value;
-            });
+        // this.rdfDataService.getQueryResults(this.barQuery).then(data => {
+        //     this.barResults = data.results.bindings.map((item) => {
+        //         return item.title.value;
+        //     });
             // console.log(this.barResults);
-        });
+        // });
+        const creationDateCheckbox = this.propertyCheckboxes.find(checkbox => checkbox.nativeElement.id === 'creationDateProperty');
+        if (creationDateCheckbox) {
+            creationDateCheckbox.nativeElement.checked = this.chartType === 'line_chart';
+            creationDateCheckbox.nativeElement.disabled = this.chartType === 'line_chart';
+        }
+    }
+
+    updateProperties() {
+    this.selectProperties = this.propertyCheckboxes
+        .filter(checkbox => checkbox.nativeElement.checked)
+        .map(checkbox => checkbox.nativeElement.name);
+
+    console.log('Selected Properties:', this.selectProperties);
     }
 
     public forwardToEditor() {

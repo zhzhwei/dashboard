@@ -11,7 +11,7 @@
                     <div class="data_select_input">
                         <input type="checkbox" id="jobNameCheckbox" [(ngModel)]="jobNameCheckbox" (change)="updateQueryParameters()" />
                         <label for="jobNameCheckbox">Jobname is</label>
-                        <input type="text" [attr.list]="jobNameInput ? 'jobNameSuggestions' : null" [(ngModel)]="jobNameInput" [disabled]="!jobNameCheckbox" (input)="updateQueryParameters()">
+                        <input type="text" [attr.list]="jobNameInput ? 'jobNameSuggestions' : null" [(ngModel)]="jobNameInput" [disabled]="!jobNameCheckbox" (input)="updateQueryParameters()" />
                         <datalist id="jobNameSuggestions">
                             <option *ngFor="let suggestion of allSuggestions" [value]="suggestion"></option>
                         </datalist>
@@ -33,7 +33,7 @@
                         <label>applicant(s)</label>
                     </div>
                     <div class="data_select_input">
-                        <input type="checkbox" id="fulltimeJobCheckbox" [(ngModel)]="fulltimeJobCheckbox" (change)="updateQueryParameters()" /> 
+                        <input type="checkbox" id="fulltimeJobCheckbox" [(ngModel)]="fulltimeJobCheckbox" (change)="updateQueryParameters()" />
                         <label for="fulltimeJobCheckbox">For a</label>
                         <select [(ngModel)]="fulltimeJob" [disabled]="!fulltimeJobCheckbox" (change)="updateQueryParameters()">
                             <option value="true">fulltime</option>
@@ -100,20 +100,51 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 text-center">
-                            <img src="assets/line-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
+                            <img src="assets/line-chart.png" id="line_chart" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
                             <p>Line Chart</p>
                         </div>
                         <div class="col-md-3 text-center">
-                            <img src="assets/bar-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
+                            <img src="assets/bar-chart.png" id="bar_chart" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
                             <p>Bar Chart</p>
                         </div>
                         <div class="col-md-3 text-center">
-                            <img src="assets/pie-chart.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
+                            <img src="assets/pie-chart.png" id="pie_chart" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
                             <p>Pie Chart</p>
                         </div>
                         <div class="col-md-3 text-center">
-                            <img src="assets/star-plot.png" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
+                            <img src="assets/star-plot.png" id="star_plot" (click)="chartTypeSelect($event)" class="img-button" width="100" height="100" />
                             <p>Star Plot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h5>3. Select Properties to visualize</h5>
+                <div class="card-body">
+                    <div class="row property-selection">
+                        <div class="data_select_input">
+                            <input type="checkbox" id="jobNameProperty" name="title" #propertyCheckbox (change)="updateProperties()" checked disabled />
+                            <label for="jobNameProperty">Jobname</label>
+                        </div>
+                        <div class="data_select_input">
+                            <input type="checkbox" id="creationDateProperty" name="created" #propertyCheckbox (change)="updateProperties()" />
+                            <label for="creationDateProperty">Creation date</label>
+                        </div>
+                        <div class="data_select_input">
+                            <input type="checkbox" id="skillProperty" name="skillName" #propertyCheckbox (change)="updateProperties()" />
+                            <label for="skillProperty">Skill</label>
+                        </div>
+                        <div class="data_select_input">
+                            <input type="checkbox" id="fulltimeProperty" name="fulltime" #propertyCheckbox (change)="updateProperties()" />
+                            <label for="fulltimeProperty">Fulltime job</label>
+                        </div>
+                        <div class="data_select_input">
+                            <input type="checkbox" id="limitedProperty" name="limited" #propertyCheckbox (change)="updateProperties()" />
+                            <label for="limitedProperty">Limited job</label>
+                        </div>
+                        <div class="data_select_input">
+                            <input type="checkbox" id="applicantNumberProperty" name="applicants" #propertyCheckbox (change)="updateProperties()" />
+                            <label for="applicantNumberProperty">Number of applicants</label>
                         </div>
                     </div>
                 </div>
