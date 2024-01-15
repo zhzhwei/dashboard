@@ -37,7 +37,11 @@ export class DialogService {
         if (message === 'Are you sure to delete this widget?') {
             dialogRef.afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
-                    this.chartService.chartAction.next({ action: action, serial: tileSerial });
+                    this.chartService.chartAction.next({
+                        action: action, serial: tileSerial,
+                        queryParameters: undefined,
+                        selectProperties: []
+                    });
                     this.chartService.chartType.next('remove');
                     this.chartService.dataSource.next(dataSource);
                 }
@@ -92,7 +96,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.chartAction.next({ action: action, serial: tileSerial, jobName: jobName });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, queryParameters: queryParameters, selectProperties: selectProperties });
     }
 
     openDoughnutChartEditor() {
