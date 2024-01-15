@@ -180,6 +180,7 @@ export class GridStackComponent implements OnInit {
                 },
                 'disfavor': () => {
                     if (serial.includes('major')) {
+                        this.gridService.tileSerialFavor.delete(serial);
                         tileSerial = serial;
                         var tempTileSerial = this.gridService.tileSerialMap.get(serial);
                         console.log(action, tempTileSerial);
@@ -202,7 +203,7 @@ export class GridStackComponent implements OnInit {
                             this.gridService.minorEmpty.next(true);
                         }
                     } else {
-                        let serialFound;
+                        let serialFound: string;
                         for (let [key, value] of this.gridService.tileSerialMap.entries()) {
                             if (value === serial) {
                                 serialFound = key;
@@ -212,6 +213,7 @@ export class GridStackComponent implements OnInit {
                         if (serialFound) {
                             console.log(serialFound);
                             tileSerial = serialFound;
+                            this.gridService.tileSerialFavor.delete(tileSerial);
                             contEl = document.getElementById(tileSerial);
                             dataSource = this.dataSources.get(tileSerial);
                         } else {
@@ -252,7 +254,64 @@ export class GridStackComponent implements OnInit {
                 chartActions[action]();
             }
 
-            if (action === 'favor') {
+            if ( action === 'create') {
+                this.gridService.tileSerialFavor.delete(tileSerial);
+                this.dataSources.set(tileSerial, dataSource);
+                if (this.resizeObservers.has(tileSerial)) {
+                    this.resizeObservers.get(tileSerial).disconnect();
+                }
+                var resizeObserver = new ResizeObserver(entries => {
+                    var latestAction = this.chartService.chartAction.value.action;
+                    console.log(action, latestAction, tileSerial);
+                    var latestDataSource = this.dataSources.get(tileSerial);
+                    if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(255, 0, 0)');
+                    } else {    
+                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
+                    }
+                });
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(tileSerial, resizeObserver);
+            } else if (action === 'edit') {
+                this.gridService.tileSerialFavor.delete(tileSerial);
+                this.dataSources.set(tileSerial, dataSource);
+                if (this.resizeObservers.has(tileSerial)) {
+                    this.resizeObservers.get(tileSerial).disconnect();
+                }
+                var resizeObserver = new ResizeObserver(entries => {
+                    var latestAction = this.chartService.chartAction.value.action;
+                    console.log(action, latestAction, tileSerial);
+                    if (latestAction != 'remove' && latestAction != 'disfavor') {
+                        var latestDataSource = this.dataSources.get(tileSerial);
+                        if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(255, 0, 0)');
+                        } else {    
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
+                        }
+                    }
+                });
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(tileSerial, resizeObserver);
+            } else if (action === 'load') {
+                this.dataSources.set(tileSerial, dataSource);
+                if (this.resizeObservers.has(tileSerial)) {
+                    this.resizeObservers.get(tileSerial).disconnect();
+                }
+                var resizeObserver = new ResizeObserver(entries => {
+                    var latestAction = this.chartService.chartAction.value.action;
+                    console.log(action, latestAction, tileSerial);
+                    if (latestAction != 'remove' && latestAction != 'disfavor') {
+                        var latestDataSource = this.dataSources.get(tileSerial);
+                        if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(255, 0, 0)');
+                        } else {    
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
+                        }
+                    }
+                });
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(tileSerial, resizeObserver);
+            } else if (action === 'favor') {
                 if (this.minorGridEl.style.display === 'block') {
                     this.dataSources.set(tileSerial, dataSource);
                     if (this.resizeObservers.has(tileSerial)) {
@@ -260,8 +319,9 @@ export class GridStackComponent implements OnInit {
                     }
                     var resizeObserver = new ResizeObserver(entries => {
                         var latestAction = this.chartService.chartAction.value.action; // within the callback, this.chartService.chartAction.value is the latest value
-                        // console.log(action, latestAction, tileSerial);
+                        console.log(action, latestAction, tileSerial);
                         if (latestAction != 'remove' && latestAction != 'disfavor') {
+                            console.log('favor');
                             var latestDataSource = this.dataSources.get(tileSerial);
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                         }
@@ -277,30 +337,18 @@ export class GridStackComponent implements OnInit {
                     }
                     var resizeObserver = new ResizeObserver(entries => {
                         var latestAction = this.chartService.chartAction.value.action;
-                        // console.log(action, latestAction, tileSerial);
+                        console.log(action, latestAction, tileSerial);
                         var latestDataSource = this.dataSources.get(tileSerial);
-                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
+                        if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(255, 0, 0)');
+                        } else {    
+                            chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
+                        }
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(tileSerial, resizeObserver);
                 }
-            } else if (action != 'remove') {
-                this.dataSources.set(tileSerial, dataSource);
-                if (this.resizeObservers.has(tileSerial)) {
-                    this.resizeObservers.get(tileSerial).disconnect();
-                }
-                var resizeObserver = new ResizeObserver(entries => {
-                    var latestAction = this.chartService.chartAction.value.action;
-                    // console.log(action, latestAction, tileSerial);
-                    if (latestAction != 'remove' && latestAction != 'disfavor') {
-                        var latestDataSource = this.dataSources.get(tileSerial);
-                        chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
-                    }
-                });
-                resizeObserver.observe(contEl);
-                this.resizeObservers.set(tileSerial, resizeObserver);
             }
-
             this.chartService.chartType.next('');
             this.chartService.dataSource.next([]);
         });

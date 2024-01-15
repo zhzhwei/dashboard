@@ -46,7 +46,7 @@ export class PieChartComponent implements OnInit {
                 // this.addIcons(this.svg, pieEL, tileSerial, jobName, dataSource, pieLabel);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, pieEL, this.margin);
-                this.titleIconService.updateIcons(this.svg, pieEL);
+                // this.titleIconService.updateIcons(this.svg, pieEL);
             }
         } else {
             if (action === 'create' || action === 'load') {

@@ -45,7 +45,7 @@ export class BarChartComponent implements OnInit {
                 this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 95);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
-                this.titleIconService.updateIcons(this.svg, barEL);
+                this.titleIconService.updateIcons(this.svg, barEL, color);
             }
         } else {
             if (action === 'create' || action === 'load') {
@@ -185,7 +185,8 @@ export class BarChartComponent implements OnInit {
             var tempTileSerial: string;
             if (heart.style('color') === 'rgb(0, 0, 0)') {
                 heart.style('color', 'rgb(255, 0, 0)');
-                // console.log(tileSerial);  
+                console.log(tileSerial);  
+                self.gridService.tileSerialFavor.add(tileSerial);
                 // self.chartService.removePersistence(tileSerial);
                 tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  

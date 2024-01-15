@@ -38,6 +38,7 @@ export class GridStackService {
 
     public infoPosition = new Map();
     public tileSerialMap = new Map();
+    public tileSerialFavor = new Set();
 
     public newTile = {
         w: 4, h: 3,

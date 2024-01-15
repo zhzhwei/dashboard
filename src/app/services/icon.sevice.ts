@@ -88,7 +88,8 @@ export class TitleIconService {
             .attr('y', 20)
     }
 
-    public updateIcons(svg, barEL): void {
+    public updateIcons(svg, barEL, color): void {
+        // console.log(color)
         svg.select('foreignObject.pencil')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)
@@ -101,7 +102,7 @@ export class TitleIconService {
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 70)
             .select('i')
-            .style('color', 'rgb(0, 0, 0)')
+            .style('color', color)
 
         svg.select('foreignObject.trash')
             .attr('x', barEL.clientWidth - 36)
