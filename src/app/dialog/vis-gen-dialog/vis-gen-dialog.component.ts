@@ -23,7 +23,7 @@ export class VisGenDialogComponent implements OnInit {
 
     public chartType: string;
     public gridStack: GridStackComponent;
-    public barResults: any;
+    public previewResults: any;
     public jobName: string;
     public searchTerm: any;
 
@@ -44,7 +44,7 @@ export class VisGenDialogComponent implements OnInit {
     public skill: string = '';
 
     public allSuggestions: string[] = [];
-    public selectProperties: string[] = [];
+    public selectProperties: string[] = ["s"];
 
     @ViewChildren('propertyCheckbox') propertyCheckboxes!: QueryList<ElementRef<HTMLInputElement>>;
 
@@ -56,7 +56,7 @@ export class VisGenDialogComponent implements OnInit {
     `;
 
     ngOnInit(): void {
-        this.barResults = [];
+        this.previewResults = [];
         this.onSearch()
         this.http.get('assets/job_name_suggestions.txt', { responseType: 'text' }).subscribe(data => {
         // Split the content into an array of suggestions (assuming one suggestion per line)
@@ -179,9 +179,9 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     onSearch() {
-    let query = this.generateQuery()
-    this.rdfDataService.getQueryResults(query).then(data => {
-        this.barResults = data.results.bindings.map((item) => {
+    let previewQuery = this.generateQuery()
+    this.rdfDataService.getQueryResults(previewQuery).then(data => {
+        this.previewResults = data.results.bindings.map((item) => {
             let linkParts = item.s.value.split("/")
             let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1]
             return {"title": item.title.value, "link": link};
@@ -228,36 +228,33 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     public forwardToEditor() {
-        // console.log(this.chartType);
         this.chartService.chartType.next(this.chartType);
-        if (this.barResults.length > 0) {
-            if (this.systemService.jobNames.includes(this.jobName)) {
-                switch (this.chartType) {
-                    case 'Bar Chart':
-                        this.dialogService.openBarChartEditor('create', '', this.jobName, this.barResults.length, '');
-                        break;
-                    case 'Stacked Bar Chart':
-                        this.dialogService.openStackedBarChartEditor();
-                        break;
-                    case 'Pie Chart':
-                        this.dialogService.openPieChartEditor('create', '', this.jobName);
-                        break;
-                    case 'Doughnut Chart':
-                        this.dialogService.openDoughnutChartEditor();
-                        break;
-                    case 'Star Plot':
-                        this.dialogService.openStarPlotEditor();
-                        break;
-                    case 'Line Chart':
-                        this.dialogService.openLineChartEditor();
-                        break;
-                    default:
-                        console.log('Invalid Chart Type');
-                }
-            } else {
-                this.dialogService.openSnackBar('Please enter the complete job name (case-sensitive)', 'close');
+        if (this.previewResults.length > 0) {
+            switch (this.chartType) {
+                case 'bar_chart':
+                    this.dialogService.openBarChartEditor('create', '', this.queryParameters, this.selectProperties, '');
+                    break;
+                case 'Stacked Bar Chart':
+                    this.dialogService.openStackedBarChartEditor();
+                    break;
+                case 'pie_chart':
+                    this.dialogService.openPieChartEditor('create', '', this.queryParameters, this.selectProperties);
+                    break;
+                case 'Doughnut Chart':
+                    this.dialogService.openDoughnutChartEditor();
+                    break;
+                case 'star_plot':
+                    this.dialogService.openStarPlotEditor();
+                    break;
+                case 'line_chart':
+                    this.dialogService.openLineChartEditor();
+                    break;
+                default:
+                    console.log('Invalid Chart Type');
+                    this.dialogService.openSnackBar('Please choose a Visualization Type', 'close');
             }
+        } else {
+            this.dialogService.openSnackBar('No database entries to visualize', 'close');
         }
     }
-
 }

@@ -74,16 +74,16 @@
                                 "
                             /> -->
                             <p class="result-p">
-                                {{ barResults.length > 0 ? "Showing job titles from 1 to " + barResults.length : "No job title Found" }}
+                                {{ previewResults.length > 0 ? "Showing job titles from 1 to " + previewResults.length : "No job title Found" }}
                             </p>
                         </div>
-                        <div class="table-container" *ngIf="barResults.length > 0">
+                        <div class="table-container" *ngIf="previewResults.length > 0">
                             <table>
                                 <tr>
                                     <th>No.</th>
                                     <th>Job title</th>
                                 </tr>
-                                <tr *ngFor="let result of barResults; let i = index">
+                                <tr *ngFor="let result of previewResults; let i = index">
                                     <td>{{ i + 1 }}</td>
                                     <td>
                                         {{ result.title }}

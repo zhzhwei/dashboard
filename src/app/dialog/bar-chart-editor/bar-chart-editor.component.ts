@@ -22,8 +22,11 @@ export class BarChartEditorComponent implements OnInit {
     public titleQuery: string;
     public skillQuery: string;
     public skillQueries: string[];
-    public titleCount: number;
-    public jobName: string;
+    public queryParameters: any;
+    public selectProperties: String[];
+
+    jobName = "Foo";
+    titleCount = 42;
 
     private svg: any;
     private margin = 60;
@@ -34,8 +37,8 @@ export class BarChartEditorComponent implements OnInit {
     constructor(private rdfDataService: RdfDataService, private chartService:
         ChartService, private dialog: MatDialog, private systemService: SystemService) {
         this.chartService.currentChartAction.subscribe( chartAction => {
-            this.jobName = chartAction.jobName;
-            this.titleCount = chartAction.titleCount;
+            this.queryParameters = chartAction.queryParameters;
+            this.selectProperties = chartAction.selectProperties;
         });
     }
 
