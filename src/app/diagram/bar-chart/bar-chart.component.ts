@@ -53,7 +53,7 @@ export class BarChartComponent implements OnInit {
                 this.addHeart(this.svg, barEL, tileSerial, jobName, dataSource, titleCount, color);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
-                this.titleIconService.updateHeart(this.svg, barEL);
+                this.titleIconService.updateHeart(this.svg, barEL, color);
             }
         }
 

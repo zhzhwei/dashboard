@@ -82,10 +82,12 @@ export class TitleIconService {
             .attr('y', 20)
     }
 
-    public updateHeart(svg, barEL): void {
+    public updateHeart(svg, barEL, color): void {
         svg.select('foreignObject.heart')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)
+            .select('i')
+            .style('color', color)
     }
 
     public updateIcons(svg, barEL, color): void {
