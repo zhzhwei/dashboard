@@ -148,13 +148,13 @@ export class VisGenDialogComponent implements OnInit {
     if(this.queryParameters["createdBefore"]) {
         query += `
         ?s edm:dateCreated ?created.
-        FILTER (xsd:dateTime("${this.queryParameters['createdBefore']}T00:00:00Z") < xsd:dateTime(?created)).`;
+        FILTER (xsd:dateTime("${this.queryParameters['createdBefore']}T00:00:00Z") > xsd:dateTime(?created)).`;
     }
 
     if(this.queryParameters["createdAfter"]) {
         query += `
         ?s edm:dateCreated ?created.
-        FILTER (xsd:dateTime(?created) < xsd:dateTime("${this.queryParameters['createdAfter']}T00:00:00Z")).`;
+        FILTER (xsd:dateTime(?created) > xsd:dateTime("${this.queryParameters['createdAfter']}T00:00:00Z")).`;
     }
 
     //applicants
@@ -191,13 +191,6 @@ export class VisGenDialogComponent implements OnInit {
             return {"title": item.title.value, "link": link};
         });
     });
-        // this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-        //     this.barResults = data.results.bindings.map((item) => {
-        //         return item.title.value;
-        //     }).filter((item) => {
-        //         return item.toLowerCase().includes(jobName.toLowerCase());
-        //     });
-        // });
     }
 
     chartTypeSelect(event: any) {
@@ -212,12 +205,7 @@ export class VisGenDialogComponent implements OnInit {
                 return this !== event.target;
             })
             .style('border', 'none');
-        // this.rdfDataService.getQueryResults(this.barQuery).then(data => {
-        //     this.barResults = data.results.bindings.map((item) => {
-        //         return item.title.value;
-        //     });
-            // console.log(this.barResults);
-        // });
+
         const creationDateCheckbox = this.propertyCheckboxes.find(checkbox => checkbox.nativeElement.id === 'creationDateProperty');
         if (creationDateCheckbox) {
             creationDateCheckbox.nativeElement.checked = this.chartType === 'line_chart';
@@ -232,11 +220,10 @@ export class VisGenDialogComponent implements OnInit {
             case 'line_chart':
                 component = LineChartPreviewComponent;
                 break;
-            // Add cases for other buttons as needed
             default:
-              // Default content or error handling
-              // TODO
-                break;
+            // Default content or error handling
+            // TODO
+            break;
         }
         // Clear the existing content
         cardBody.innerHTML = '';
@@ -248,11 +235,9 @@ export class VisGenDialogComponent implements OnInit {
         // Type the component instance as any to avoid TypeScript errors
         const contentComponent: any = contentComponentRef.instance;
 
-        // Set the queryParameters property of the component instance
         contentComponent.queryParameters = this.queryParameters;
+        contentComponent.selectProperties = this.selectProperties;
         cardBody.appendChild(contentComponentRef.location.nativeElement);
-
-        // Add other logic as needed
     }
 
     updateProperties() {
