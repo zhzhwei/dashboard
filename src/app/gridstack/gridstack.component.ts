@@ -362,6 +362,20 @@ export class GridStackComponent implements OnInit {
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(tileSerial, resizeObserver);
+                    
+                    this.minorGrid.compact();
+                    
+                    // Start a batch update
+                    this.majorGrid.batchUpdate();
+
+                    // Move all grid items to the left
+                    for (let i = 0; i < this.majorGrid.engine.nodes.length; i++) {
+                        let node = this.majorGrid.engine.nodes[i];
+                        this.majorGrid.update(node.el, { x: 0, y: node.y });
+                    }
+
+                    // End the batch update
+                    this.majorGrid.commit();
                 }
             }
             this.chartService.chartType.next('');
