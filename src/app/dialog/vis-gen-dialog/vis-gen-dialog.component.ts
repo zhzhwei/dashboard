@@ -19,6 +19,8 @@ import { SystemService } from 'src/app/services/system.service';
 export class VisGenDialogComponent implements OnInit {
     //important object
     public queryParameters: any = {};
+    currentPreviewContent: any = undefined;
+    currentPreviewContentRef: any = undefined;
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
         private rdfDataService: RdfDataService, private systemService: SystemService, private http: HttpClient, 
@@ -231,12 +233,15 @@ export class VisGenDialogComponent implements OnInit {
         // Dynamically create the component and attach it to the DOM
         const factory = this.componentFactoryResolver.resolveComponentFactory(component);
         const contentComponentRef = factory.create(this.injector);
-
+        this.currentPreviewContentRef = contentComponentRef
+        
         // Type the component instance as any to avoid TypeScript errors
         const contentComponent: any = contentComponentRef.instance;
+        this.currentPreviewContent = contentComponent
 
         contentComponent.queryParameters = this.queryParameters;
         contentComponent.selectProperties = this.selectProperties;
+        contentComponentRef.changeDetectorRef.detectChanges();
         cardBody.appendChild(contentComponentRef.location.nativeElement);
     }
 
@@ -246,6 +251,10 @@ export class VisGenDialogComponent implements OnInit {
         .map(checkbox => checkbox.nativeElement.name);
 
     console.log('Selected Properties:', this.selectProperties);
+    if(this.currentPreviewContent !== undefined){
+        this.currentPreviewContent.selectProperties = this.selectProperties;
+        this.currentPreviewContentRef.changeDetectorRef.detectChanges();
+    }
     }
 
     public forwardToEditor() {

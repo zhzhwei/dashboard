@@ -6,18 +6,20 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./bar-chart-preview.component.css']
 })
 export class BarChartPreviewComponent implements OnInit {
-    @Input() queryParameters: any;
-    @Input() selectProperties: any;
+
+    @Input() queryParameters: Object;
+    @Input() selectProperties: string[];
 
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  constructor() {
+   }
+    ngOnInit(): void {
+    }
 
   logQueryParameters() {
     console.log('Query Parameters:', this.queryParameters);
     console.log('select properties (probably the more important ones):', this.selectProperties);
+    
   }
 
 }

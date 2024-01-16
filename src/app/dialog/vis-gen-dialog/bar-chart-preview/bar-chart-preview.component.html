@@ -4,9 +4,7 @@
 
 <img src="/assets/bar-chart-preview.png" alt="Bar Chart Preview Image" (click)="logQueryParameters()" />
 
-<select style="vertical-align: bottom">
-    <option value="" disabled selected>Select Option After Image</option>
-    <option value="optionA">title</option>
-    <option value="optionB">skill</option>
-    <option value="optionC">...</option>
+
+<select style="vertical-align: bottom">>
+      <option *ngFor="let property of selectProperties" [value]="property">{{ property }}</option>
 </select>
