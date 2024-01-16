@@ -12,6 +12,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { VisGenDialogComponent } from './vis-gen-dialog.component';
+import { BarChartPreviewComponent } from './bar-chart-preview/bar-chart-preview.component';
+import { LineChartPreviewComponent } from './line-chart-preview/line-chart-preview.component';
 
 @NgModule({
     imports: [
@@ -30,6 +32,8 @@ import { VisGenDialogComponent } from './vis-gen-dialog.component';
     ],
     declarations: [
         VisGenDialogComponent,
+        BarChartPreviewComponent,
+        LineChartPreviewComponent,
     ],
     // exports: [VisGenComponent]
 })

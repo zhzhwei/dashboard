@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, ComponentFactoryResolver, Injector } from '@angular/core';
+import { BarChartPreviewComponent } from './bar-chart-preview/bar-chart-preview.component';
+import { LineChartPreviewComponent } from './line-chart-preview/line-chart-preview.component';
 import { HttpClient } from '@angular/common/http';
 import { GridStackComponent } from '../../gridstack/gridstack.component';
 
@@ -19,7 +21,9 @@ export class VisGenDialogComponent implements OnInit {
     public queryParameters: any = {};
 
     constructor(private chartService: ChartService, private dialogService: DialogService, 
-        private rdfDataService: RdfDataService, private systemService: SystemService, private http: HttpClient) { }
+        private rdfDataService: RdfDataService, private systemService: SystemService, private http: HttpClient, 
+        private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector) { }
+
 
     public chartType: string;
     public gridStack: GridStackComponent;
@@ -199,6 +203,8 @@ export class VisGenDialogComponent implements OnInit {
     chartTypeSelect(event: any) {
         console.log(event.target.id);
         this.chartType = event.target.id
+        const cardBody = document.querySelector('.preview-content');
+
         d3.select(event.target)
             .style('border', '3px solid gray');
         d3.selectAll('.img-button')
@@ -217,6 +223,36 @@ export class VisGenDialogComponent implements OnInit {
             creationDateCheckbox.nativeElement.checked = this.chartType === 'line_chart';
             creationDateCheckbox.nativeElement.disabled = this.chartType === 'line_chart';
         }
+
+        let component;
+        switch (this.chartType) {
+            case 'bar_chart':
+                component = BarChartPreviewComponent;
+                break;
+            case 'line_chart':
+                component = LineChartPreviewComponent;
+                break;
+            // Add cases for other buttons as needed
+            default:
+              // Default content or error handling
+              // TODO
+                break;
+        }
+        // Clear the existing content
+        cardBody.innerHTML = '';
+
+        // Dynamically create the component and attach it to the DOM
+        const factory = this.componentFactoryResolver.resolveComponentFactory(component);
+        const contentComponentRef = factory.create(this.injector);
+
+        // Type the component instance as any to avoid TypeScript errors
+        const contentComponent: any = contentComponentRef.instance;
+
+        // Set the queryParameters property of the component instance
+        contentComponent.queryParameters = this.queryParameters;
+        cardBody.appendChild(contentComponentRef.location.nativeElement);
+
+        // Add other logic as needed
     }
 
     updateProperties() {
