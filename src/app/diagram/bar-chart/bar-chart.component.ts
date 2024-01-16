@@ -188,8 +188,8 @@ export class BarChartComponent implements OnInit {
                 console.log(tileSerial);  
                 self.gridService.tileSerialFavor.add(tileSerial);
                 // self.chartService.removePersistence(tileSerial);
-                tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  
+                tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
                 self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, jobName: jobName, titleCount: titleCount });
                 self.chartService.chartType.next('Bar Chart');
