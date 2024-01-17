@@ -173,13 +173,13 @@ export class VisGenDialogComponent implements OnInit {
         console.log(previewQuery);
         console.log("results go here lol");
 
-        // this.rdfDataService.getQueryResults(previewQuery).then(data => {
-        //     this.previewResults = data.results.bindings.map((item) => {
-        //         let linkParts = item.s.value.split("/")
-        //         let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1]
-        //         return {"title": item.title.value, "link": link};
-        //     });
-        // });
+        this.rdfDataService.getQueryResults(previewQuery).then(data => {
+            this.previewResults = data.results.bindings.map((item) => {
+                let linkParts = item.s.value.split("/")
+                let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1]
+                return {"title": item.title.value, "link": link};
+            });
+        });
     }
 
     chartTypeSelect(event: any) {

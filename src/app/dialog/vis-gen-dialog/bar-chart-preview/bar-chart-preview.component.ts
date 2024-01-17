@@ -13,6 +13,18 @@ export class BarChartPreviewComponent implements OnInit {
 
     public xProperty;
 
+    // skills require extra information to be counted
+    public skillQueryStart = `SELECT DISTINCT ?skillName
+                            WHERE {
+                            ?s rdf:type edm:JobPosting.
+                            ?s edm:title ?title.`;
+
+    public skillQueryEnd = `?s edm:hasSkill ?skill.
+                            ?skill edm:textField ?skillName.
+                            FILTER (lang(?skillName) = "de").
+                        }
+                        ORDER BY ?skillName`;
+
     public queryMappings: { [key: string]: string } = {
         jobName: `FILTER contains(?title, "$value$").`,
         createdBefore: `?s edm:dateCreated ?created. FILTER (xsd:dateTime("$value$T00:00:00Z") > xsd:dateTime(?created)).`,
@@ -29,6 +41,17 @@ export class BarChartPreviewComponent implements OnInit {
         console.log("Query Parameters:", this.queryParameters);
         console.log("select properties (probably the more important ones):", this.selectProperties);
     }
+
+    addFilters(query: string) {
+        for (const key in this.queryParameters) {
+            if (this.queryParameters.hasOwnProperty(key) && this.queryMappings[key]) {
+                const filterString = this.queryMappings[key].replace("$value$", this.queryParameters[key]);
+                query += filterString;
+            }
+        }
+        return query;
+    }
+
     updateXProperty() {
         // Access the selected value using document.getElementById
         const xPropertyElement = document.getElementById("x_property");
@@ -41,19 +64,35 @@ export class BarChartPreviewComponent implements OnInit {
     generateQuery() {
         this.updateXProperty();
 
+        //special behavior for skills, yet again
+        let skillListString = ""
+        if (this.xProperty === "skill") {
+            let skillQuery = this.rdfDataService.prefixes + this.skillQueryStart;
+            skillQuery = this.addFilters(skillQuery);
+            skillQuery += this.skillQueryEnd;
+            //TODO get list of all skills using this query
+            //make string out of skillList
+        }
+
         let query =
             this.rdfDataService.prefixes +
             `SELECT ?${this.xProperty} (COUNT(DISTINCT ?s) AS ?occurrences) WHERE {
             ?s rdf:type edm:JobPosting.
             ?s edm:title ?title.`;
 
-        // Add statements based on queryParameters
-        for (const key in this.queryParameters) {
-            if (this.queryParameters.hasOwnProperty(key) && this.queryMappings[key]) {
-                const filterString = this.queryMappings[key].replace("$value$", this.queryParameters[key]);
-                query += filterString;
-            }
-        }
+        query = this.addFilters(query);
+
+
+        const countMappings: { [key: string]: string } = {
+            jobName: ``,
+            fulltimeJob: `?s mp:isFulltimeJob ?fulltimeJob`,
+            limitedJob: `?s mp:isLimitedJob ?limitedJob`,
+            skill: `?s edm:hasSkill ?skill.
+                    ?skill edm:textField ?skillName.
+                    FILTER (lang(?skillName) = "de").
+                    FILTER (?skillName IN ($value$)`,
+        };
+        query += countMappings[this.xProperty].replace("$value$", this.queryParameters[this.xProperty]);
         console.log(query);
 
         return query + "}";
