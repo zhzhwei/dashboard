@@ -4,7 +4,8 @@
 
 <img src="/assets/bar-chart-preview.png" alt="Bar Chart Preview Image" (click)="logQueryParameters()" />
 
-
-<select style="vertical-align: bottom">>
-      <option *ngFor="let property of selectProperties" [value]="property">{{ property }}</option>
+<select id="x_property" style="vertical-align: bottom" (change)="updateXProperty()">
+    <option *ngFor="let property of selectProperties" [value]="property">{{ property }}</option>
 </select>
+
+<button (click)="generateQuery()">Test</button>
