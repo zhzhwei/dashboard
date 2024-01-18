@@ -20,19 +20,17 @@ export class RdfDataService {
     constructor(private http: HttpClient) {}
 
     public getQueryResults(query): Promise<any> {
+        const options = {
+            headers: this.headers,
+            params: {
+                query: query
+            }
+        };
 
-    //     const options = {
-    //         headers: this.headers,
-    //         params: {
-    //             query: query
-    //         }
-    //     };
-
-    //     return this.http.get(this.endpointUrl, options)
-    //         .toPromise()
-    //         .then(response => response)
-    //         .catch(error => console.error(error)); 
-    return undefined
+        return this.http.get(this.endpointUrl, options)
+            .toPromise()
+            .then(response => response)
+            .catch(error => console.error(error)); 
     }
    
 }

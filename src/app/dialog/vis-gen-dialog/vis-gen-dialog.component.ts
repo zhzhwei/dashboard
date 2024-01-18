@@ -171,7 +171,6 @@ export class VisGenDialogComponent implements OnInit {
     onSearch() {
         let previewQuery = this.generateQuery();
         console.log(previewQuery);
-        console.log("results go here lol");
 
         this.rdfDataService.getQueryResults(previewQuery).then(data => {
             this.previewResults = data.results.bindings.map((item) => {

@@ -65,11 +65,13 @@ export class BarChartPreviewComponent implements OnInit {
         this.updateXProperty();
 
         //special behavior for skills, yet again
-        let skillListString = ""
         if (this.xProperty === "skill") {
+            let skillListString = ""
             let skillQuery = this.rdfDataService.prefixes + this.skillQueryStart;
             skillQuery = this.addFilters(skillQuery);
             skillQuery += this.skillQueryEnd;
+            console.log(skillQuery)
+            console.log(this.rdfDataService.getQueryResults(skillQuery));
             //TODO get list of all skills using this query
             //make string out of skillList
         }
@@ -81,20 +83,20 @@ export class BarChartPreviewComponent implements OnInit {
             ?s edm:title ?title.`;
 
         query = this.addFilters(query);
+        //nothing to add for title, that's essentially the vanilla case
+        if (this.xProperty == "fulltimeJob") {
+            query += `?s mp:isFulltimeJob ?fulltimeJobRaw.
+            BIND(str(?fulltimeJobRaw) AS ?fulltimeJob).`;
+        }
+        else if (this.xProperty == "limitedJob") {
+            query += `?s mp:isLimitedJob ?limitedJobRaw.
+            BIND(str(?limitedJobRaw) AS ?limitedJob).`;
+        }
 
-
-        const countMappings: { [key: string]: string } = {
-            jobName: ``,
-            fulltimeJob: `?s mp:isFulltimeJob ?fulltimeJob`,
-            limitedJob: `?s mp:isLimitedJob ?limitedJob`,
-            skill: `?s edm:hasSkill ?skill.
-                    ?skill edm:textField ?skillName.
-                    FILTER (lang(?skillName) = "de").
-                    FILTER (?skillName IN ($value$)`,
-        };
-        query += countMappings[this.xProperty].replace("$value$", this.queryParameters[this.xProperty]);
+        query +=  `} GROUP BY ?${this.xProperty}`;
         console.log(query);
+        console.log(this.rdfDataService.getQueryResults(query));
 
-        return query + "}";
+        return query;
     }
 }
