@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
 
+import { DialogService } from "../../../services/dialog.service";
 import { RdfDataService } from "../../../services/rdf-data.service";
 
 @Component({
@@ -34,7 +35,8 @@ export class BarChartPreviewComponent implements OnInit {
         skill: `?s edm:hasSkill ?skill. ?skill edm:textField "$value$"@de`,
     };
 
-    constructor(private rdfDataService: RdfDataService) {}
+    constructor(private rdfDataService: RdfDataService,
+        private dialogService: DialogService) {}
     ngOnInit(): void {}
 
     logQueryParameters() {
@@ -65,15 +67,38 @@ export class BarChartPreviewComponent implements OnInit {
         this.updateXProperty();
 
         //special behavior for skills, yet again
-        if (this.xProperty === "skill") {
-            let skillListString = ""
+        if (this.xProperty == "skill") {
+            let skillList = []
             let skillQuery = this.rdfDataService.prefixes + this.skillQueryStart;
             skillQuery = this.addFilters(skillQuery);
             skillQuery += this.skillQueryEnd;
-            console.log(skillQuery)
-            console.log(this.rdfDataService.getQueryResults(skillQuery));
-            //TODO get list of all skills using this query
-            //make string out of skillList
+
+            this.rdfDataService.getQueryResults(skillQuery).then(data => {
+                for (const item of data.results.bindings) {
+                    skillList.push(`"${item.skillName.value}"@de`);
+                }
+                console.log(skillList)
+                if (skillList.length > 20) {
+                    this.dialogService.openSnackBar("Too many different values to visualize in a bar chart.", "close");
+                } else {
+                    let skillListString = skillList.join(", ");
+                    console.log(skillListString)
+                    let actualCountQuery =
+                        this.rdfDataService.prefixes +
+                        `SELECT ?skillName (COUNT(DISTINCT ?s) AS ?occurrences) WHERE {
+                            ?s rdf:type edm:JobPosting.
+                            ?s edm:title ?title.`;
+                    actualCountQuery = this.addFilters(actualCountQuery);
+                    actualCountQuery += `?s edm:hasSkill ?skill.
+                        ?skill edm:textField ?skillName.
+                        FILTER (lang(?skillName) = "de").
+                        FILTER (?skillName IN (${skillListString})).
+                    }
+                    GROUP BY ?skillName`; 
+                    console.log(actualCountQuery)
+                    console.log(this.rdfDataService.getQueryResults(actualCountQuery));
+                }
+            });
         }
 
         let query =
