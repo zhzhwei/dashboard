@@ -72,9 +72,9 @@ export class GridStackComponent implements OnInit {
 
         this.gridService.currentMinorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
-                // console.log('minorGrid is empty');
                 this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
+                console.log('minorGrid is minorInitContent');
                 this.minorInitImage = true;
             }
         });
@@ -138,7 +138,7 @@ export class GridStackComponent implements OnInit {
                 },
                 'load': () => {
                     tileSerial = serial;
-                    console.log(action,tileSerial);
+                    // console.log(action,tileSerial);
                     if (serial.includes('major')) {
                         if (this.majorInitImage) {
                             this.majorGrid.removeAll();
@@ -245,6 +245,7 @@ export class GridStackComponent implements OnInit {
                         let keys = Object.keys(localStorage);
                         keys.forEach(key => {
                             if (key.includes('minor')) {
+                                console.log('1111111111111')
                                 this.minorInitImage = false;
                             }
                         });
@@ -315,7 +316,7 @@ export class GridStackComponent implements OnInit {
                 }
                 var resizeObserver = new ResizeObserver(entries => {
                     var latestAction = this.chartService.chartAction.value.action;
-                    console.log(action, latestAction, tileSerial);
+                    // console.log(action, latestAction, tileSerial);
                     if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
@@ -388,23 +389,28 @@ export class GridStackComponent implements OnInit {
         this.chartService.loadPersistence('major');
         // localStorage.clear();
 
-        this.moveFromMinorToMajor();
         this.moveFromMajorToMinor();
+        this.moveFromMinorToMajor();
 
         this.gridService.currentMinorGridEl.subscribe((minorGridEl: any) => {
             if ( minorGridEl ) {
+                let minorFound = false;
                 let keys = Object.keys(localStorage);
                 keys.forEach(key => {
                     if (key.includes('minor')) {
-                        this.minorInitImage = false;
+                        console.log(key);
+                        minorFound = true;
                     }
                 });
-                if ( this.minorInitImage ) {
+                if ( !minorFound ) {
+                    console.log('minor is not found');
                     this.gridService.minorEmpty.next(true);
                 } else {
-                    // console.log('minorGrid is not empty');
+                    console.log('minor is found');
+                    this.minorInitImage = false;
+                    this.minorGrid.removeAll();
                     this.chartService.loadPersistence('minor');
-                }
+                }   
             } else {
                 let keys = Object.keys(localStorage);
                 keys.forEach(key => {
@@ -415,26 +421,26 @@ export class GridStackComponent implements OnInit {
                         }
                     }
                 });
-                this.minorGrid.removeAll();
-                this.minorInitImage = true;
-            }
-        });
-
-        this.minorGrid.on('change', (event, items) => {
-            if (this.minorGrid.getGridItems().length === 0) {
                 console.log('minorGrid is empty');
                 this.gridService.minorEmpty.next(true);
             }
         });
 
-        this.majorGrid.on('change', (event, items) => {
-            if (this.majorGrid.getGridItems().length === 0) {
-                console.log('majorGrid is empty');
-                this.gridService.majorEmpty.next(true);
-            }
-        });
+        // this.minorGrid.on('change', (event, items) => {
+        //     if (this.minorGrid.getGridItems().length === 0) {
+        //         console.log('minorGrid is empty');
+        //         this.gridService.minorEmpty.next(true);
+        //     }
+        // });
 
-        this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
+        // this.majorGrid.on('change', (event, items) => {
+        //     if (this.majorGrid.getGridItems().length === 0) {
+        //         console.log('majorGrid is empty');
+        //         this.gridService.majorEmpty.next(true);
+        //     }
+        // });
+
+        // this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
     }
 
@@ -454,14 +460,73 @@ export class GridStackComponent implements OnInit {
         return tileSerial;
     }
 
-    private moveFromMinorToMajor() {
-        this.minorGrid.on('removed', (event, items) => {
-            // console.log(this.chartService.chartAction.value.action);
-            if (this.chartService.chartAction.value.action === 'disfavor' || this.minorInitImage) {
-                // console.log('disfavor or minorInitImage');
+    private moveFromMajorToMinor() {
+        this.majorGrid.on('removed', (event, items) => {
+            console.log(this.chartService.chartAction.value.action);
+            console.log(this.majorInitImage);
+            if (this.chartService.chartAction.value.action === 'create' || this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
                 return;
             }
+            if ( this.minorInitImage ) {
+                console.log('1111111111111');
+                this.minorGrid.removeAll();
+                this.minorInitImage = false;
+            }
+            var serial = items[0].el.querySelector('.grid-stack-item-content').id;
+            if (this.resizeObservers.has(serial)) {
+                this.resizeObservers.get(serial).disconnect();
+            }
+            this.chartService.removePersistence(serial);
+            if (serial.includes('bar')) {
+                var dataSource = this.dataSources.get(serial);
+                var titleCount = this.chartService.chartAction.value.titleCount;
+                var jobName = this.chartService.chartAction.value.jobName;
+                // var color = this.chartService.chartAction.value.color;
+                // this.gridService.majorChartTypeNum['Bar Chart'];
+                var contEl = document.getElementById(serial);
+                serial = serial.replace('major', 'minor');
+                // serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['Bar Chart']);
+                contEl.setAttribute('id', serial);
+                var barEL = document.getElementById(serial);
+                var svg = d3.select('#' + serial).select('svg')
+                    .attr('width', barEL.clientWidth)
+                    .attr('height', barEL.clientHeight)
+                // console.log(barEL, serial, jobName, titleCount, color);
+                d3.select('#' + serial).select('svg').select('foreignObject.pencil').remove();
+                d3.select('#' + serial).select('svg').select('foreignObject.download').remove();
+                d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
+                d3.select('#' + serial).select('svg').select('foreignObject.trash').remove();
+                this.barChart.addHeart(svg, barEL, serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
+            }
+            if (this.minorGridEl.style.display === 'block') {
+                var resizeObserver = new ResizeObserver(entries => {
+                    // console.log(serial, contEl);
+                    this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
+                }); 
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(serial, resizeObserver);
+                this.minorGrid.addWidget(items[0].el);
+                this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
+            }
+            setTimeout(() => {
+                if (this.majorGrid.getGridItems().length === 0) {
+                    // console.log('minorGrid is empty');
+                    this.gridService.majorEmpty.next(true);
+                }
+            }, 0);
+        });
+    }
+
+    private moveFromMinorToMajor() {
+        this.minorGrid.on('removed', (event, items) => {
+            console.log(this.chartService.chartAction.value.action);
+            console.log(this.minorInitImage)
+            if (this.chartService.chartAction.value.action === 'disfavor' || this.minorInitImage) {
+                return;
+            }
+            console.log(this.majorInitImage)
             if ( this.majorInitImage ) {
+                console.log('1111111111111');
                 this.majorGrid.removeAll();
                 this.majorInitImage = false;
             }
@@ -498,6 +563,8 @@ export class GridStackComponent implements OnInit {
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
+                    this.majorGrid.addWidget(items[0].el);
+                    this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 }
             }
             setTimeout(() => {
@@ -509,72 +576,21 @@ export class GridStackComponent implements OnInit {
         });
     }
 
-    private moveFromMajorToMinor() {
-        this.majorGrid.on('removed', (event, items) => {
-            if (this.chartService.chartAction.value.action === 'create' || this.chartService.chartAction.value.action === 'remove') {
-                return;
-            }
-            if ( this.minorInitImage ) {
-                this.minorGrid.removeAll();
-                this.minorInitImage = false;
-            }
-            var serial = items[0].el.querySelector('.grid-stack-item-content').id;
-            if (this.resizeObservers.has(serial)) {
-                this.resizeObservers.get(serial).disconnect();
-            }
-            console.log(serial);
-            if (serial.includes('bar')) {
-                var dataSource = this.dataSources.get(serial);
-                var titleCount = this.chartService.chartAction.value.titleCount;
-                var jobName = this.chartService.chartAction.value.jobName;
-                var color = this.chartService.chartAction.value.color;
-                // this.gridService.majorChartTypeNum['Bar Chart'];
-                var contEl = document.getElementById(serial);
-                serial = serial.replace('major', 'minor');
-                serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['Bar Chart']);
-                contEl.setAttribute('id', serial);
-                var barEL = document.getElementById(serial);
-                var svg = d3.select('#' + serial).select('svg')
-                    .attr('width', barEL.clientWidth)
-                    .attr('height', barEL.clientHeight)
-                // console.log(barEL, serial, jobName, titleCount, color);
-                d3.select('#' + serial).select('svg').select('foreignObject.pencil').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.download').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.trash').remove();
-                this.barChart.addHeart(svg, barEL, serial, jobName, dataSource, titleCount, color);
-            }
-            // this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
-            var resizeObserver = new ResizeObserver(entries => {
-                console.log(serial);
-                this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
-            });
-            resizeObserver.observe(contEl);
-            this.resizeObservers.set(serial, resizeObserver);
-            setTimeout(() => {
-                if (this.majorGrid.getGridItems().length === 0) {
-                    // console.log('minorGrid is empty');
-                    this.gridService.majorEmpty.next(true);
-                }
-            }, 0);
-        });
-    }
+    // private mergeItem(event, items) {
+    //     var nodes = this.majorGrid.getGridItems();
+    //     for (var i = 0; i < nodes.length; i++) {
+    //         for (var j = i + 1; j < nodes.length; j++) {
+    //             if (this.isOverlap(nodes[i], nodes[j])) {
+    //                 // console.log('overlap');
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
-    private mergeItem(event, items) {
-        var nodes = this.majorGrid.getGridItems();
-        for (var i = 0; i < nodes.length; i++) {
-            for (var j = i + 1; j < nodes.length; j++) {
-                if (this.isOverlap(nodes[i], nodes[j])) {
-                    // console.log('overlap');
-                    break;
-                }
-            }
-        }
-    }
-
-    private isOverlap(item1, item2) {
-        return !(item2.x >= item1.x + item1.width || item2.x + item2.width <= item1.x ||
-            item2.y >= item1.y + item1.height || item2.y + item2.height <= item1.y);
-    }
+    // private isOverlap(item1, item2) {
+    //     return !(item2.x >= item1.x + item1.width || item2.x + item2.width <= item1.x ||
+    //         item2.y >= item1.y + item1.height || item2.y + item2.height <= item1.y);
+    // }
 
 }
