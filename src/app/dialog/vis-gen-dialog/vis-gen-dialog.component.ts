@@ -241,6 +241,7 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     public forwardToEditor() {
+        this.currentPreviewContent.generateQuery()
         this.chartService.chartType.next(this.chartType);
         if (this.previewResults.length > 0) {
             switch (this.chartType) {
