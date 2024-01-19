@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { RdfDataService } from '../../services/rdf-data.service';
 import { ChartService } from '../../services/chart.service';
 import { SystemService } from '../../services/system.service';
+import { SharedService } from "../../services/shared.service";
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
 
@@ -24,6 +25,7 @@ export class BarChartEditorComponent implements OnInit {
     public skillQueries: string[];
     public queryParameters: any;
     public selectProperties: String[];
+    public mainResult: any[];
 
     jobName = "Foo";
     titleCount = 42;
@@ -34,16 +36,22 @@ export class BarChartEditorComponent implements OnInit {
     private x: any;
     private y: any;
 
-    constructor(private rdfDataService: RdfDataService, private chartService:
-        ChartService, private dialog: MatDialog, private systemService: SystemService) {
-        this.chartService.currentChartAction.subscribe( chartAction => {
+    constructor(private rdfDataService: RdfDataService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
+        this.chartService.currentChartAction.subscribe((chartAction) => {
             this.queryParameters = chartAction.queryParameters;
             this.selectProperties = chartAction.selectProperties;
         });
     }
 
     ngOnInit(): void {
-        this.query = this.rdfDataService.prefixes + `
+        this.sharedService.results$.subscribe((results) => {
+            this.mainResult = results;
+            console.log("Received updated results:", this.mainResult);
+        });
+
+        this.query =
+            this.rdfDataService.prefixes +
+            `
             select distinct ?skillName where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.

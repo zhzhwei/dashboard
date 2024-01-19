@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 
 import { DialogService } from "../../../services/dialog.service";
 import { RdfDataService } from "../../../services/rdf-data.service";
+import { SharedService } from "../../../services/shared.service";
 
 @Component({
     selector: "app-bar-chart-preview",
@@ -13,6 +14,7 @@ export class BarChartPreviewComponent implements OnInit {
     @Input() selectProperties: string[];
 
     public xProperty;
+    public mainResult: any[];
 
     // skills require extra information to be counted
     public skillQueryStart = `SELECT DISTINCT ?skillName
@@ -35,8 +37,7 @@ export class BarChartPreviewComponent implements OnInit {
         skill: `?s edm:hasSkill ?skill. ?skill edm:textField "$value$"@de`,
     };
 
-    constructor(private rdfDataService: RdfDataService,
-        private dialogService: DialogService) {}
+    constructor(private rdfDataService: RdfDataService, private dialogService: DialogService, private sharedService: SharedService) {}
     ngOnInit(): void {}
 
     logQueryParameters() {
@@ -68,7 +69,7 @@ export class BarChartPreviewComponent implements OnInit {
 
         //special behavior for skills, yet again
         if (this.xProperty == "skill") {
-            let skillList = []
+            let skillList = [];
             let skillQuery = this.rdfDataService.prefixes + this.skillQueryStart;
             skillQuery = this.addFilters(skillQuery);
             skillQuery += this.skillQueryEnd;
@@ -77,12 +78,12 @@ export class BarChartPreviewComponent implements OnInit {
                 for (const item of data.results.bindings) {
                     skillList.push(`"${item.skillName.value}"@de`);
                 }
-                console.log(skillList)
+                console.log(skillList);
                 if (skillList.length > 20) {
                     this.dialogService.openSnackBar("Too many different values to visualize in a bar chart.", "close");
                 } else {
                     let skillListString = skillList.join(", ");
-                    console.log(skillListString)
+                    console.log(skillListString);
                     let actualCountQuery =
                         this.rdfDataService.prefixes +
                         `SELECT ?skillName (COUNT(DISTINCT ?s) AS ?occurrences) WHERE {
@@ -94,8 +95,8 @@ export class BarChartPreviewComponent implements OnInit {
                         FILTER (lang(?skillName) = "de").
                         FILTER (?skillName IN (${skillListString})).
                     }
-                    GROUP BY ?skillName`; 
-                    console.log(actualCountQuery)
+                    GROUP BY ?skillName`;
+                    console.log(actualCountQuery);
                     console.log(this.rdfDataService.getQueryResults(actualCountQuery));
                 }
             });
@@ -112,15 +113,19 @@ export class BarChartPreviewComponent implements OnInit {
         if (this.xProperty == "fulltimeJob") {
             query += `?s mp:isFulltimeJob ?fulltimeJobRaw.
             BIND(str(?fulltimeJobRaw) AS ?fulltimeJob).`;
-        }
-        else if (this.xProperty == "limitedJob") {
+        } else if (this.xProperty == "limitedJob") {
             query += `?s mp:isLimitedJob ?limitedJobRaw.
             BIND(str(?limitedJobRaw) AS ?limitedJob).`;
         }
 
-        query +=  `} GROUP BY ?${this.xProperty}`;
+        query += `} GROUP BY ?${this.xProperty}`;
         console.log(query);
-        console.log(this.rdfDataService.getQueryResults(query));
+        this.rdfDataService.getQueryResults(query).then((data) => {
+            this.mainResult = data
+            console.log("this.mainResult")
+            console.log(this.mainResult)
+            this.sharedService.updateResults(this.mainResult);
+        })
 
         return query;
     }
