@@ -389,8 +389,8 @@ export class GridStackComponent implements OnInit {
         this.chartService.loadPersistence('major');
         // localStorage.clear();
 
-        this.moveFromMajorToMinor();
-        this.moveFromMinorToMajor();
+        // this.moveFromMajorToMinor();
+        // this.moveFromMinorToMajor();
 
         this.gridService.currentMinorGridEl.subscribe((minorGridEl: any) => {
             if ( minorGridEl ) {
