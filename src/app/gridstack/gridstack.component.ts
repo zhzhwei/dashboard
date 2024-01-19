@@ -74,7 +74,6 @@ export class GridStackComponent implements OnInit {
             if (isEmpty) {
                 this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
-                console.log('minorGrid is minorInitContent');
                 this.minorInitImage = true;
             }
         });
@@ -407,8 +406,8 @@ export class GridStackComponent implements OnInit {
                     this.gridService.minorEmpty.next(true);
                 } else {
                     console.log('minor is found');
-                    this.minorInitImage = false;
                     this.minorGrid.removeAll();
+                    // this.minorInitImage = false;
                     this.chartService.loadPersistence('minor');
                 }   
             } else {
@@ -422,6 +421,7 @@ export class GridStackComponent implements OnInit {
                     }
                 });
                 console.log('minorGrid is empty');
+                this.minorInitImage = true;
                 this.gridService.minorEmpty.next(true);
             }
         });
@@ -535,7 +535,7 @@ export class GridStackComponent implements OnInit {
                 if (this.resizeObservers.has(serial)) {
                     this.resizeObservers.get(serial).disconnect();
                 }
-                console.log(serial);
+                this.chartService.removePersistence(serial);
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
                     var titleCount = this.chartService.chartAction.value.titleCount;
