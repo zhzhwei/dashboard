@@ -7,7 +7,7 @@
             <div class="card">
                 <h5>1. Select Dataset</h5>
                 <div class="card-body">
-                    <p>Select Job Postings where...</p>
+                    <p>Select Job Postings Where ...</p>
                     <div class="data_select_input">
                         <input type="checkbox" id="jobNameCheckbox" [(ngModel)]="jobNameCheckbox" (change)="updateQueryParameters()" />
                         <label for="jobNameCheckbox">Job name is</label>
@@ -58,7 +58,7 @@
 
                     <div class="row">
                         <div class="search-container">
-                            <button id="preview button" (click)="onSearch()">Preview</button>
+                            <button mat-raised-button id="preview button" (click)="onSearch()">Preview</button>
                             <!-- preview button to not absolutely spam the GraphDB with queries -->
                             <!-- <input
                                 [(ngModel)]="searchTerm"
@@ -124,29 +124,35 @@
                 <h5>3. Select Properties to Visualize</h5>
                 <div class="card-body">
                     <div class="row property-selection">
-                        <div class="data_select_input">
-                            <input type="checkbox" id="jobNameProperty" name="title" #propertyCheckbox (change)="updateProperties()" checked disabled />
-                            <label for="jobNameProperty">Jobname</label>
+                        <div class="row">
+                            <div class="data_select_input col-5">
+                                <input type="checkbox" id="jobNameProperty" name="title" #propertyCheckbox (change)="updateProperties()" checked disabled />
+                                <label for="jobNameProperty">Jobname</label>
+                            </div>
+                            <div class="data_select_input col-7">
+                                <input type="checkbox" id="creationDateProperty" name="created" #propertyCheckbox (change)="updateProperties()" />
+                                <label for="creationDateProperty">Creation date</label>
+                            </div>
                         </div>
-                        <div class="data_select_input">
-                            <input type="checkbox" id="creationDateProperty" name="created" #propertyCheckbox (change)="updateProperties()" />
-                            <label for="creationDateProperty">Creation date</label>
+                        <div class="row">
+                            <div class="data_select_input col-5">
+                                <input type="checkbox" id="skillProperty" name="skill" #propertyCheckbox (change)="updateProperties()" />
+                                <label for="skillProperty">Skill</label>
+                            </div>
+                            <div class="data_select_input col-7">
+                                <input type="checkbox" id="fulltimeProperty" name="fulltimeJob" #propertyCheckbox (change)="updateProperties()" />
+                                <label for="fulltimeProperty">Fulltime job</label>
+                            </div>
                         </div>
-                        <div class="data_select_input">
-                            <input type="checkbox" id="skillProperty" name="skill" #propertyCheckbox (change)="updateProperties()" />
-                            <label for="skillProperty">Skill</label>
-                        </div>
-                        <div class="data_select_input">
-                            <input type="checkbox" id="fulltimeProperty" name="fulltimeJob" #propertyCheckbox (change)="updateProperties()" />
-                            <label for="fulltimeProperty">Fulltime job</label>
-                        </div>
-                        <div class="data_select_input">
-                            <input type="checkbox" id="limitedProperty" name="limitedJob" #propertyCheckbox (change)="updateProperties()" />
-                            <label for="limitedProperty">Limited job</label>
-                        </div>
-                        <div class="data_select_input">
-                            <input type="checkbox" id="applicantNumberProperty" name="applicants" #propertyCheckbox (change)="updateProperties()" />
-                            <label for="applicantNumberProperty">Number of applicants</label>
+                        <div class="row">
+                            <div class="data_select_input col-5">
+                                <input type="checkbox" id="limitedProperty" name="limitedJob" #propertyCheckbox (change)="updateProperties()" />
+                                <label for="limitedProperty">Limited job</label>
+                            </div>
+                            <div class="data_select_input col-7">
+                                <input type="checkbox" id="applicantNumberProperty" name="applicants" #propertyCheckbox (change)="updateProperties()" />
+                                <label for="applicantNumberProperty">Number of applicants</label>
+                            </div>
                         </div>
                     </div>
                 </div>
