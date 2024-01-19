@@ -20,7 +20,6 @@ export class RdfDataService {
     constructor(private http: HttpClient) {}
 
     public getQueryResults(query): Promise<any> {
-
         const options = {
             headers: this.headers,
             params: {
@@ -31,6 +30,7 @@ export class RdfDataService {
         return this.http.get(this.endpointUrl, options)
             .toPromise()
             .then(response => response)
-            .catch(error => console.error(error));
+            .catch(error => console.error(error)); 
     }
+   
 }

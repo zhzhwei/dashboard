@@ -3,10 +3,10 @@ import { color } from 'highcharts';
 import { BehaviorSubject } from 'rxjs';
 
 interface ChartAction {
+    queryParameters: any;
+    selectProperties: String[];
     action: string;
     serial: string;
-    jobName?: string;
-    titleCount?: number;
     pieLabel?: string;
     color?: string;
 }
@@ -27,7 +27,7 @@ export class ChartService {
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' });
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' , queryParameters: {}, selectProperties: []});
     currentChartAction = this.chartAction.asObservable();
 
     public chartFavorite = new BehaviorSubject<ChartFavorite>({ type: '', serial: '', favorite: false });
@@ -71,15 +71,16 @@ export class ChartService {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        jobName: exportObj.jobName,
-                        titleCount: exportObj.titleCount
+                        queryParameters: exportObj.queryParameters,
+                        selectProperties: exportObj.selectProperties
                     });
                 }
                 else if (exportObj.chartType === 'Pie Chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        jobName: exportObj.jobName,
+                        queryParameters: exportObj.queryParameters,
+                        selectProperties: exportObj.selectProperties,
                         pieLabel: exportObj.pieLabel
                     });
                 };

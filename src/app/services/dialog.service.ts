@@ -37,7 +37,11 @@ export class DialogService {
         if (message === 'Are you sure to delete this widget?') {
             dialogRef.afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
-                    this.chartService.chartAction.next({ action: action, serial: tileSerial });
+                    this.chartService.chartAction.next({
+                        action: action, serial: tileSerial,
+                        queryParameters: undefined,
+                        selectProperties: []
+                    });
                     this.chartService.chartType.next('remove');
                     this.chartService.dataSource.next(dataSource);
                 }
@@ -63,7 +67,7 @@ export class DialogService {
         });
     }
 
-    openBarChartEditor(action: string, tileSerial: string, jobName: string, titleCount: number, color: any) {
+    openBarChartEditor(action: string, tileSerial: string, queryParameters: Object, selectProperties: String[], color: any) {
         this.dialog.open(BarChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -71,7 +75,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.chartAction.next({ action: action, serial: tileSerial, jobName: jobName, titleCount: titleCount, color: color });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, queryParameters: queryParameters, selectProperties: selectProperties, color: color });
     }
 
     openStackedBarChartEditor() {
@@ -84,7 +88,7 @@ export class DialogService {
         });
     }
 
-    openPieChartEditor(action: string, tileSerial: string, jobName: string) {
+    openPieChartEditor(action: string, tileSerial: string, queryParameters: Object, selectProperties: String[]) {
         this.dialog.open(PieChartEditorComponent, {
             width: '1500px',
             height: '800px',
@@ -92,7 +96,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.chartAction.next({ action: action, serial: tileSerial, jobName: jobName });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, queryParameters: queryParameters, selectProperties: selectProperties });
     }
 
     openDoughnutChartEditor() {

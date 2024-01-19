@@ -53,7 +53,7 @@ table {
 
 th, td {
     color: rgb(68, 68, 133);
-    padding: 15px;
+    padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -67,7 +67,46 @@ th:last-child {
     border-right: none;
 }
 
-/* .table-container {
-    max-height: 800px;
+.table-container {
+    max-height: 400px;
     overflow-y: auto;
-} */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.table-container td {
+    font-size: 16px;
+}
+
+.data_select_input input[type="checkbox"] {
+    width: 50px;
+}
+
+.data_select_input input[type="text"],
+.data_select_input input[type="date"],
+.data_select_input input[type="number"],
+.data_select_input label {
+    vertical-align: top;
+    margin-top: 2px;
+    margin-left: 10px;
+}
+
+.data_select_input input[type="date"] {
+    width: 150px;
+}
+
+.data_select_input input[type="number"] {
+    width: 80px;
+}
+
+.data_select_input select {
+    vertical-align: top;
+    margin-top: 2px;
+    margin-left: 10px;
+    height: 34px;
+    padding: 1px 2px;
+}
+
+.table-container i {
+    margin-left: 5px;
+}
