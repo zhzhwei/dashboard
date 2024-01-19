@@ -25,7 +25,7 @@ export class BarChartEditorComponent implements OnInit {
     public queryParameters: any;
     public selectProperties: String[];
 
-    jobName = "Foo";
+    // jobName = "Foo";
     titleCount = 42;
 
     private svg: any;
@@ -39,6 +39,8 @@ export class BarChartEditorComponent implements OnInit {
         this.chartService.currentChartAction.subscribe( chartAction => {
             this.queryParameters = chartAction.queryParameters;
             this.selectProperties = chartAction.selectProperties;
+            console.log(this.queryParameters['jobName']);
+            console.log(this.selectProperties);
         });
     }
 
@@ -47,7 +49,7 @@ export class BarChartEditorComponent implements OnInit {
             select distinct ?skillName where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
+                filter contains(?title, "${this.queryParameters['jobName']}").
                 ?s edm:hasSkill ?skill.
                 ?skill edm:textField ?skillName.
                 filter (lang(?skillName) = "de").
@@ -85,7 +87,7 @@ export class BarChartEditorComponent implements OnInit {
             select (count(?s) as ?skillCount) where { 
                 ?s rdf:type edm:JobPosting.
                 ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
+                filter contains(?title, "${this.queryParameters['jobName']}").
                 ?s edm:hasSkill ?skill.
                 ?skill edm:textField ?skillName.
                 filter (lang(?skillName) = "de").
@@ -117,7 +119,7 @@ export class BarChartEditorComponent implements OnInit {
                 item.skill = this.systemService.skillAbbr[item.skill];
             });
             this.chartService.dataSource.next(this.dataSource);
-            this.createChart(this.jobName, this.dataSource, this.titleCount);
+            this.createChart(this.queryParameters['jobName'], this.dataSource, this.titleCount);
         });
     }
 
