@@ -125,7 +125,9 @@ export class BarChartPreviewComponent implements OnInit {
         query += `} GROUP BY ?${this.xProperty}`;
         console.log(query);
         this.rdfDataService.getQueryResults(query).then((data) => {
-            this.mainResult = data
+            this.mainResult =  data.results.bindings.map((item) => {
+                return { name: item[this.xProperty].value, count: item.occurrences.value };
+            });
             console.log("this.mainResult")
             console.log(this.mainResult)
             this.sharedService.updateResults(this.mainResult);
