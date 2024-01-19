@@ -74,7 +74,7 @@ export class BarChartPreviewComponent implements OnInit {
             skillQuery = this.addFilters(skillQuery);
             skillQuery += this.skillQueryEnd;
 
-            this.rdfDataService.getQueryResults(skillQuery).then(data => {
+            this.rdfDataService.getQueryResults(skillQuery).then((data) => {
                 for (const item of data.results.bindings) {
                     skillList.push(`"${item.skillName.value}"@de`);
                 }
@@ -102,6 +102,9 @@ export class BarChartPreviewComponent implements OnInit {
             });
         }
 
+        if (this.xProperty == "title") {
+            this.xProperty = "justJobName";
+        }
         let query =
             this.rdfDataService.prefixes +
             `SELECT ?${this.xProperty} (COUNT(DISTINCT ?s) AS ?occurrences) WHERE {
@@ -109,8 +112,9 @@ export class BarChartPreviewComponent implements OnInit {
             ?s edm:title ?title.`;
 
         query = this.addFilters(query);
-        //nothing to add for title, that's essentially the vanilla case
-        if (this.xProperty == "fulltimeJob") {
+        if (this.xProperty == "justJobName") {
+            query += `BIND("${this.queryParameters["jobName"]}" AS ?justJobName).`;
+        } else if (this.xProperty == "fulltimeJob") {
             query += `?s mp:isFulltimeJob ?fulltimeJobRaw.
             BIND(str(?fulltimeJobRaw) AS ?fulltimeJob).`;
         } else if (this.xProperty == "limitedJob") {
