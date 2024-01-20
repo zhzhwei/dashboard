@@ -17,7 +17,7 @@ export class BarChartEditorComponent implements OnInit {
     public skills: any;
     public results: any;
     public list: any;
-    public checkedSkills: any;
+    public checkedItems: any;
     public dataSource: any;
     public allChecked = false;
     public titleQuery: string;
@@ -47,35 +47,15 @@ export class BarChartEditorComponent implements OnInit {
         this.sharedService.results$.subscribe((results) => {
             this.mainResult = results;
             console.log("Received updated results:", this.mainResult);
+
+            this.list = this.mainResult.map((item, index) => {
+                return {
+                    id: index,
+                    title: item.name,
+                    checked: false,
+                };
+            });
         });
-
-        this.query =
-            this.rdfDataService.prefixes +
-            `
-            select distinct ?skillName where { 
-                ?s rdf:type edm:JobPosting.
-                ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
-                ?s edm:hasSkill ?skill.
-                ?skill edm:textField ?skillName.
-                filter (lang(?skillName) = "de").
-            } Order By ASC (?skillName)
-        `;
-
-        this.rdfDataService
-            .getQueryResults(this.query)
-            .then((data) => {
-                this.results = data.results.bindings;
-                this.skills = this.results.map((item) => item.skillName.value);
-                this.list = this.skills.map((item, index) => {
-                    return {
-                        id: index,
-                        title: item,
-                        checked: false,
-                    };
-                });
-            })
-            .catch((error) => console.error(error));
     }
 
     backToDashboard(): void {
@@ -83,58 +63,57 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     selectAll() {
-        console.log(this.mainResult)
         for (let item of this.list) {
             item.checked = this.allChecked;
         }
     }
 
     public applyChanges(): void {
-        this.checkedSkills = this.list.filter((item) => item.checked === true);
-        this.skillQuery =
-            this.rdfDataService.prefixes +
-            `
-            select (count(?s) as ?skillCount) where { 
-                ?s rdf:type edm:JobPosting.
-                ?s edm:title ?title.
-                filter contains(?title, "${this.jobName}").
-                ?s edm:hasSkill ?skill.
-                ?skill edm:textField ?skillName.
-                filter (lang(?skillName) = "de").
-                filter (?skillName = "skillName"@de).
-            }
-        `;
-        this.skillQueries = this.checkedSkills.map((item) => {
-            return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
-        });
-        this.dataSource = this.checkedSkills.map((item) => {
-            return {
-                skill: item.title,
-            };
-        });
-        let promises = this.skillQueries.map((query, index) => {
-            return this.rdfDataService
-                .getQueryResults(query)
-                .then((data) => {
-                    this.results = data.results.bindings;
-                    this.dataSource[index].skillCount = Number(this.results[0].skillCount.value);
-                })
-                .catch((error) => console.error(error));
-        });
+        this.checkedItems = this.list.filter((item) => item.checked === true);
+        // this.skillQuery =
+        //     this.rdfDataService.prefixes +
+        //     `
+        //     select (count(?s) as ?skillCount) where { 
+        //         ?s rdf:type edm:JobPosting.
+        //         ?s edm:title ?title.
+        //         filter contains(?title, "${this.jobName}").
+        //         ?s edm:hasSkill ?skill.
+        //         ?skill edm:textField ?skillName.
+        //         filter (lang(?skillName) = "de").
+        //         filter (?skillName = "skillName"@de).
+        //     }
+        // `;
+        // this.skillQueries = this.checkedItems.map((item) => {
+        //     return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
+        // });
+        // this.dataSource = this.checkedItems.map((item) => {
+        //     return {
+        //         skill: item.title,
+        //     };
+        // });
+        // let promises = this.skillQueries.map((query, index) => {
+        //     return this.rdfDataService
+        //         .getQueryResults(query)
+        //         .then((data) => {
+        //             this.results = data.results.bindings;
+        //             this.dataSource[index].skillCount = Number(this.results[0].skillCount.value);
+        //         })
+        //         .catch((error) => console.error(error));
+        // });
 
-        Promise.all(promises).then(() => {
-            // this.dataSource.forEach(item => {
-            //     console.log(item.skill, item.skillCount);
-            // });
-            this.dataSource.forEach((item) => {
-                item.skill = this.systemService.skillAbbr[item.skill];
-            });
-            this.chartService.dataSource.next(this.dataSource);
-            this.createChart(this.jobName, this.dataSource, this.titleCount);
-        });
+        // Promise.all(promises).then(() => {
+        //     // this.dataSource.forEach(item => {
+        //     //     console.log(item.skill, item.skillCount);
+        //     // });
+        //     this.dataSource.forEach((item) => {
+        //         item.skill = this.systemService.skillAbbr[item.skill];
+        //     });
+        //     this.chartService.dataSource.next(this.dataSource);
+            this.createChart("example title", this.mainResult);
+        // });
     }
 
-    private createChart(jobName: string, dataSource: any[], titleCount: any): void {
+    private createChart(title: string, dataSource: any[]): void {
         this.barEL = document.getElementById("editor-bar");
 
         while (this.barEL.firstChild) {
@@ -152,13 +131,13 @@ export class BarChartEditorComponent implements OnInit {
             .attr("y", this.margin / 2 + 15)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
-            .text(`${jobName}` + " --- " + `${titleCount}` + " Stellenangebote");
+            .text(title);
 
         // Create the X-axis band scale
         this.x = d3
             .scaleBand()
             .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map((d) => d.skill))
+            .domain(dataSource.map((d) => d.name))
             .padding(0.2);
 
         // Draw the X-axis on the DOM
@@ -171,10 +150,10 @@ export class BarChartEditorComponent implements OnInit {
             .style("text-anchor", "middle");
 
         // Create the Y-axis band scale
-        var maxSkillCount = d3.max(dataSource, (d: any) => d.skillCount);
+        var maxCount = d3.max(dataSource, (d: any) => d.count);
         this.y = d3
             .scaleLinear()
-            .domain([0, maxSkillCount + 1])
+            .domain([0, maxCount + 1])
             .range([this.barEL.clientHeight - this.margin * 2, 0]);
 
         // Draw the Y-axis on the DOM
@@ -185,10 +164,10 @@ export class BarChartEditorComponent implements OnInit {
             .data(dataSource)
             .enter()
             .append("rect")
-            .attr("x", (d: any) => this.x(d.skill))
-            .attr("y", (d: any) => this.y(d.skillCount))
+            .attr("x", (d: any) => this.x(d.name))
+            .attr("y", (d: any) => this.y(d.count))
             .attr("width", this.x.bandwidth())
-            .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.skillCount))
+            .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
             .attr("fill", "steelblue");
     }
 }
