@@ -464,14 +464,14 @@ export class GridStackComponent implements OnInit {
         this.majorGrid.on('removed', (event, items) => {
             console.log(this.chartService.chartAction.value.action);
             console.log(this.majorInitImage);
-            if (this.chartService.chartAction.value.action === 'create' || this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
+            if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
                 return;
             }
-            if ( this.minorInitImage ) {
-                console.log('1111111111111');
-                this.minorGrid.removeAll();
-                this.minorInitImage = false;
-            }
+            // if ( this.minorInitImage ) {
+            //     console.log('1111111111111');
+            //     this.minorGrid.removeAll();
+            //     this.minorInitImage = false;
+            // }
             var serial = items[0].el.querySelector('.grid-stack-item-content').id;
             if (this.resizeObservers.has(serial)) {
                 this.resizeObservers.get(serial).disconnect();
@@ -481,17 +481,13 @@ export class GridStackComponent implements OnInit {
                 var dataSource = this.dataSources.get(serial);
                 var titleCount = this.chartService.chartAction.value.titleCount;
                 var jobName = this.chartService.chartAction.value.jobName;
-                // var color = this.chartService.chartAction.value.color;
-                // this.gridService.majorChartTypeNum['Bar Chart'];
                 var contEl = document.getElementById(serial);
-                serial = serial.replace('major', 'minor');
-                // serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['Bar Chart']);
+                serial = this.gridService.getMinorTileSerial('Bar Chart', serial);
                 contEl.setAttribute('id', serial);
                 var barEL = document.getElementById(serial);
                 var svg = d3.select('#' + serial).select('svg')
                     .attr('width', barEL.clientWidth)
                     .attr('height', barEL.clientHeight)
-                // console.log(barEL, serial, jobName, titleCount, color);
                 d3.select('#' + serial).select('svg').select('foreignObject.pencil').remove();
                 d3.select('#' + serial).select('svg').select('foreignObject.download').remove();
                 d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
@@ -500,12 +496,10 @@ export class GridStackComponent implements OnInit {
             }
             if (this.minorGridEl.style.display === 'block') {
                 var resizeObserver = new ResizeObserver(entries => {
-                    // console.log(serial, contEl);
                     this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                 }); 
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
-                this.minorGrid.addWidget(items[0].el);
                 this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
             }
             setTimeout(() => {
@@ -525,11 +519,11 @@ export class GridStackComponent implements OnInit {
                 return;
             }
             console.log(this.majorInitImage)
-            if ( this.majorInitImage ) {
-                console.log('1111111111111');
-                this.majorGrid.removeAll();
-                this.majorInitImage = false;
-            }
+            // if ( this.majorInitImage ) {
+            //     console.log('1111111111111');
+            //     this.majorGrid.removeAll();
+            //     this.majorInitImage = false;
+            // }
             if ( this.minorGridEl.style.display === 'block' ) {
                 var serial = items[0].el.querySelector('.grid-stack-item-content').id;
                 if (this.resizeObservers.has(serial)) {
@@ -563,7 +557,6 @@ export class GridStackComponent implements OnInit {
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
-                    this.majorGrid.addWidget(items[0].el);
                     this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 }
             }
