@@ -3,8 +3,7 @@ import { color } from 'highcharts';
 import { BehaviorSubject } from 'rxjs';
 
 interface ChartAction {
-    queryParameters: any;
-    selectProperties: String[];
+    title: string;
     action: string;
     serial: string;
     pieLabel?: string;
@@ -27,7 +26,7 @@ export class ChartService {
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' , queryParameters: {}, selectProperties: []});
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', title: '', color: ''});
     currentChartAction = this.chartAction.asObservable();
 
     public chartFavorite = new BehaviorSubject<ChartFavorite>({ type: '', serial: '', favorite: false });
@@ -36,18 +35,15 @@ export class ChartService {
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
 
-    public saveJsonFile(chartType: string, dataSource: any[], jobName: string, parameter: any) {
+    public saveJsonFile(chartType: string, dataSource: any[], title: string, parameter: any) {
         let exportObj = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             serial: '',
-            jobName: jobName
+            title: title
         };
-        if (chartType === 'Bar Chart') {
-            exportObj['titleCount'] = parameter;
-        }
-        else if (chartType === 'Pie Chart') {
+        if (chartType === 'Pie Chart') {
             exportObj['pieLabel'] = parameter;
         }
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
@@ -71,16 +67,14 @@ export class ChartService {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        queryParameters: exportObj.queryParameters,
-                        selectProperties: exportObj.selectProperties
+                        title: exportObj.title
                     });
                 }
                 else if (exportObj.chartType === 'Pie Chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        queryParameters: exportObj.queryParameters,
-                        selectProperties: exportObj.selectProperties,
+                        title: exportObj.title,
                         pieLabel: exportObj.pieLabel
                     });
                 };
@@ -92,19 +86,16 @@ export class ChartService {
         input.click();
     }
 
-    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any, color: string) {
+    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], title: string, parameter: any=undefined, color: string) {
         var chartData = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             tileSerial: tileSerial,
-            jobName: jobName,
+            title: title,
             color: color
         };
-        if (chartType === 'Bar Chart') {
-            chartData['titleCount'] = parameter;
-        }
-        else if (chartType === 'Pie Chart') {
+        if (chartType === 'Pie Chart') {
             chartData['pieLabel'] = parameter;
         }
         // console.log('Saving data:', chartData);
@@ -142,13 +133,11 @@ export class ChartService {
         let actionData: any = {
             action: 'load',
             serial: chartData.tileSerial,
-            jobName: chartData.jobName,
+            title: chartData.title,
             color: chartData.color
         };
     
-        if (chartType === 'dash-bar') {
-            actionData.titleCount = chartData.titleCount;
-        } else if (chartType === 'dash-pie') {
+        if (chartType === 'dash-pie') {
             actionData.pieLabel = chartData.pieLabel;
         }
     

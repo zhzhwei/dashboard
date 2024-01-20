@@ -13,6 +13,7 @@ import * as d3 from 'd3';
 })
 export class BarChartEditorComponent implements OnInit {
 
+    public title: string;
     public query: string;
     public skills: any;
     public results: any;
@@ -23,12 +24,7 @@ export class BarChartEditorComponent implements OnInit {
     public titleQuery: string;
     public skillQuery: string;
     public skillQueries: string[];
-    public queryParameters: any;
-    public selectProperties: String[];
     public mainResult: any[];
-
-    jobName = "Foo";
-    titleCount = 42;
 
     private svg: any;
     private margin = 60;
@@ -38,8 +34,7 @@ export class BarChartEditorComponent implements OnInit {
 
     constructor(private rdfDataService: RdfDataService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
         this.chartService.currentChartAction.subscribe((chartAction) => {
-            this.queryParameters = chartAction.queryParameters;
-            this.selectProperties = chartAction.selectProperties;
+            this.title = chartAction.title;
         });
     }
 
@@ -108,8 +103,8 @@ export class BarChartEditorComponent implements OnInit {
         //     this.dataSource.forEach((item) => {
         //         item.skill = this.systemService.skillAbbr[item.skill];
         //     });
-        //     this.chartService.dataSource.next(this.dataSource);
-            this.createChart("example title", this.mainResult);
+            this.chartService.dataSource.next(this.mainResult); //?
+            this.createChart(this.title, this.mainResult);
         // });
     }
 

@@ -22,7 +22,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public copeChartAction(action: string, tileSerial: string, jobName: string, dataSource: any[], titleCount: any, color: any): void {
+    public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], color: any): void {
         var barEL = document.getElementById(tileSerial);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -38,10 +38,10 @@ export class BarChartComponent implements OnInit {
 
         if (tileSerial.includes('major')) {
             if (action === 'create' || action === 'edit' || action === 'load') {
-                this.addTitle(this.svg, barEL, jobName, titleCount);
-                this.addPencil(this.svg, barEL, tileSerial, jobName, titleCount, color);
-                this.addDownload(this.svg, barEL, jobName, dataSource, titleCount, color);
-                this.addHeart(this.svg, barEL, tileSerial, jobName, dataSource, titleCount, color);
+                this.addTitle(this.svg, barEL, title);
+                this.addPencil(this.svg, barEL, tileSerial, title, color);
+                this.addDownload(this.svg, barEL, title, dataSource, color);
+                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, color);
                 this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 95);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
@@ -49,8 +49,8 @@ export class BarChartComponent implements OnInit {
             }
         } else {
             if (action === 'create' || action === 'load') {
-                this.addTitle(this.svg, barEL, jobName, titleCount);
-                this.addHeart(this.svg, barEL, tileSerial, jobName, dataSource, titleCount, color);
+                this.addTitle(this.svg, barEL, title);
+                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, color);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
                 this.titleIconService.updateHeart(this.svg, barEL, 'rgb(255, 0, 0)');
@@ -160,25 +160,24 @@ export class BarChartComponent implements OnInit {
 
     }
 
-    private addTitle(svg, barEL, jobName, titleCount): void {
-        this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2,
-            `${jobName}` + " " + `${titleCount}` + " Stellenangebote");
+    private addTitle(svg, barEL, title): void {
+        this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, title);
     }
 
-    public addPencil(svg, barEL, tileSerial, jobName, titleCount, color): void {
+    public addPencil(svg, barEL, tileSerial, title, color): void {
         this.titleIconService.createPencil(svg, barEL.clientWidth - 38, 20, () => {
-            this.dialogService.openBarChartEditor('edit', tileSerial, jobName, titleCount, color);
+            this.dialogService.openBarChartEditor('edit', tileSerial, title, color);
             this.chartService.chartType.next('Bar Chart');
         });
     }
 
-    public addDownload(svg, barEL, jobName, dataSource, titleCount, color): void {
+    public addDownload(svg, barEL, title, dataSource, color): void {
         this.titleIconService.createDownload(svg, barEL.clientWidth - 38, 45, () => {
-            this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
+            this.chartService.saveJsonFile('Bar Chart', dataSource, title, undefined);
         });
     }
 
-    public addHeart(svg, barEL, tileSerial, jobName, dataSource, titleCount, color): void {
+    public addHeart(svg, barEL, tileSerial, title, dataSource, color): void {
         const self = this;
         this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
             var heart = d3.select(this).select('i');
@@ -188,18 +187,18 @@ export class BarChartComponent implements OnInit {
                 console.log(tileSerial);  
                 self.gridService.tileSerialFavor.add(tileSerial);
                 // self.chartService.removePersistence(tileSerial);
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');  
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, title, 'rgb(255, 0, 0)');  
                 tempTileSerial = self.gridService.getMinorTileSerial('Bar Chart', tileSerial);
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
-                self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, jobName: jobName, titleCount: titleCount });
+                self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, title: title});
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource);  
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');
                 // self.chartService.removePersistence(tileSerial);
-                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
-                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, jobName: jobName, titleCount: titleCount });
+                // self.chartService.savePersistence('Bar Chart', tileSerial, dataSource, title, 'rgb(0, 0, 0)');
+                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, title: title});
                 self.chartService.chartType.next('Bar Chart');
                 self.chartService.dataSource.next(dataSource); 
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
