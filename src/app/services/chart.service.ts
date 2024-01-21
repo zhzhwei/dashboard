@@ -35,6 +35,12 @@ export class ChartService {
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
 
+    updateTitle(newTitle: string): void {
+        const currentValue = this.chartAction.getValue();
+        const updatedValue: ChartAction = { ...currentValue, title: newTitle };
+        this.chartAction.next(updatedValue);
+    }
+
     public saveJsonFile(chartType: string, dataSource: any[], title: string, parameter: any) {
         let exportObj = {
             chartType: chartType,

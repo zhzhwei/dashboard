@@ -86,9 +86,9 @@ export class GridStackComponent implements OnInit {
             switchMap(([chartType, dataSource]) => {
                 if (chartType && dataSource.length > 0) {
                     return this.chartService.chartAction.pipe(
-                        map((chartAction): { chartType: string, dataSource: any[], action?: string, serial?: string, title?: string, pieLabel?: string, color?: any } => {
-                            if (chartAction && typeof chartAction === 'object') {
-                                return { chartType, dataSource, ...chartAction };
+                    map((chartActionFromObservable): { chartType: string, dataSource: any[], action?: string, serial?: string, title?: string, pieLabel?: string, color?: any } => {
+                        if (chartActionFromObservable && typeof chartActionFromObservable === 'object') {
+                                return { chartType, dataSource, ...chartActionFromObservable };
                             } else {
                                 return { chartType, dataSource };
                             }
@@ -100,7 +100,7 @@ export class GridStackComponent implements OnInit {
             })
         ).subscribe(({ chartType, dataSource, action, serial, title, pieLabel, color }) => {
             if (!(title)) {
-                title = "placeholder title"
+                title = this.chartService.chartAction.value.title
             }
             var chartCreators = {
                 'bar_chart': this.barChart.copeChartAction.bind(this.barChart),
@@ -281,6 +281,7 @@ export class GridStackComponent implements OnInit {
                 var resizeObserver = new ResizeObserver(entries => {
                     var latestAction = this.chartService.chartAction.value.action;
                     console.log(action, latestAction, tileSerial);
+                    title = this.chartService.chartAction.value.title
                     if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {

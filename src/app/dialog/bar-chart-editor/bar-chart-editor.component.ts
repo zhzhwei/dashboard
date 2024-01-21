@@ -104,6 +104,7 @@ export class BarChartEditorComponent implements OnInit {
         //         item.skill = this.systemService.skillAbbr[item.skill];
         //     });
             this.chartService.dataSource.next(this.mainResult); //?
+            this.chartService.updateTitle(this.title)
             this.createChart(this.title, this.mainResult);
         // });
     }
