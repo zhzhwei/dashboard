@@ -413,20 +413,6 @@ export class GridStackComponent implements OnInit {
             }
         });
 
-        // this.minorGrid.on('change', (event, items) => {
-        //     if (this.minorGrid.getGridItems().length === 0) {
-        //         console.log('minorGrid is empty');
-        //         this.gridService.minorEmpty.next(true);
-        //     }
-        // });
-
-        // this.majorGrid.on('change', (event, items) => {
-        //     if (this.majorGrid.getGridItems().length === 0) {
-        //         console.log('majorGrid is empty');
-        //         this.gridService.majorEmpty.next(true);
-        //     }
-        // });
-
         // this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
     }
@@ -468,11 +454,11 @@ export class GridStackComponent implements OnInit {
             if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
                 return;
             }
-            // if ( this.minorInitImage ) {
-            //     console.log('1111111111111');
-            //     this.minorGrid.removeAll();
-            //     this.minorInitImage = false;
-            // }
+            if ( this.minorInitImage ) {
+                console.log('1111111111111');
+                this.minorGrid.removeWidget(this.minorGrid.getGridItems()[0] as HTMLElement);
+                this.minorInitImage = false;
+            }
             var serial = items[0].el.querySelector('.grid-stack-item-content').id;
             if (this.resizeObservers.has(serial)) {
                 this.resizeObservers.get(serial).disconnect();
@@ -497,6 +483,7 @@ export class GridStackComponent implements OnInit {
             }
             if (this.minorGridEl.style.display === 'block') {
                 var resizeObserver = new ResizeObserver(entries => {
+                    console.log('resizeObserver', serial);
                     this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                 }); 
                 resizeObserver.observe(contEl);
@@ -521,11 +508,11 @@ export class GridStackComponent implements OnInit {
                 return;
             }
             console.log(this.majorInitImage)
-            // if ( this.majorInitImage ) {
-            //     console.log('1111111111111');
-            //     this.majorGrid.removeAll();
-            //     this.majorInitImage = false;
-            // }
+            if ( this.majorInitImage ) {
+                console.log('2222222222222');
+                this.majorGrid.removeWidget(this.majorGrid.getGridItems()[0] as HTMLElement);
+                this.majorInitImage = false;
+            }
             if ( this.minorGridEl.style.display === 'block' ) {
                 var serial = items[0].el.querySelector('.grid-stack-item-content').id;
                 if (this.resizeObservers.has(serial)) {
@@ -554,6 +541,7 @@ export class GridStackComponent implements OnInit {
                 }
                 if (contEl) {
                     var resizeObserver = new ResizeObserver(entries => {
+                        console.log('resizeObserver', serial);
                         this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
                     });
                     resizeObserver.observe(contEl);
