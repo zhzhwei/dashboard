@@ -97,9 +97,17 @@ export class BarChartPreviewComponent implements OnInit {
                     }
                     GROUP BY ?skillName`;
                     console.log(actualCountQuery);
-                    console.log(this.rdfDataService.getQueryResults(actualCountQuery));
+                    this.rdfDataService.getQueryResults(actualCountQuery).then((data) => {
+                        this.mainResult =  data.results.bindings.map((item) => {
+                            return { name: item.skillName.value, count: item.occurrences.value };
+                        });
+                        console.log("this.mainResult")
+                        console.log(this.mainResult)
+                        this.sharedService.updateResults(this.mainResult);
+                    })
                 }
             });
+            return
         }
 
         if (this.xProperty == "title") {

@@ -99,14 +99,17 @@ export class GridStackComponent implements OnInit {
                 }
             })
         ).subscribe(({ chartType, dataSource, action, serial, title, pieLabel, color }) => {
+            if (!(title)) {
+                title = "placeholder title"
+            }
             var chartCreators = {
-                'Bar Chart': this.barChart.copeChartAction.bind(this.barChart),
-                'Pie Chart': this.pieChart.copeChartAction.bind(this.pieChart),
+                'bar_chart': this.barChart.copeChartAction.bind(this.barChart),
+                'pie_chart': this.pieChart.copeChartAction.bind(this.pieChart),
             };
 
             var conditions = {
-                'Bar Chart': title,
-                'Pie Chart':  pieLabel
+                'bar_chart': title,
+                'pie_chart':  pieLabel
             };
 
             var parameter = pieLabel;
@@ -455,7 +458,7 @@ export class GridStackComponent implements OnInit {
         var itemEl = this.majorGrid.addWidget(this.gridService.newTile);
         this.gridService.majorChartTypeNum[chartType]++;
         var contEl = itemEl.querySelector('.grid-stack-item-content');
-        var tileSerial = 'major-dash-' + (chartType === 'Bar Chart' ? 'bar-' : 'pie-') + this.gridService.majorChartTypeNum[chartType];
+        var tileSerial = 'major-dash-' + (chartType === 'bar_chart' ? 'bar-' : 'pie-') + this.gridService.majorChartTypeNum[chartType];
         contEl.setAttribute('id', tileSerial);
         return tileSerial;
     }
@@ -505,7 +508,7 @@ export class GridStackComponent implements OnInit {
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
                 this.minorGrid.addWidget(items[0].el);
-                this.chartService.savePersistence('Bar Chart', serial, dataSource, title, undefined, 'rgb(255, 0, 0)');
+                this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(255, 0, 0)');
             }
             setTimeout(() => {
                 if (this.majorGrid.getGridItems().length === 0) {
@@ -539,10 +542,10 @@ export class GridStackComponent implements OnInit {
                     var dataSource = this.dataSources.get(serial);
                     var title = this.chartService.chartAction.value.title;
                     var color = this.chartService.chartAction.value.color;
-                    this.gridService.majorChartTypeNum['Bar Chart']++;
+                    this.gridService.majorChartTypeNum['bar_chart']++;
                     var contEl = document.getElementById(serial);
                     serial = serial.replace('minor', 'major');
-                    serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['Bar Chart']);
+                    serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['bar_chart']);
                     contEl.setAttribute('id', serial);
                     var barEL = document.getElementById(serial);
                     var svg = d3.select('#' + serial).select('svg')
@@ -562,7 +565,7 @@ export class GridStackComponent implements OnInit {
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
                     this.majorGrid.addWidget(items[0].el);
-                    this.chartService.savePersistence('Bar Chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)');
+                    this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)');
                 }
             }
             setTimeout(() => {

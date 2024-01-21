@@ -43,7 +43,7 @@ export class ChartService {
             serial: '',
             title: title
         };
-        if (chartType === 'Pie Chart') {
+        if (chartType === 'pie_chart') {
             exportObj['pieLabel'] = parameter;
         }
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
@@ -63,14 +63,14 @@ export class ChartService {
             var reader = new FileReader();
             reader.onload = (event: any) => {
                 var exportObj = JSON.parse(event.target.result);
-                if (exportObj.chartType === 'Bar Chart') {
+                if (exportObj.chartType === 'bar_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
                         title: exportObj.title
                     });
                 }
-                else if (exportObj.chartType === 'Pie Chart') {
+                else if (exportObj.chartType === 'pie_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
@@ -95,7 +95,7 @@ export class ChartService {
             title: title,
             color: color
         };
-        if (chartType === 'Pie Chart') {
+        if (chartType === 'pie_chart') {
             chartData['pieLabel'] = parameter;
         }
         // console.log('Saving data:', chartData);
