@@ -365,20 +365,7 @@ export class GridStackComponent implements OnInit {
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(tileSerial, resizeObserver);
-                    
-                    // Start a batch update
-                    this.minorGrid.batchUpdate();
-
-                    // Move all grid items to the left
-                    for (let i = 0; i < this.minorGrid.engine.nodes.length; i++) {
-                        let node = this.minorGrid.engine.nodes[i];
-                        this.minorGrid.update(node.el, { x: 0, y: node.y });
-                    }
-
-                    this.minorGrid.compact();
-                    
-                    // End the batch update
-                    this.minorGrid.commit();
+                    this.compactGridstack(this.minorGrid);
                 }
             }
             this.chartService.chartType.next('');
@@ -460,6 +447,20 @@ export class GridStackComponent implements OnInit {
         return tileSerial;
     }
 
+    private compactGridstack(gridstack: GridStack) {
+        // Start a batch update
+        gridstack.batchUpdate();
+        // Move all grid items to the left
+        for (let i = 0; i < gridstack.engine.nodes.length; i++) {
+            let node = gridstack.engine.nodes[i];
+            gridstack.update(node.el, { x: 0, y: node.y });
+        }
+        // Compact the grid items vertically
+        gridstack.compact();
+        // End the batch update
+        gridstack.commit();
+    }
+
     private moveFromMajorToMinor() {
         this.majorGrid.on('removed', (event, items) => {
             console.log(this.chartService.chartAction.value.action);
@@ -500,6 +501,7 @@ export class GridStackComponent implements OnInit {
                 }); 
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
+                // this.compactGridstack(this.minorGrid);
                 this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
             }
             setTimeout(() => {
@@ -544,7 +546,6 @@ export class GridStackComponent implements OnInit {
                     var svg = d3.select('#' + serial).select('svg')
                         .attr('width', barEL.clientWidth)
                         .attr('height', barEL.clientHeight)
-                    // console.log(barEL, serial, jobName, titleCount, color);
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                     this.barChart.addPencil(svg, barEL, serial, jobName, titleCount, color);
                     this.barChart.addDownload(svg, barEL, jobName, dataSource, titleCount, color);
