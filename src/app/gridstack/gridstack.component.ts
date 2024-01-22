@@ -372,24 +372,18 @@ export class GridStackComponent implements OnInit {
             this.chartService.dataSource.next([]);
         });
 
-        this.chartService.loadPersistence('major');
-        // localStorage.clear();
-
-        this.moveFromMajorToMinor();
-        this.moveFromMinorToMajor();
-
         this.gridService.currentMinorGridEl.subscribe((minorGridEl: any) => {
             if ( minorGridEl ) {
                 let minorFound = false;
                 let keys = Object.keys(localStorage);
                 keys.forEach(key => {
                     if (key.includes('minor')) {
-                        console.log(key);
+                        // console.log(key);
                         minorFound = true;
                     }
                 });
                 if ( !minorFound ) {
-                    console.log('minor is not found');
+                    // console.log('minor is not found');
                     this.gridService.minorEmpty.next(true);
                 } else {
                     console.log('minor is found');
@@ -407,11 +401,17 @@ export class GridStackComponent implements OnInit {
                         }
                     }
                 });
-                console.log('minorGrid is empty');
+                // console.log('minorGrid is empty');
                 this.minorInitImage = true;
                 this.gridService.minorEmpty.next(true);
             }
         });
+
+        this.chartService.loadPersistence('major');
+        // localStorage.clear();
+
+        this.moveFromMajorToMinor();
+        this.moveFromMinorToMajor();
 
         // this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
@@ -449,8 +449,8 @@ export class GridStackComponent implements OnInit {
 
     private moveFromMajorToMinor() {
         this.majorGrid.on('removed', (event, items) => {
-            console.log(this.chartService.chartAction.value.action);
-            console.log(this.majorInitImage);
+            // console.log(this.chartService.chartAction.value.action);
+            // console.log(this.majorInitImage);
             if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
                 return;
             }
@@ -483,11 +483,12 @@ export class GridStackComponent implements OnInit {
             }
             if (this.minorGridEl.style.display === 'block') {
                 var resizeObserver = new ResizeObserver(entries => {
-                    console.log('resizeObserver', serial);
+                    console.log('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                     this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                 }); 
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
+                this.dataSources.set(serial, dataSource);
                 // this.compactGridstack(this.minorGrid);
                 this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
             }
@@ -502,8 +503,8 @@ export class GridStackComponent implements OnInit {
 
     private moveFromMinorToMajor() {
         this.minorGrid.on('removed', (event, items) => {
-            console.log(this.chartService.chartAction.value.action);
-            console.log(this.minorInitImage)
+            // console.log(this.chartService.chartAction.value.action);
+            // console.log(this.minorInitImage)
             if (this.chartService.chartAction.value.action === 'disfavor' || this.minorInitImage) {
                 return;
             }
@@ -521,6 +522,7 @@ export class GridStackComponent implements OnInit {
                 this.chartService.removePersistence(serial);
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
+                    console.log(dataSource);
                     var titleCount = this.chartService.chartAction.value.titleCount;
                     var jobName = this.chartService.chartAction.value.jobName;
                     var color = this.chartService.chartAction.value.color;
@@ -535,17 +537,19 @@ export class GridStackComponent implements OnInit {
                         .attr('height', barEL.clientHeight)
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                     this.barChart.addPencil(svg, barEL, serial, jobName, titleCount, color);
-                    this.barChart.addDownload(svg, barEL, jobName, dataSource, titleCount, color);
+                    this.barChart.addDownload(svg, barEL, jobName, dataSource, titleCount);
                     this.barChart.addHeart(svg, barEL, serial, jobName, dataSource, titleCount, color);
                     this.barChart.addTrash(svg, serial, dataSource, barEL.clientWidth - 36, 95);
                 }
                 if (contEl) {
+                    console.log(contEl)
                     var resizeObserver = new ResizeObserver(entries => {
-                        console.log('resizeObserver', serial);
+                        console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
                         this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
+                    this.dataSources.set(serial, dataSource);
                     this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(0, 0, 0)');
                 }
             }

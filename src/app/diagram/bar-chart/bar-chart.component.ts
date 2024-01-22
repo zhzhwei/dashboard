@@ -40,7 +40,7 @@ export class BarChartComponent implements OnInit {
             if (action === 'create' || action === 'edit' || action === 'load') {
                 this.addTitle(this.svg, barEL, jobName, titleCount);
                 this.addPencil(this.svg, barEL, tileSerial, jobName, titleCount, color);
-                this.addDownload(this.svg, barEL, jobName, dataSource, titleCount, color);
+                this.addDownload(this.svg, barEL, jobName, dataSource, titleCount);
                 this.addHeart(this.svg, barEL, tileSerial, jobName, dataSource, titleCount, color);
                 this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 95);
             } else if (action === 'update') {
@@ -172,7 +172,7 @@ export class BarChartComponent implements OnInit {
         });
     }
 
-    public addDownload(svg, barEL, jobName, dataSource, titleCount, color): void {
+    public addDownload(svg, barEL, jobName, dataSource, titleCount): void {
         this.titleIconService.createDownload(svg, barEL.clientWidth - 38, 45, () => {
             this.chartService.saveJsonFile('Bar Chart', dataSource, jobName, titleCount);
         });
