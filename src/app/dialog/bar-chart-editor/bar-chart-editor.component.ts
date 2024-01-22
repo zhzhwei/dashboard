@@ -111,6 +111,7 @@ export class BarChartEditorComponent implements OnInit {
 
     private createChart(title: string, dataSource: any[]): void {
         this.barEL = document.getElementById("editor-bar");
+        console.log("clientHeight", this.barEL.clientHeight)
 
         while (this.barEL.firstChild) {
             this.barEL.removeChild(this.barEL.firstChild);
@@ -146,7 +147,7 @@ export class BarChartEditorComponent implements OnInit {
             .style("text-anchor", "middle");
 
         // Create the Y-axis band scale
-        var maxCount = d3.max(dataSource, (d: any) => d.count);
+        var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
         this.y = d3
             .scaleLinear()
             .domain([0, maxCount + 1])

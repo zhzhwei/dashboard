@@ -64,9 +64,9 @@ export class BarChartComponent implements OnInit {
             .domain(dataSource.map(d => d.name))
             .padding(0.2);
 
-        var maxCount = d3.max(dataSource, (d: any) => d.count);
+        var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
         var y = d3.scaleLinear()
-            .domain([0, maxCount + 1])
+            .domain([0, Number(maxCount + 1)])
             .range([barEL.clientHeight - this.margin * 2, 0]);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
