@@ -124,7 +124,7 @@ export class GridStackComponent implements OnInit {
                         console.log(action,tileSerial);
                         chartCreators[chartType]('create', tileSerial, jobName, dataSource, parameter, 'rgb(0, 0, 0)');
                         this.chartService.savePersistence(chartType, tileSerial, dataSource, jobName, parameter, 'rgb(0, 0, 0)');
-                        this.gridService.saveInfoPosition(tileSerial);
+                        // this.gridService.saveInfoPosition(tileSerial);
                     }
                 },
                 'edit': () => {
@@ -436,16 +436,37 @@ export class GridStackComponent implements OnInit {
     private compactGridstack(gridstack: GridStack) {
         // Start a batch update
         gridstack.batchUpdate();
-        // Move all grid items to the left
-        for (let i = 0; i < gridstack.engine.nodes.length; i++) {
-            let node = gridstack.engine.nodes[i];
-            gridstack.update(node.el, { x: 0, y: node.y });
+        // Get all grid items
+        let nodes = gridstack.engine.nodes;
+        // Sort the grid items by their y position
+        nodes.sort((a, b) => a.y - b.y);
+        // For each grid item
+        for (let node of nodes) {
+            // Find the highest empty cell below the grid item
+            let highestEmptyCell = node.y;
+            for (let y = node.y - 1; y >= 0; y--) {
+                let isCellEmpty = true;
+                for (let otherNode of nodes) {
+                    if (otherNode !== node && otherNode.y <= y && y < otherNode.y + otherNode.h && otherNode.x < node.x + node.w && node.x < otherNode.x + otherNode.w) {
+                        isCellEmpty = false;
+                        break;
+                    }
+                }
+                if (isCellEmpty) {
+                    highestEmptyCell = y;
+                } else {
+                    break;
+                }
+            }
+            // Move the grid item to the highest empty cell
+            gridstack.update(node.el, { x: node.x, y: highestEmptyCell });
         }
         // Compact the grid items vertically
         gridstack.compact();
         // End the batch update
         gridstack.commit();
     }
+    
 
     private moveFromMajorToMinor() {
         this.majorGrid.on('removed', (event, items) => {
@@ -489,7 +510,7 @@ export class GridStackComponent implements OnInit {
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
                 this.dataSources.set(serial, dataSource);
-                // this.compactGridstack(this.minorGrid);
+                this.compactGridstack(this.minorGrid);
                 this.chartService.savePersistence('Bar Chart', serial, dataSource, jobName, titleCount, 'rgb(255, 0, 0)');
             }
             setTimeout(() => {
