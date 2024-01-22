@@ -212,14 +212,14 @@ export class GridStackComponent implements OnInit {
                             }
                         }
                         if (serialFound) {
-                            console.log(serialFound);
+                            console.log('serialFound:', serialFound);
                             tileSerial = serialFound;
                             this.gridService.tileSerialFavor.delete(tileSerial);
                             contEl = document.getElementById(tileSerial);
                             dataSource = this.dataSources.get(tileSerial);
                         } else {
                             let serial: string;
-                            let minNum = 1000;
+                            let minNum = 10000;
                             let keys = Object.keys(localStorage);
                             keys.forEach(key => {
                                 if (key.includes('major')) {
@@ -244,7 +244,6 @@ export class GridStackComponent implements OnInit {
                         let keys = Object.keys(localStorage);
                         keys.forEach(key => {
                             if (key.includes('minor')) {
-                                console.log('1111111111111')
                                 this.minorInitImage = false;
                             }
                         });
@@ -319,10 +318,8 @@ export class GridStackComponent implements OnInit {
                     if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
-                            // console.log('11111');
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(255, 0, 0)');
                         } else {    
-                            // console.log('22222');
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter, 'rgb(0, 0, 0)');
                         }
                     }
@@ -339,7 +336,6 @@ export class GridStackComponent implements OnInit {
                         var latestAction = this.chartService.chartAction.value.action; // within the callback, this.chartService.chartAction.value is the latest value
                         console.log(action, latestAction, tileSerial);
                         if (latestAction != 'remove' && latestAction != 'disfavor') {
-                            console.log('favor');
                             var latestDataSource = this.dataSources.get(tileSerial);
                             chartCreators[chartType]('update', tileSerial, jobName, latestDataSource, parameter);
                         }
@@ -386,7 +382,7 @@ export class GridStackComponent implements OnInit {
                     // console.log('minor is not found');
                     this.gridService.minorEmpty.next(true);
                 } else {
-                    console.log('minor is found');
+                    // console.log('minor is found');
                     this.minorGrid.removeAll();
                     // this.minorInitImage = false;
                     this.chartService.loadPersistence('minor');
@@ -476,7 +472,6 @@ export class GridStackComponent implements OnInit {
                 return;
             }
             if ( this.minorInitImage ) {
-                console.log('1111111111111');
                 this.minorGrid.removeWidget(this.minorGrid.getGridItems()[0] as HTMLElement);
                 this.minorInitImage = false;
             }
@@ -504,7 +499,7 @@ export class GridStackComponent implements OnInit {
             }
             if (this.minorGridEl.style.display === 'block') {
                 var resizeObserver = new ResizeObserver(entries => {
-                    console.log('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
+                    // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                     this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(255, 0, 0)');
                 }); 
                 resizeObserver.observe(contEl);
@@ -529,9 +524,7 @@ export class GridStackComponent implements OnInit {
             if (this.chartService.chartAction.value.action === 'disfavor' || this.minorInitImage) {
                 return;
             }
-            console.log(this.majorInitImage)
             if ( this.majorInitImage ) {
-                console.log('2222222222222');
                 this.majorGrid.removeWidget(this.majorGrid.getGridItems()[0] as HTMLElement);
                 this.majorInitImage = false;
             }
@@ -543,7 +536,6 @@ export class GridStackComponent implements OnInit {
                 this.chartService.removePersistence(serial);
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
-                    console.log(dataSource);
                     var titleCount = this.chartService.chartAction.value.titleCount;
                     var jobName = this.chartService.chartAction.value.jobName;
                     var color = this.chartService.chartAction.value.color;
@@ -563,9 +555,8 @@ export class GridStackComponent implements OnInit {
                     this.barChart.addTrash(svg, serial, dataSource, barEL.clientWidth - 36, 95);
                 }
                 if (contEl) {
-                    console.log(contEl)
                     var resizeObserver = new ResizeObserver(entries => {
-                        console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
+                        // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
                         this.barChart.copeChartAction('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
                     });
                     resizeObserver.observe(contEl);
