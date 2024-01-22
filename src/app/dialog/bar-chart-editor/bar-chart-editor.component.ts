@@ -65,6 +65,11 @@ export class BarChartEditorComponent implements OnInit {
 
     public applyChanges(): void {
         this.checkedItems = this.list.filter((item) => item.checked === true);
+        this.mainResult = this.mainResult.filter((item) => {
+            return this.checkedItems.some((checkedItem) => {
+                return checkedItem.title === item.name;
+            });
+        });
         // this.skillQuery =
         //     this.rdfDataService.prefixes +
         //     `
