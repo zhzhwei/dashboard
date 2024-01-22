@@ -47,7 +47,7 @@ section {
 }
 
 .selected {
-    border: 2px solid black;
+    border: 2px solid rgb(68, 68, 68);
 }
 
 .logo-button {

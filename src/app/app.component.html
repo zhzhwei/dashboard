@@ -14,8 +14,7 @@
         </div>
         <div fxFlex="20" class="text-center card text-white grid-stack-item">
             <div id="add-circle" style="padding: 15px; margin-bottom: 15px;" class="logo-button text-center text-white"
-                (click)="openVisGenDialog(); toggleSelected('add-circle')"
-                [ngClass]="{'selected': isSelected('add-circle')}">
+                (click)="openVisGenDialog();">
                 <div>
                     <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
                 </div>
@@ -37,8 +36,7 @@
         </div>
         <div fxFlex="20" class="text-center card text-white grid-stack-item">
             <div id="cloud-upload-outline" style="padding: 15px; margin-bottom: 15px;"
-                class="logo-button text-center text-white" (click)="loadChart(); toggleSelected('cloud-upload-outline')"
-                [ngClass]="{'selected': isSelected('cloud-upload-outline')}">
+                class="logo-button text-center text-white" (click)="loadChart();">
                 <div>
                     <ion-icon name="cloud-upload-outline" style="font-size: 400%"></ion-icon>
                 </div>
@@ -49,7 +47,7 @@
         </div>
         <div fxFlex="20" class="text-center card text-white grid-stack-item">
             <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="logo-button text-center text-white"
-                (click)="removeAllCharts(); toggleSelected('trash')" [ngClass]="{'selected': isSelected('trash')}">
+                (click)="removeAllCharts();">
                 <div>
                     <ion-icon name="trash" style="font-size: 400%"></ion-icon>
                 </div>
