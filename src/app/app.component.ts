@@ -4,7 +4,6 @@ import { VisGenDialogComponent } from './dialog/vis-gen-dialog/vis-gen-dialog.co
 import { ChartService } from './services/chart.service';
 import { GridHTMLElement } from 'gridstack';
 
-import * as d3 from 'd3';
 import { GridStackComponent } from './gridstack/gridstack.component';
 import { GridStackService } from './services/gridstack.service';
 import { DialogService } from './services/dialog.service';
@@ -18,13 +17,15 @@ export class AppComponent {
 
     @ViewChild(GridStackComponent) gridStack: GridStackComponent;
 
+    selectedId: string = '';
+
     constructor(public dialog: MatDialog, private chartService: ChartService, 
         private gridService: GridStackService, private dialogService: DialogService) { }
     
     ngOnInit() { }
 
     welcomeToApp() {
-        window.location.reload();
+        // window.location.reload();
     }
 
     openVisGenDialog() {
@@ -54,6 +55,14 @@ export class AppComponent {
 
     removeAllCharts() {
         this.dialogService.openDeleteConfirmation('','','', 'Are you sure to delete all widgets?');
+    }
+
+    toggleSelected(id: string) {
+        this.selectedId = this.selectedId === id ? '' : id;
+    }
+
+    isSelected(id: string) {
+        return this.selectedId === id;
     }
 
 }

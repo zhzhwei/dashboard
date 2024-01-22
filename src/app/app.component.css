@@ -46,6 +46,10 @@ section {
     background-color: rgb(115, 105, 148);
 }
 
+.selected {
+    border: 2px solid black;
+}
+
 .logo-button {
     border-radius: 5px;
 }
