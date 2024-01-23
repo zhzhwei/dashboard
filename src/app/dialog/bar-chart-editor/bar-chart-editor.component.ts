@@ -25,6 +25,7 @@ export class BarChartEditorComponent implements OnInit {
     public skillQuery: string;
     public skillQueries: string[];
     public mainResult: any[];
+    public initialMainResult: any[];
 
     private svg: any;
     private margin = 60;
@@ -41,6 +42,7 @@ export class BarChartEditorComponent implements OnInit {
     ngOnInit(): void {
         this.sharedService.results$.subscribe((results) => {
             this.mainResult = results;
+            this.initialMainResult = [...results];
             console.log("Received updated results:", this.mainResult);
 
             this.list = this.mainResult.map((item, index) => {
@@ -65,7 +67,7 @@ export class BarChartEditorComponent implements OnInit {
 
     public applyChanges(): void {
         this.checkedItems = this.list.filter((item) => item.checked === true);
-        this.mainResult = this.mainResult.filter((item) => {
+        this.mainResult = this.initialMainResult.filter((item) => {
             return this.checkedItems.some((checkedItem) => {
                 return checkedItem.title === item.name;
             });
