@@ -74,7 +74,7 @@ export class GridStackComponent implements OnInit {
             if (isEmpty) {
                 this.minorGrid.removeAll();
                 this.minorGrid.addWidget(this.gridService.minorInitContent);
-                console.log('minorGrid is minorInitContent');
+                // console.log('minorGrid is minorInitContent');
                 this.minorInitImage = true;
             }
         });
@@ -425,7 +425,7 @@ export class GridStackComponent implements OnInit {
                         }
                     }
                 });
-                console.log('minorGrid is empty');
+                // console.log('minorGrid is empty');
                 this.gridService.minorEmpty.next(true);
             }
         });
