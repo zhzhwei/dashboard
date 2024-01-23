@@ -123,7 +123,7 @@ export class ChartService {
     }
 
     public loadPersistence(gridType: string) {
-        if (localStorage.length > 0 && localStorage.length < 10) {
+        if (localStorage.length > 0 && localStorage.length < 100) {
             let keys = Object.keys(localStorage);
             keys.forEach(key => {
                 if (key.includes(gridType)) {
