@@ -3,8 +3,7 @@ import { color } from 'highcharts';
 import { BehaviorSubject } from 'rxjs';
 
 interface ChartAction {
-    queryParameters: any;
-    selectProperties: String[];
+    title: string;
     action: string;
     serial: string;
     pieLabel?: string;
@@ -27,7 +26,7 @@ export class ChartService {
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', color: '' , queryParameters: {}, selectProperties: []});
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', title: '', color: ''});
     currentChartAction = this.chartAction.asObservable();
 
     public chartFavorite = new BehaviorSubject<ChartFavorite>({ type: '', serial: '', favorite: false });
@@ -36,18 +35,21 @@ export class ChartService {
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
 
-    public saveJsonFile(chartType: string, dataSource: any[], jobName: string, parameter: any) {
+    updateTitle(newTitle: string): void {
+        const currentValue = this.chartAction.getValue();
+        const updatedValue: ChartAction = { ...currentValue, title: newTitle };
+        this.chartAction.next(updatedValue);
+    }
+
+    public saveJsonFile(chartType: string, dataSource: any[], title: string, parameter: any) {
         let exportObj = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             serial: '',
-            jobName: jobName
+            title: title
         };
-        if (chartType === 'Bar Chart') {
-            exportObj['titleCount'] = parameter;
-        }
-        else if (chartType === 'Pie Chart') {
+        if (chartType === 'pie_chart') {
             exportObj['pieLabel'] = parameter;
         }
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
@@ -67,20 +69,18 @@ export class ChartService {
             var reader = new FileReader();
             reader.onload = (event: any) => {
                 var exportObj = JSON.parse(event.target.result);
-                if (exportObj.chartType === 'Bar Chart') {
+                if (exportObj.chartType === 'bar_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        queryParameters: exportObj.queryParameters,
-                        selectProperties: exportObj.selectProperties
+                        title: exportObj.title
                     });
                 }
-                else if (exportObj.chartType === 'Pie Chart') {
+                else if (exportObj.chartType === 'pie_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        queryParameters: exportObj.queryParameters,
-                        selectProperties: exportObj.selectProperties,
+                        title: exportObj.title,
                         pieLabel: exportObj.pieLabel
                     });
                 };
@@ -92,19 +92,16 @@ export class ChartService {
         input.click();
     }
 
-    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], jobName: string, parameter: any, color: string) {
+    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], title: string, parameter: any=undefined, color: string) {
         var chartData = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             tileSerial: tileSerial,
-            jobName: jobName,
+            title: title,
             color: color
         };
-        if (chartType === 'Bar Chart') {
-            chartData['titleCount'] = parameter;
-        }
-        else if (chartType === 'Pie Chart') {
+        if (chartType === 'pie_chart') {
             chartData['pieLabel'] = parameter;
         }
         // console.log('Saving data:', chartData);
@@ -142,13 +139,11 @@ export class ChartService {
         let actionData: any = {
             action: 'load',
             serial: chartData.tileSerial,
-            jobName: chartData.jobName,
+            title: chartData.title,
             color: chartData.color
         };
     
-        if (chartType === 'dash-bar') {
-            actionData.titleCount = chartData.titleCount;
-        } else if (chartType === 'dash-pie') {
+        if (chartType === 'dash-pie') {
             actionData.pieLabel = chartData.pieLabel;
         }
     

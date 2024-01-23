@@ -5,18 +5,18 @@
         </div>
         <h2 mat-dialog-title align="center">Bar Chart Editor</h2>
     </div>
-    <div class="card" style="margin-top: 20px;">
+    <div class="card" style="margin-top: 20px">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9 text-center" id="editor-bar" style="display: flex; justify-content: center; align-items: center;">
+                <div class="col-md-9 text-center" id="editor-bar" style="display: flex; justify-content: center; align-items: center">
                     <p>Bar Chart</p>
                 </div>
                 <div class="col-md-3">
-                    <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()">Select All</strong>
-                    <div *ngFor="let item of list">
-                        <input type="checkbox" [(ngModel)]="item.checked">{{item.title}}
-                    </div>
-                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block;">Apply Changes</button>
+                    <input type="text" id="title-input" [(ngModel)]="title" placeholder="title"/>
+                    <br>
+                    <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()" />Select All</strong>
+                    <div *ngFor="let item of list"><input type="checkbox" [(ngModel)]="item.checked" />{{ item.title }}</div>
+                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block">Apply Changes</button>
                 </div>
             </div>
         </div>

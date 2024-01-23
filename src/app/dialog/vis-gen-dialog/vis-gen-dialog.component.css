@@ -68,14 +68,21 @@ th:last-child {
 }
 
 .table-container {
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
 }
 
 .table-container td {
     font-size: 16px;
+}
+
+p {
+    margin-left: 8px;
 }
 
 .data_select_input input[type="checkbox"] {
@@ -91,13 +98,58 @@ th:last-child {
     margin-left: 10px;
 }
 
-.data_select_input input[type="date"] {
+#checkbox_1 {
+    width: 250px;
+}
+
+label[for="jobNameCheckbox"],
+#checkbox_1 {
+    margin-top: -1px;
+}
+
+#checkbox_2 {
+    width: 232px;
+}
+
+label[for="createdBeforeCheckbox"],
+#checkbox_2{
+    margin-top: -1px;
+}
+
+#checkbox_3 {
+    width: 244px;
+}
+
+label[for="createdAfterCheckbox"],
+#checkbox_3 {
+    margin-top: -1px;
+}
+
+#checkbox_4 {
+    width: 190px;
+}
+
+label[for="applicantNumberCheckbox"],
+#checkbox_4 {
+    margin-top: -1px;
+}
+
+#checkbox_5, #checkbox_6, #checkbox_7 {
+    width: 268px;
+}
+
+label[for="fulltimeJobCheckbox, limitedJobCheckbox, listsSkillCheckbox"],
+#checkbox_5, #checkbox_6, #checkbox_7{
+    margin-top: -1px;
+}
+
+/* .data_select_input input[type="date"] {
     width: 150px;
 }
 
 .data_select_input input[type="number"] {
     width: 80px;
-}
+} */
 
 .data_select_input select {
     vertical-align: top;
