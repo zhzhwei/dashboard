@@ -93,7 +93,7 @@ export class BarChartComponent implements OnInit {
                 .attr('x', (d: any) => x(d.name))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
-                .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.name))
+                .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
                 .attr('fill', 'steelblue')
                 .on('mouseover', (d, i, nodes) => {
                     // Get the current bar element
