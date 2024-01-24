@@ -30,8 +30,8 @@ export class AppComponent {
 
     openVisGenDialog() {
         this.dialog.open(VisGenDialogComponent, {
-            width: '1800px',
-            height: '1000px',
+            width: '1600px',
+            height: '800px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
