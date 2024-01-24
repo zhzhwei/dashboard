@@ -13,7 +13,7 @@
                     <p>Bar Chart</p>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" id="title-input" [(ngModel)]="title" placeholder="title"/>
+                    <input type="text" id="title-input" [(ngModel)]="title" placeholder="Please enter your title"/>
                     <br>
                     <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()" />Select All</strong>
                     <div *ngFor="let item of list"><input type="checkbox" [(ngModel)]="item.checked" />{{ item.title }}</div>

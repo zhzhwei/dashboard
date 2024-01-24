@@ -270,27 +270,29 @@ export class GridStackComponent implements OnInit {
                 chartActions[action]();
             }
             // console.log(this.gridService.tileSerialFavor);
-            if ( action === 'create') {
-                this.gridService.tileSerialFavor.delete(tileSerial);
-                this.dataSources.set(tileSerial, dataSource);
-                if (this.resizeObservers.has(tileSerial)) {
-                    this.resizeObservers.get(tileSerial).disconnect();
-                }
-                var resizeObserver = new ResizeObserver(entries => {
-                    var latestAction = this.chartService.chartAction.value.action;
-                    console.log(action, latestAction, tileSerial);
-                    title = this.chartService.chartAction.value.title
-                    if (latestAction != 'remove' && latestAction != 'disfavor') {
-                        var latestDataSource = this.dataSources.get(tileSerial);
-                        if (this.gridService.tileSerialFavor.has(tileSerial)) {
-                            chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)');
-                        } else {    
-                            chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)');
-                        }
+            if (action === 'create') {
+                if (conditions[chartType]) {
+                    this.gridService.tileSerialFavor.delete(tileSerial);
+                    this.dataSources.set(tileSerial, dataSource);
+                    if (this.resizeObservers.has(tileSerial)) {
+                        this.resizeObservers.get(tileSerial).disconnect();
                     }
-                });
-                resizeObserver.observe(contEl);
-                this.resizeObservers.set(tileSerial, resizeObserver);
+                    var resizeObserver = new ResizeObserver(entries => {
+                        var latestAction = this.chartService.chartAction.value.action;
+                        console.log(action, latestAction, tileSerial);
+                        title = this.chartService.chartAction.value.title
+                        if (latestAction != 'remove' && latestAction != 'disfavor') {
+                            var latestDataSource = this.dataSources.get(tileSerial);
+                            if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                                chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)');
+                            } else {    
+                                chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)');
+                            }
+                        }
+                    });
+                    resizeObserver.observe(contEl);
+                    this.resizeObservers.set(tileSerial, resizeObserver);
+                }
             } else if (action === 'edit') {
                 this.gridService.tileSerialFavor.delete(tileSerial);
                 this.dataSources.set(tileSerial, dataSource);
