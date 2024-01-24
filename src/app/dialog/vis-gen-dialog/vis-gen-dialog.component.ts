@@ -276,7 +276,7 @@ export class VisGenDialogComponent implements OnInit {
                     break;
                 default:
                     console.log("Invalid Chart Type");
-                    this.dialogService.openSnackBar("Please choose a Visualization Type fisrt", "close");
+                    this.dialogService.openSnackBar("Please choose a Visualization Type first", "close");
             }
         } else {
             this.dialogService.openSnackBar("No database entries to visualize", "close");
