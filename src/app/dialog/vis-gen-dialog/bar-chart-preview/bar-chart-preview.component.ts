@@ -79,7 +79,7 @@ export class BarChartPreviewComponent implements OnInit {
                     skillList.push(`"${item.skillName.value}"@de`);
                 }
                 console.log(skillList);
-                if (skillList.length > 20) {
+                if (skillList.length > 40) {
                     this.dialogService.openSnackBar("Too many different values to visualize in a bar chart.", "close");
                 } else {
                     let skillListString = skillList.join(", ");

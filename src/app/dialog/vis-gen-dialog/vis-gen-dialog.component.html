@@ -52,7 +52,10 @@
                     </div>
                     <div class="data_select_input">
                         <input type="checkbox" id="listsSkillCheckbox" [(ngModel)]="listsSkillCheckbox" (change)="updateQueryParameters()" /> <label for="listsSkillCheckbox">Lists skill</label>
-                        <input type="text" id="checkbox_7" [(ngModel)]="skill" [disabled]="!listsSkillCheckbox" (input)="updateQueryParameters()" placeholder="Enter skill" />
+                        <input type="text" id="checkbox_7" [attr.list]="skill ? 'skillSuggestions' : null" [(ngModel)]="skill" [disabled]="!listsSkillCheckbox" (input)="updateQueryParameters()" placeholder="Enter skill" />
+                        <datalist id="skillSuggestions">
+                            <option *ngFor="let suggestion of allSkills" [value]="suggestion"></option>
+                        </datalist>
                     </div>
                     <br />
 

@@ -55,16 +55,20 @@ export class VisGenDialogComponent implements OnInit {
     public skill: string = "";
 
     public allSuggestions: string[] = [];
+    public allSkills: string[] = [];
     public selectProperties: string[] = ["s"];
 
     @ViewChildren("propertyCheckbox") propertyCheckboxes!: QueryList<ElementRef<HTMLInputElement>>;
 
-    public barQuery =
+    public allSkillsQuery =
         this.rdfDataService.prefixes +
         `
-        select ?title where { 
+        SELECT DISTINCT ?skillName WHERE { 
             ?s rdf:type edm:JobPosting.
             ?s edm:title ?title.
+            ?s edm:hasSkill ?skill.
+            ?skill edm:textField ?skillName.
+            FILTER (lang(?skillName) = "de").
         }
     `;
 
@@ -74,6 +78,11 @@ export class VisGenDialogComponent implements OnInit {
         this.http.get("assets/job_name_suggestions.txt", { responseType: "text" }).subscribe((data) => {
             // Split the content into an array of suggestions (assuming one suggestion per line)
             this.allSuggestions = data.split("\n").map((suggestion) => suggestion.trim());
+        });
+        this.rdfDataService.getQueryResults(this.allSkillsQuery).then((data) => {
+            for (const item of data.results.bindings) {
+                this.allSkills.push(item.skillName.value);
+            }
         });
     }
 
@@ -172,11 +181,11 @@ export class VisGenDialogComponent implements OnInit {
         let previewQuery = this.generateQuery();
         console.log(previewQuery);
 
-        this.rdfDataService.getQueryResults(previewQuery).then(data => {
+        this.rdfDataService.getQueryResults(previewQuery).then((data) => {
             this.previewResults = data.results.bindings.map((item) => {
-                let linkParts = item.s.value.split("/")
-                let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1]
-                return {"title": item.title.value, "link": link};
+                let linkParts = item.s.value.split("/");
+                let link = "https://graphdb.elevait.io/resource?uri=http:%2F%2Fai4bd.com%2Fresource%2Fdata%2F" + linkParts[linkParts.length - 1];
+                return { title: item.title.value, link: link };
             });
         });
     }
@@ -241,7 +250,7 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     public forwardToEditor() {
-        this.currentPreviewContent.generateQuery()
+        this.currentPreviewContent.generateQuery();
         this.chartService.chartType.next(this.chartType);
         if (this.previewResults.length > 0) {
             switch (this.chartType) {
