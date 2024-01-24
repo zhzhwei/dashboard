@@ -69,7 +69,7 @@ export class DialogService {
     openVisGenDialog(): void {
         this.dialog.open(VisGenDialogComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -79,7 +79,7 @@ export class DialogService {
     openBarChartEditor(action: string, tileSerial: string, title: string, color: any) {
         this.dialog.open(BarChartEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -90,7 +90,7 @@ export class DialogService {
     openStackedBarChartEditor() {
         this.dialog.open(StackedBarEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -100,7 +100,7 @@ export class DialogService {
     openPieChartEditor(action: string, tileSerial: string, title: string) {
         this.dialog.open(PieChartEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -111,7 +111,7 @@ export class DialogService {
     openDoughnutChartEditor() {
         this.dialog.open(DoughnutEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -121,7 +121,7 @@ export class DialogService {
     openStarPlotEditor() {
         this.dialog.open(StarPlotEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true
@@ -131,7 +131,7 @@ export class DialogService {
     openLineChartEditor() {
         this.dialog.open(LineChartEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true

@@ -250,7 +250,9 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     public forwardToEditor() {
-        this.currentPreviewContent.generateQuery();
+        if (this.currentPreviewContent) {
+            this.currentPreviewContent.generateQuery();
+        }
         this.chartService.chartType.next(this.chartType);
         if (this.previewResults.length > 0) {
             switch (this.chartType) {
@@ -274,7 +276,7 @@ export class VisGenDialogComponent implements OnInit {
                     break;
                 default:
                     console.log("Invalid Chart Type");
-                    this.dialogService.openSnackBar("Please choose a Visualization Type", "close");
+                    this.dialogService.openSnackBar("Please choose a Visualization Type fisrt", "close");
             }
         } else {
             this.dialogService.openSnackBar("No database entries to visualize", "close");

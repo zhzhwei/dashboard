@@ -182,7 +182,7 @@ export class BarChartEditorComponent implements OnInit {
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
                 .attr("fill", "steelblue");
         } else {
-            this.dialogService.openSnackBar("Please enter the title and select at least one skill.", "close");
+            this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
         }
     }
 }

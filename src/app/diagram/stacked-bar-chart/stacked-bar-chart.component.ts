@@ -35,7 +35,7 @@ export class StackedBarChartComponent implements OnInit {
     openDialog() {
         this.dialog.open(StackedBarEditorComponent, {
             width: '1600px',
-            height: '800px',
+            height: '850px',
             backdropClass: "hello",
             autoFocus: false,
             disableClose: true

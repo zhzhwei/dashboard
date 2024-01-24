@@ -15,6 +15,7 @@ import { GridStackService } from '../services/gridstack.service';
 
 import 'gridstack/dist/h5/gridstack-dd-native';
 import * as d3 from 'd3';
+import { chart } from 'highcharts';
 
 declare var ResizeObserver: any;
 
@@ -271,7 +272,8 @@ export class GridStackComponent implements OnInit {
             }
             // console.log(this.gridService.tileSerialFavor);
             if (action === 'create') {
-                if (conditions[chartType]) {
+                console.log(chartType, conditions[chartType]);
+                // if (conditions[chartType]) {
                     this.gridService.tileSerialFavor.delete(tileSerial);
                     this.dataSources.set(tileSerial, dataSource);
                     if (this.resizeObservers.has(tileSerial)) {
@@ -292,7 +294,7 @@ export class GridStackComponent implements OnInit {
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(tileSerial, resizeObserver);
-                }
+                // }
             } else if (action === 'edit') {
                 this.gridService.tileSerialFavor.delete(tileSerial);
                 this.dataSources.set(tileSerial, dataSource);
