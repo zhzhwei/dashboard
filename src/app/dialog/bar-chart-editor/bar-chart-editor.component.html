@@ -1,23 +1,27 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <button mat-raised-button (click)="backToDashboard()">Back to Dashboard</button>
-            <button mat-raised-button (click)="backToVisGen()">Back to Visualization Generator</button>
+            <button mat-raised-button class="close-buttons" (click)="backToVisGen()">Back to Visualization Generator</button>
         </div>
-        <h2 mat-dialog-title align="center">Bar Chart Editor</h2>
+        <div class="col-md-4">
+            <button mat-raised-button class="close-buttons" (click)="backToDashboard()">Back to Dashboard</button>
+        </div>
+        <h2 mat-dialog-title align="center" style="margin-top: 20px;">Bar Chart Editor</h2>
     </div>
     <div class="card" style="margin-top: 20px">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9 text-center" id="editor-bar" style="display: flex; justify-content: center; align-items: center">
-                    <p>Bar Chart</p>
+                <div class="col-md-9" id="editor-bar" style="text-align: center; margin-top: 20px;">
+                    <strong><label id="title-label">Title: </label></strong>
+                    <input type="text" id="title-text" style="text-align: center; margin-left: 5px; border-radius: 5px;" [(ngModel)]="title" placeholder="Please enter the title"/>
+                    <!-- <p>Bar Chart</p> -->
                 </div>
                 <div class="col-md-3">
-                    <input type="text" id="title-input" [(ngModel)]="title" placeholder="Please enter your title"/>
-                    <br>
+                    <!-- <input type="text" id="title-input" [(ngModel)]="title" placeholder="Please enter your title"/>
+                    <br> -->
                     <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()" />Select All</strong>
                     <div *ngFor="let item of list"><input type="checkbox" [(ngModel)]="item.checked" />{{ item.title }}</div>
-                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block">Apply Changes</button>
+                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block">Preview</button>
                 </div>
             </div>
         </div>

@@ -127,22 +127,22 @@ export class BarChartEditorComponent implements OnInit {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
 
-            while (this.barEL.firstChild) {
-                this.barEL.removeChild(this.barEL.firstChild);
+            while (this.barEL.children.length > 2) {
+                this.barEL.removeChild(this.barEL.lastChild);
             }
 
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
             var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
 
-            this.svg
-                .append("text")
-                .attr("class", "title")
-                .attr("x", this.barEL.clientWidth / 2)
-                .attr("y", this.margin / 2 + 15)
-                .attr("text-anchor", "middle")
-                .style("font-size", "16px")
-                .text(title);
+            // this.svg
+            //     .append("text")
+            //     .attr("class", "title")
+            //     .attr("x", this.barEL.clientWidth / 2)
+            //     .attr("y", this.margin / 2 + 15)
+            //     .attr("text-anchor", "middle")
+            //     .style("font-size", "16px")
+            //     .text(title);
 
             // Create the X-axis band scale
             this.x = d3
