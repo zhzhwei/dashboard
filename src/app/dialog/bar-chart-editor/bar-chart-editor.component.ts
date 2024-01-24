@@ -3,6 +3,7 @@ import { RdfDataService } from '../../services/rdf-data.service';
 import { ChartService } from '../../services/chart.service';
 import { SystemService } from '../../services/system.service';
 import { SharedService } from "../../services/shared.service";
+import { DialogService } from 'src/app/services/dialog.service';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
 
@@ -33,7 +34,7 @@ export class BarChartEditorComponent implements OnInit {
     private x: any;
     private y: any;
 
-    constructor(private rdfDataService: RdfDataService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
+    constructor(private dialogService: DialogService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
         this.chartService.currentChartAction.subscribe((chartAction) => {
             this.title = chartAction.title;
         });
@@ -53,6 +54,11 @@ export class BarChartEditorComponent implements OnInit {
                 };
             });
         });
+    }
+
+    backToVisGen(): void {
+        this.dialog.closeAll();
+        this.dialogService.openVisGenDialog();
     }
 
     backToDashboard(): void {
