@@ -123,61 +123,65 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     private createChart(title: string, dataSource: any[]): void {
-        this.barEL = document.getElementById("editor-bar");
-        console.log("clientHeight", this.barEL.clientHeight)
+        if ( title && dataSource.length > 0 ) {
+            this.barEL = document.getElementById("editor-bar");
+            console.log("clientHeight", this.barEL.clientHeight)
 
-        while (this.barEL.firstChild) {
-            this.barEL.removeChild(this.barEL.firstChild);
+            while (this.barEL.firstChild) {
+                this.barEL.removeChild(this.barEL.firstChild);
+            }
+
+            this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
+
+            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
+
+            this.svg
+                .append("text")
+                .attr("class", "title")
+                .attr("x", this.barEL.clientWidth / 2)
+                .attr("y", this.margin / 2 + 15)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .text(title);
+
+            // Create the X-axis band scale
+            this.x = d3
+                .scaleBand()
+                .range([0, this.barEL.clientWidth - this.margin * 2])
+                .domain(dataSource.map((d) => d.name))
+                .padding(0.2);
+
+            // Draw the X-axis on the DOM
+            g.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", "translate(0," + (this.barEL.clientHeight - this.margin * 2) + ")")
+                .call(d3.axisBottom(this.x).tickSizeOuter(0))
+                .selectAll("text")
+                // .attr('transform', 'translate(-10,0)rotate(-45)')
+                .style("text-anchor", "middle");
+
+            // Create the Y-axis band scale
+            var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
+            this.y = d3
+                .scaleLinear()
+                .domain([0, maxCount + 1])
+                .range([this.barEL.clientHeight - this.margin * 2, 0]);
+
+            // Draw the Y-axis on the DOM
+            g.append("g").attr("class", "y-axis").call(d3.axisLeft(this.y));
+
+            // Create and fill the bars
+            g.selectAll("bars")
+                .data(dataSource)
+                .enter()
+                .append("rect")
+                .attr("x", (d: any) => this.x(d.name))
+                .attr("y", (d: any) => this.y(d.count))
+                .attr("width", this.x.bandwidth())
+                .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
+                .attr("fill", "steelblue");
+        } else {
+            this.dialogService.openSnackBar("Please enter the title and select at least one skill.", "close");
         }
-
-        this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
-
-        var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
-
-        this.svg
-            .append("text")
-            .attr("class", "title")
-            .attr("x", this.barEL.clientWidth / 2)
-            .attr("y", this.margin / 2 + 15)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text(title);
-
-        // Create the X-axis band scale
-        this.x = d3
-            .scaleBand()
-            .range([0, this.barEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map((d) => d.name))
-            .padding(0.2);
-
-        // Draw the X-axis on the DOM
-        g.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", "translate(0," + (this.barEL.clientHeight - this.margin * 2) + ")")
-            .call(d3.axisBottom(this.x).tickSizeOuter(0))
-            .selectAll("text")
-            // .attr('transform', 'translate(-10,0)rotate(-45)')
-            .style("text-anchor", "middle");
-
-        // Create the Y-axis band scale
-        var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
-        this.y = d3
-            .scaleLinear()
-            .domain([0, maxCount + 1])
-            .range([this.barEL.clientHeight - this.margin * 2, 0]);
-
-        // Draw the Y-axis on the DOM
-        g.append("g").attr("class", "y-axis").call(d3.axisLeft(this.y));
-
-        // Create and fill the bars
-        g.selectAll("bars")
-            .data(dataSource)
-            .enter()
-            .append("rect")
-            .attr("x", (d: any) => this.x(d.name))
-            .attr("y", (d: any) => this.y(d.count))
-            .attr("width", this.x.bandwidth())
-            .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
-            .attr("fill", "steelblue");
     }
 }
