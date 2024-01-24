@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RdfDataService } from '../../services/rdf-data.service';
-import { ChartService } from '../../services/chart.service';
-import { SystemService } from '../../services/system.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { RdfDataService } from "../../services/rdf-data.service";
+import { ChartService } from "../../services/chart.service";
+import { SystemService } from "../../services/system.service";
 import { SharedService } from "../../services/shared.service";
-import { DialogService } from 'src/app/services/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
-import * as d3 from 'd3';
+import { DialogService } from "src/app/services/dialog.service";
+import { MatDialog } from "@angular/material/dialog";
+import * as d3 from "d3";
 
 @Component({
-    selector: 'app-bar-chart-editor',
-    templateUrl: './bar-chart-editor.component.html',
-    styleUrls: ['./bar-chart-editor.component.css']
+    selector: "app-bar-chart-editor",
+    templateUrl: "./bar-chart-editor.component.html",
+    styleUrls: ["./bar-chart-editor.component.css"],
 })
 export class BarChartEditorComponent implements OnInit {
-
     public title: string;
+    public tileSerial: string;
     public query: string;
     public skills: any;
     public results: any;
@@ -37,14 +37,29 @@ export class BarChartEditorComponent implements OnInit {
     constructor(private dialogService: DialogService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
         this.chartService.currentChartAction.subscribe((chartAction) => {
             this.title = chartAction.title;
+            this.tileSerial = chartAction.serial;
         });
     }
 
     ngOnInit(): void {
-        this.sharedService.results$.subscribe((results) => {
-            this.mainResult = results;
-            this.initialMainResult = [...results];
-            console.log("Received updated results:", this.mainResult);
+        if (this.tileSerial === "") {
+            this.sharedService.results$.subscribe((results) => {
+                this.mainResult = results;
+                this.initialMainResult = [...results];
+                console.log("Received updated results:", this.mainResult);
+
+                this.list = this.mainResult.map((item, index) => {
+                    return {
+                        id: index,
+                        title: item.name,
+                        checked: false,
+                    };
+                });
+            });
+        } else {
+            const storageItem = JSON.parse(localStorage.getItem(this.tileSerial));
+            this.mainResult = storageItem.dataSource;
+            this.initialMainResult = [...this.mainResult];
 
             this.list = this.mainResult.map((item, index) => {
                 return {
@@ -53,7 +68,8 @@ export class BarChartEditorComponent implements OnInit {
                     checked: false,
                 };
             });
-        });
+            this.createChart(this.title, this.mainResult);
+        }
     }
 
     backToVisGen(): void {
@@ -81,7 +97,7 @@ export class BarChartEditorComponent implements OnInit {
         // this.skillQuery =
         //     this.rdfDataService.prefixes +
         //     `
-        //     select (count(?s) as ?skillCount) where { 
+        //     select (count(?s) as ?skillCount) where {
         //         ?s rdf:type edm:JobPosting.
         //         ?s edm:title ?title.
         //         filter contains(?title, "${this.jobName}").
@@ -116,14 +132,14 @@ export class BarChartEditorComponent implements OnInit {
         //     this.dataSource.forEach((item) => {
         //         item.skill = this.systemService.skillAbbr[item.skill];
         //     });
-            this.chartService.dataSource.next(this.mainResult); //?
-            this.chartService.updateTitle(this.title)
-            this.createChart(this.title, this.mainResult);
+        this.chartService.dataSource.next(this.mainResult); //?
+        this.chartService.updateTitle(this.title);
+        this.createChart(this.title, this.mainResult);
         // });
     }
 
     private createChart(title: string, dataSource: any[]): void {
-        if ( title && dataSource.length > 0 ) {
+        if (title && dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
 
@@ -162,7 +178,7 @@ export class BarChartEditorComponent implements OnInit {
 
             // Create the Y-axis band scale
             var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
-            console.log("maxCount", maxCount)
+            console.log("maxCount", maxCount);
             this.y = d3
                 .scaleLinear()
                 .domain([0, maxCount + 1])
