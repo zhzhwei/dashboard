@@ -170,7 +170,7 @@ export class BarChartEditorComponent implements OnInit {
             while (this.barEL.children.length > 2) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
-            // this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
+            this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
         }
     }
 }
