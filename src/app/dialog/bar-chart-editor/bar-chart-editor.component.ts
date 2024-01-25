@@ -161,7 +161,7 @@ export class BarChartEditorComponent implements OnInit {
             this.x = d3
                 .scaleBand()
                 .range([0, this.barEL.clientWidth - this.margin * 2])
-                .domain(dataSource.map((d) => this.systemService.skillAbbr[d.name]))
+                .domain(dataSource.map((d) => this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
                 .padding(0.2);
 
             // Draw the X-axis on the DOM
@@ -189,7 +189,7 @@ export class BarChartEditorComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append("rect")
-                .attr("x", (d: any) => this.x(this.systemService.skillAbbr[d.name]))
+                .attr("x", (d: any) => this.x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
                 .attr("y", (d: any) => this.y(d.count))
                 .attr("width", this.x.bandwidth())
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))

@@ -68,7 +68,7 @@ export class BarChartComponent implements OnInit {
 
         var x = d3.scaleBand()
             .range([0, barEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map(d => this.systemService.skillAbbr[d.name]))
+            .domain(dataSource.map(d => this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
             .padding(0.2);
 
         var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
@@ -97,7 +97,7 @@ export class BarChartComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append('rect')
-                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name]))
+                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
                 .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
@@ -159,7 +159,7 @@ export class BarChartComponent implements OnInit {
                 .call(d3.axisLeft(y));
 
             this.svg.selectAll('rect')
-                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name]))
+                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
                 .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count));
