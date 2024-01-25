@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RdfDataService } from '../../services/rdf-data.service';
-import { ChartService } from '../../services/chart.service';
-import { SystemService } from '../../services/system.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { RdfDataService } from "../../services/rdf-data.service";
+import { ChartService } from "../../services/chart.service";
+import { SystemService } from "../../services/system.service";
 import { SharedService } from "../../services/shared.service";
-import { DialogService } from 'src/app/services/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
-import * as d3 from 'd3';
+import { DialogService } from "src/app/services/dialog.service";
+import { MatDialog } from "@angular/material/dialog";
+import * as d3 from "d3";
 
 @Component({
-    selector: 'app-bar-chart-editor',
-    templateUrl: './bar-chart-editor.component.html',
-    styleUrls: ['./bar-chart-editor.component.css']
+    selector: "app-bar-chart-editor",
+    templateUrl: "./bar-chart-editor.component.html",
+    styleUrls: ["./bar-chart-editor.component.css"],
 })
 export class BarChartEditorComponent implements OnInit {
-
     public title: string;
+    public tileSerial: string;
     public query: string;
     public skills: any;
     public results: any;
@@ -37,15 +37,31 @@ export class BarChartEditorComponent implements OnInit {
     constructor(private dialogService: DialogService, private chartService: ChartService, private dialog: MatDialog, private systemService: SystemService, private sharedService: SharedService) {
         this.chartService.currentChartAction.subscribe((chartAction) => {
             this.title = chartAction.title;
+            this.tileSerial = chartAction.serial;
         });
     }
 
     ngOnInit(): void {
-        this.sharedService.results$.subscribe((results) => {
-            this.mainResult = results;
-            this.initialMainResult = [...results];
-            console.log("Received updated results:", this.mainResult);
+        if (this.tileSerial === "") {
+            this.sharedService.results$.subscribe((results) => {
+                this.mainResult = results;
+                this.initialMainResult = [...results];
+                // localStorage.setItem(this.tileSerial, JSON.stringify({ dataSource: this.initialMainResult }));
+                console.log("Received updated results:", this.mainResult);
 
+                this.list = this.mainResult.map((item, index) => {
+                    return {
+                        id: index,
+                        title: item.name,
+                        checked: false,
+                    };
+                });
+            });
+        } else {
+            const storageItem = JSON.parse(localStorage.getItem(this.tileSerial));
+            this.mainResult = storageItem.dataSource;
+            this.initialMainResult = [...this.mainResult];
+            console.log("Received updated results:", this.mainResult);
             this.list = this.mainResult.map((item, index) => {
                 return {
                     id: index,
@@ -53,7 +69,8 @@ export class BarChartEditorComponent implements OnInit {
                     checked: false,
                 };
             });
-        });
+            this.createChart(this.title, this.mainResult);
+        }
     }
 
     backToVisGen(): void {
@@ -81,7 +98,7 @@ export class BarChartEditorComponent implements OnInit {
         // this.skillQuery =
         //     this.rdfDataService.prefixes +
         //     `
-        //     select (count(?s) as ?skillCount) where { 
+        //     select (count(?s) as ?skillCount) where {
         //         ?s rdf:type edm:JobPosting.
         //         ?s edm:title ?title.
         //         filter contains(?title, "${this.jobName}").
@@ -113,27 +130,32 @@ export class BarChartEditorComponent implements OnInit {
         //     // this.dataSource.forEach(item => {
         //     //     console.log(item.skill, item.skillCount);
         //     // });
-        //     this.dataSource.forEach((item) => {
-        //         item.skill = this.systemService.skillAbbr[item.skill];
-        //     });
-            this.chartService.dataSource.next(this.mainResult); //?
-            this.chartService.updateTitle(this.title)
-            this.createChart(this.title, this.mainResult);
+        // this.mainResult.forEach((item) => {
+        //     item.name = this.systemService.skillAbbr[item.name];
+        // });
+        this.chartService.dataSource.next(this.mainResult); //?
+        this.chartService.updateTitle(this.title);
+        this.createChart(this.title, this.mainResult);
         // });
     }
 
     private createChart(title: string, dataSource: any[]): void {
-        if ( title && dataSource.length > 0 ) {
+        if (title && dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
-            // console.log("clientHeight", this.barEL.clientHeight)
+            console.log("clientHeight", this.barEL.clientHeight)
+            console.log("clientWidth", this.barEL.clientWidth)
 
             while (this.barEL.children.length > 2) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
-
+            if (dataSource.length < 15) {
+                this.barEL.style.height = "420px";
+            } else {
+                this.barEL.style.height = dataSource.length * 24 + 90 + "px";
+            }
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
-            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
+            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin - 20) + ")");
 
             // this.svg
             //     .append("text")
@@ -162,7 +184,7 @@ export class BarChartEditorComponent implements OnInit {
 
             // Create the Y-axis band scale
             var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
-            console.log("maxCount", maxCount)
+            console.log("maxCount", maxCount);
             this.y = d3
                 .scaleLinear()
                 .domain([0, maxCount + 1])
