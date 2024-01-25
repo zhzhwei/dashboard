@@ -5,6 +5,7 @@ import { TitleIconService } from '../../services/icon.sevice';
 import { GridStackService } from '../../services/gridstack.service';
 
 import * as d3 from 'd3';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
     selector: 'app-bar-chart',
@@ -12,8 +13,13 @@ import * as d3 from 'd3';
 
 export class BarChartComponent implements OnInit {
 
-    constructor(private dialogService: DialogService, private chartService: ChartService,
-        private titleIconService: TitleIconService, private gridService: GridStackService) { }
+    constructor(
+        private dialogService: DialogService, 
+        private chartService: ChartService,
+        private titleIconService: TitleIconService, 
+        private gridService: GridStackService,
+        private systemService: SystemService
+    ) { }
 
     private svg: any;
     private g: any;
@@ -23,6 +29,7 @@ export class BarChartComponent implements OnInit {
     ngOnInit(): void { }
 
     public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], color: any): void {
+        // console.log(dataSource);
         var barEL = document.getElementById(tileSerial);
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -61,7 +68,7 @@ export class BarChartComponent implements OnInit {
 
         var x = d3.scaleBand()
             .range([0, barEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map(d => d.name))
+            .domain(dataSource.map(d => this.systemService.skillAbbr[d.name]))
             .padding(0.2);
 
         var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
@@ -90,7 +97,7 @@ export class BarChartComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append('rect')
-                .attr('x', (d: any) => x(d.name))
+                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name]))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
                 .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
@@ -114,7 +121,7 @@ export class BarChartComponent implements OnInit {
                     // Show the tooltip element
                     d3.select('.tooltip')
                         // .text(`${d.name}: ${d.count}`)
-                        .html(`Name: ${d.name} <br> Häufigkeit: ${d.count}`)
+                        .html(`Name: ${d.name} <br> Count: ${d.count}`)
                         .transition()
                         .duration(200)
                         .style('opacity', 1);
@@ -152,7 +159,7 @@ export class BarChartComponent implements OnInit {
                 .call(d3.axisLeft(y));
 
             this.svg.selectAll('rect')
-                .attr('x', (d: any) => x(d.name))
+                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name]))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
                 .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count));

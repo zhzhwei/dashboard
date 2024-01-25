@@ -133,7 +133,7 @@ export class BarChartEditorComponent implements OnInit {
         // this.mainResult.forEach((item) => {
         //     item.name = this.systemService.skillAbbr[item.name];
         // });
-        this.chartService.dataSource.next(this.mainResult); //?
+        this.chartService.dataSource.next(this.mainResult);
         this.chartService.updateTitle(this.title);
         this.createChart(this.title, this.mainResult);
         // });
@@ -142,8 +142,8 @@ export class BarChartEditorComponent implements OnInit {
     private createChart(title: string, dataSource: any[]): void {
         if (title && dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
-            console.log("clientHeight", this.barEL.clientHeight)
-            console.log("clientWidth", this.barEL.clientWidth)
+            // console.log("clientHeight", this.barEL.clientHeight)
+            // console.log("clientWidth", this.barEL.clientWidth)
 
             while (this.barEL.children.length > 2) {
                 this.barEL.removeChild(this.barEL.lastChild);
@@ -157,20 +157,11 @@ export class BarChartEditorComponent implements OnInit {
 
             var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin - 20) + ")");
 
-            // this.svg
-            //     .append("text")
-            //     .attr("class", "title")
-            //     .attr("x", this.barEL.clientWidth / 2)
-            //     .attr("y", this.margin / 2 + 15)
-            //     .attr("text-anchor", "middle")
-            //     .style("font-size", "16px")
-            //     .text(title);
-
             // Create the X-axis band scale
             this.x = d3
                 .scaleBand()
                 .range([0, this.barEL.clientWidth - this.margin * 2])
-                .domain(dataSource.map((d) => d.name))
+                .domain(dataSource.map((d) => this.systemService.skillAbbr[d.name]))
                 .padding(0.2);
 
             // Draw the X-axis on the DOM
@@ -198,7 +189,7 @@ export class BarChartEditorComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append("rect")
-                .attr("x", (d: any) => this.x(d.name))
+                .attr("x", (d: any) => this.x(this.systemService.skillAbbr[d.name]))
                 .attr("y", (d: any) => this.y(d.count))
                 .attr("width", this.x.bandwidth())
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
