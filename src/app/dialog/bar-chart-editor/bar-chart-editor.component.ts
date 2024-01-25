@@ -46,6 +46,7 @@ export class BarChartEditorComponent implements OnInit {
             this.sharedService.results$.subscribe((results) => {
                 this.mainResult = results;
                 this.initialMainResult = [...results];
+                // localStorage.setItem(this.tileSerial, JSON.stringify({ dataSource: this.initialMainResult }));
                 console.log("Received updated results:", this.mainResult);
 
                 this.list = this.mainResult.map((item, index) => {
@@ -60,7 +61,7 @@ export class BarChartEditorComponent implements OnInit {
             const storageItem = JSON.parse(localStorage.getItem(this.tileSerial));
             this.mainResult = storageItem.dataSource;
             this.initialMainResult = [...this.mainResult];
-
+            console.log("Received updated results:", this.mainResult);
             this.list = this.mainResult.map((item, index) => {
                 return {
                     id: index,
@@ -129,9 +130,9 @@ export class BarChartEditorComponent implements OnInit {
         //     // this.dataSource.forEach(item => {
         //     //     console.log(item.skill, item.skillCount);
         //     // });
-        //     this.dataSource.forEach((item) => {
-        //         item.skill = this.systemService.skillAbbr[item.skill];
-        //     });
+        // this.mainResult.forEach((item) => {
+        //     item.name = this.systemService.skillAbbr[item.name];
+        // });
         this.chartService.dataSource.next(this.mainResult); //?
         this.chartService.updateTitle(this.title);
         this.createChart(this.title, this.mainResult);
@@ -141,12 +142,16 @@ export class BarChartEditorComponent implements OnInit {
     private createChart(title: string, dataSource: any[]): void {
         if (title && dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
-            // console.log("clientHeight", this.barEL.clientHeight)
+            console.log("clientHeight", this.barEL.clientHeight)
+            console.log("clientWidth", this.barEL.clientWidth)
 
             while (this.barEL.firstChild) {
                 this.barEL.removeChild(this.barEL.firstChild);
             }
 
+            if (this.barEL.clientHeight < 454) {
+                this.barEL.style.height = "454px";
+            }
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
             var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + this.margin + ")");
