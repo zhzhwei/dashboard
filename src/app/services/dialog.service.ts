@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteConfirmationComponent } from '../dialog/delete-confirmation/delete-confirmation.component';
-import { VisGenDialogComponent } from '../dialog/vis-gen-dialog/vis-gen-dialog.component';
 import { BarChartEditorComponent } from '../dialog/bar-chart-editor/bar-chart-editor.component';
 import { StackedBarEditorComponent } from '../dialog/stacked-bar-editor/stacked-bar-editor.component';
 import { PieChartEditorComponent } from '../dialog/pie-chart-editor/pie-chart-editor.component';
@@ -63,16 +62,6 @@ export class DialogService {
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 2000,
-        });
-    }
-
-    openVisGenDialog(): void {
-        this.dialog.open(VisGenDialogComponent, {
-            width: '1600px',
-            height: '850px',
-            backdropClass: "hello",
-            autoFocus: false,
-            disableClose: true
         });
     }
 

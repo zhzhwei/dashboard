@@ -69,74 +69,46 @@ export class BarChartEditorComponent implements OnInit {
                     checked: false,
                 };
             });
+            var checkedItems = this.list.filter((item) => {
+                return this.mainResult.some((mainItem) => {
+                    return mainItem.name === item.title;
+                });
+            });
+            checkedItems.forEach((item) => {
+                item.checked = true;
+            });
+            this.allChecked = this.list.every((item) => item.checked);
             this.createChart(this.title, this.mainResult);
         }
-    }
-
-    backToVisGen(): void {
-        this.dialog.closeAll();
-        this.dialogService.openVisGenDialog();
-    }
-
-    backToDashboard(): void {
-        this.dialog.closeAll();
     }
 
     selectAll() {
         for (let item of this.list) {
             item.checked = this.allChecked;
         }
+        this.updateCheckedItems();
     }
 
-    public applyChanges(): void {
+    onItemCheckedChange(item: any, isChecked: boolean): void {
+        item.checked = isChecked;
+        this.updateCheckedItems();
+        this.allChecked = this.list.every((item) => item.checked);
+    }
+
+    private updateCheckedItems(): void {
         this.checkedItems = this.list.filter((item) => item.checked === true);
         this.mainResult = this.initialMainResult.filter((item) => {
             return this.checkedItems.some((checkedItem) => {
                 return checkedItem.title === item.name;
             });
         });
-        // this.skillQuery =
-        //     this.rdfDataService.prefixes +
-        //     `
-        //     select (count(?s) as ?skillCount) where {
-        //         ?s rdf:type edm:JobPosting.
-        //         ?s edm:title ?title.
-        //         filter contains(?title, "${this.jobName}").
-        //         ?s edm:hasSkill ?skill.
-        //         ?skill edm:textField ?skillName.
-        //         filter (lang(?skillName) = "de").
-        //         filter (?skillName = "skillName"@de).
-        //     }
-        // `;
-        // this.skillQueries = this.checkedItems.map((item) => {
-        //     return this.skillQuery.replace('"skillName"@de', `"${item.title}"@de`);
-        // });
-        // this.dataSource = this.checkedItems.map((item) => {
-        //     return {
-        //         skill: item.title,
-        //     };
-        // });
-        // let promises = this.skillQueries.map((query, index) => {
-        //     return this.rdfDataService
-        //         .getQueryResults(query)
-        //         .then((data) => {
-        //             this.results = data.results.bindings;
-        //             this.dataSource[index].skillCount = Number(this.results[0].skillCount.value);
-        //         })
-        //         .catch((error) => console.error(error));
-        // });
+        this.createChart(this.title, this.mainResult);
+    }
 
-        // Promise.all(promises).then(() => {
-        //     // this.dataSource.forEach(item => {
-        //     //     console.log(item.skill, item.skillCount);
-        //     // });
-        // this.mainResult.forEach((item) => {
-        //     item.name = this.systemService.skillAbbr[item.name];
-        // });
+    public backToDashboard(): void {
         this.chartService.dataSource.next(this.mainResult);
         this.chartService.updateTitle(this.title);
-        this.createChart(this.title, this.mainResult);
-        // });
+        this.dialog.closeAll();
     }
 
     private createChart(title: string, dataSource: any[]): void {
@@ -195,7 +167,10 @@ export class BarChartEditorComponent implements OnInit {
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
                 .attr("fill", "steelblue");
         } else {
-            this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
+            while (this.barEL.children.length > 2) {
+                this.barEL.removeChild(this.barEL.lastChild);
+            }
+            // this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
         }
     }
 }

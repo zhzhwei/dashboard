@@ -1,8 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <button mat-raised-button (click)="backToDashboard()">Back to Dashboard</button>
-            <button mat-raised-button *ngIf="!tileSerial" (click)="backToVisGen()">Back to Visualization Generator</button>
+            <button mat-raised-button mat-dialog-close *ngIf="!tileSerial" (click)="backToVisGen()">Back to Visualization Generator</button>
         </div>
         <h2 mat-dialog-title align="center" style="margin-top: 20px;">Bar Chart Editor</h2>
     </div>
@@ -15,8 +14,10 @@
                 </div>
                 <div class="col-md-3" style="margin-top: 10px;">
                     <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()" />Select All</strong>
-                    <div *ngFor="let item of list"><input type="checkbox" [(ngModel)]="item.checked" />{{ item.title }}</div>
-                    <button mat-raised-button (click)="applyChanges()" style="margin-top: 5px; width: 100%; display: block">Preview</button>
+                    <div *ngFor="let item of list">
+                        <input type="checkbox" [ngModel]="item.checked" (ngModelChange)="onItemCheckedChange(item, $event)" />{{ item.title }}
+                    </div>
+                    <button mat-raised-button (click)="backToDashboard()" style="margin-top: 5px; width: 100%; display: block">Back to Dashboard</button>
                 </div>
             </div>
         </div>
