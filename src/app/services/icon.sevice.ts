@@ -21,8 +21,8 @@ export class TitleIconService {
             .attr('class', 'pencil')
             .attr('x', x)
             .attr('y', y)
-            .attr('width', 22)
-            .attr('height', 22)
+            .attr('width', 24)
+            .attr('height', 24)
             .html(`<i class="fas fa-pencil"></i>`)
             .on('click', clickHandler);
     }
@@ -32,8 +32,8 @@ export class TitleIconService {
             .attr('class', 'download')
             .attr('x', x)
             .attr('y', y)
-            .attr('width', 22)
-            .attr('height', 22)
+            .attr('width', 24)
+            .attr('height', 24)
             .html(`<i class="fas fa-download"></i>`)
             .on('click', clickHandler);
     }
@@ -43,8 +43,8 @@ export class TitleIconService {
             .attr('class', 'heart')
             .attr('x', x)
             .attr('y', y)
-            .attr('width', 22)
-            .attr('height', 22)
+            .attr('width', 24)
+            .attr('height', 24)
             .html(`<i class="fas fa-heart"></i>`)
             .style('color', color)
             .on('click', clickHandler);
@@ -55,8 +55,8 @@ export class TitleIconService {
             .attr('class', 'trash')
             .attr('x', x)
             .attr('y', y)
-            .attr('width', 22)
-            .attr('height', 22)
+            .attr('width', 24)
+            .attr('height', 24)
             .html(`<i class="fas fa-trash"></i>`)
             .on('click', clickHandler);
     }
