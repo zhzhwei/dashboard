@@ -5,6 +5,7 @@ import { SystemService } from "../../services/system.service";
 import { SharedService } from "../../services/shared.service";
 import { DialogService } from "src/app/services/dialog.service";
 import { MatDialog } from "@angular/material/dialog";
+
 import * as d3 from "d3";
 
 @Component({
@@ -106,8 +107,11 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     public backToDashboard(): void {
+        this.chartService.chartAction.value.title = this.title;
         this.chartService.dataSource.next(this.mainResult);
-        this.chartService.updateTitle(this.title);
+        var currentValue = this.chartService.chartAction.getValue();
+        var updatedValue = Object.assign({}, currentValue, { title: this.title });
+        this.chartService.chartAction.next(updatedValue);
         this.dialog.closeAll();
     }
 
