@@ -74,7 +74,7 @@ export class BarChartEditorComponent implements OnInit {
                 };
             });
             this.allChecked = this.list.every((item) => item.checked);
-            this.createChart(this.title, this.mainResult);
+            this.createChart(this.title, this.initialMainResult);
         }
     }
 
@@ -109,7 +109,7 @@ export class BarChartEditorComponent implements OnInit {
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
-            this.chartService.dataSource.next(this.mainResult);
+            this.chartService.dataSource.next(this.initialMainResult);
             var currentValue = this.chartService.chartAction.getValue();
             var updatedValue = Object.assign({}, currentValue, { title: this.title });
             this.chartService.chartAction.next(updatedValue);
