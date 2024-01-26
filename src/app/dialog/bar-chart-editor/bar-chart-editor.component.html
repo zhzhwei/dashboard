@@ -18,7 +18,8 @@
                     <div *ngFor="let item of list">
                         <input type="checkbox" [ngModel]="item.checked" (ngModelChange)="onItemCheckedChange(item, $event)" />{{ item.title }}
                     </div>
-                    <button mat-raised-button (click)="backToDashboard()" style="margin-top: 5px; width: 100%; display: block">Back to Dashboard</button>
+                    <button mat-raised-button (click)="addToDashboard()" style="margin-top: 5px; width: 100%; display: block">Add to Dashboard</button>
+                    <button mat-raised-button (click)="cancel()" style="margin-top: 5px; width: 100%; display: block">Cancel</button>
                 </div>
             </div>
         </div>

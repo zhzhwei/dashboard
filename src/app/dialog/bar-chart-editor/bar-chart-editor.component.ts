@@ -126,7 +126,7 @@ export class BarChartEditorComponent implements OnInit {
         });
     }
 
-    public backToDashboard(): void {
+    public addToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
         this.chartService.chartAction.value.barColor = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
@@ -144,6 +144,10 @@ export class BarChartEditorComponent implements OnInit {
         } else if (this.mainResult.length === 0) {
             this.dialogService.openSnackBar("Please select at least one item", "close");
         }
+    }
+
+    public cancel(): void {
+        this.dialog.closeAll();
     }
 
     private createChart(dataSource: any[]): void {
