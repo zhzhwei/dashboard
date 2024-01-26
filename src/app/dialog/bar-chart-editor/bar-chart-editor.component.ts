@@ -96,13 +96,17 @@ export class BarChartEditorComponent implements OnInit {
     onColorChange(color: string): void {
         this.barColor = color;
         this.updateCheckedItems();
-        this.createChart(this.title, this.mainResult);
+        if (this.mainResult.length > 0) {
+            this.createChart(this.title, this.mainResult);
+        }
     }
 
     onTitleChange(title: string): void {
         this.title = title;
         this.updateCheckedItems();
-        this.createChart(this.title, this.mainResult);
+        if (this.mainResult.length > 0) {
+            this.createChart(this.title, this.mainResult);
+        }
     }
 
     onItemCheckedChange(item: any, isChecked: boolean): void {
@@ -141,7 +145,7 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     private createChart(title: string, dataSource: any[]): void {
-        if (title && dataSource.length > 0) {
+        if (dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
             // console.log("clientWidth", this.barEL.clientWidth)
