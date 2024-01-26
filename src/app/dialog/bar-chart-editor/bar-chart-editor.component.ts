@@ -41,6 +41,7 @@ export class BarChartEditorComponent implements OnInit {
         this.chartService.currentChartAction.subscribe((chartAction) => {
             this.title = chartAction.title;
             this.tileSerial = chartAction.serial;
+            this.barColor = chartAction.barColor;
         });
     }
 
@@ -81,7 +82,7 @@ export class BarChartEditorComponent implements OnInit {
                 item.checked = true;
             });
             this.allChecked = this.list.every((item) => item.checked);
-            this.createChart(this.title, this.mainResult);
+            this.createChart(this.mainResult);
         }
     }
 
@@ -90,14 +91,14 @@ export class BarChartEditorComponent implements OnInit {
             item.checked = this.allChecked;
         }
         this.updateCheckedItems();
-        this.createChart(this.title, this.mainResult);
+        this.createChart(this.mainResult);
     }
 
-    onColorChange(color: string): void {
-        this.barColor = color;
+    onColorChange(barColor: string): void {
+        this.barColor = barColor;
         this.updateCheckedItems();
         if (this.mainResult.length > 0) {
-            this.createChart(this.title, this.mainResult);
+            this.createChart(this.mainResult);
         }
     }
 
@@ -105,14 +106,14 @@ export class BarChartEditorComponent implements OnInit {
         this.title = title;
         this.updateCheckedItems();
         if (this.mainResult.length > 0) {
-            this.createChart(this.title, this.mainResult);
+            this.createChart(this.mainResult);
         }
     }
 
     onItemCheckedChange(item: any, isChecked: boolean): void {
         item.checked = isChecked;
         this.updateCheckedItems();
-        this.createChart(this.title, this.mainResult);
+        this.createChart(this.mainResult);
         this.allChecked = this.list.every((item) => item.checked);
     }
 
@@ -127,11 +128,12 @@ export class BarChartEditorComponent implements OnInit {
 
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
+        this.chartService.chartAction.value.barColor = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
             this.updateCheckedItems();
             this.chartService.dataSource.next(this.mainResult);
             var currentValue = this.chartService.chartAction.getValue();
-            var updatedValue = Object.assign({}, currentValue, { title: this.title });
+            var updatedValue = Object.assign({}, currentValue, { title: this.title, barColor: this.barColor});
             this.chartService.chartAction.next(updatedValue);
             this.dialog.closeAll();
         } else if (!this.chartService.chartAction.value.title && this.mainResult.length === 0) {
@@ -144,7 +146,7 @@ export class BarChartEditorComponent implements OnInit {
         }
     }
 
-    private createChart(title: string, dataSource: any[]): void {
+    private createChart(dataSource: any[]): void {
         if (dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
