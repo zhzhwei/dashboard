@@ -10,7 +10,8 @@
             <div class="row">
                 <div class="col-md-9" id="editor-bar" style="text-align: center; margin-top: 15px;">
                     <strong><label id="title-label">Title: </label></strong>
-                    <input type="text" id="title-text" style="text-align: center; margin-left: 5px; border-radius: 5px;" [(ngModel)]="title" placeholder="Please enter the title"/>
+                    <input type="text" id="title-text" style="text-align: center; margin-left: 5px; border-radius: 5px; vertical-align: middle;" [(ngModel)]="title" (ngModelChange)="onTitleChange($event)" placeholder="Please enter the title"/>
+                    <input type="color" id="bar-color" [(ngModel)]="barColor" (ngModelChange)="onColorChange($event)" style="margin-left: 5px; vertical-align: middle;">
                 </div>
                 <div class="col-md-3" style="margin-top: 10px;">
                     <strong><input type="checkbox" [(ngModel)]="allChecked" (change)="selectAll()" />Select All</strong>

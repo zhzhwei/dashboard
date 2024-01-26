@@ -29,6 +29,7 @@ export class BarChartEditorComponent implements OnInit {
     public mainResult: any[];
     public initialMainResult: any[];
     public previewImage: boolean = true;
+    public barColor: string = "#4682B4";
 
     private svg: any;
     private margin = 60;
@@ -91,9 +92,22 @@ export class BarChartEditorComponent implements OnInit {
         this.updateCheckedItems();
     }
 
+    onColorChange(color: string): void {
+        this.barColor = color;
+        this.updateCheckedItems();
+        this.createChart(this.title, this.mainResult);
+    }
+
+    onTitleChange(title: string): void {
+        this.title = title;
+        this.updateCheckedItems();
+        this.createChart(this.title, this.mainResult);
+    }
+
     onItemCheckedChange(item: any, isChecked: boolean): void {
         item.checked = isChecked;
         this.updateCheckedItems();
+        this.createChart(this.title, this.mainResult);
         this.allChecked = this.list.every((item) => item.checked);
     }
 
@@ -104,17 +118,16 @@ export class BarChartEditorComponent implements OnInit {
                 return checkedItem.title === item.name;
             });
         });
-        // if (this.title && this.mainResult.length > 0) {
-            this.createChart(this.title, this.mainResult);
-        // }
     }
 
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
+        this.chartService.chartAction.value.color = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
+            this.updateCheckedItems();
             this.chartService.dataSource.next(this.mainResult);
             var currentValue = this.chartService.chartAction.getValue();
-            var updatedValue = Object.assign({}, currentValue, { title: this.title });
+            var updatedValue = Object.assign({}, currentValue, { title: this.title, color: this.barColor });
             this.chartService.chartAction.next(updatedValue);
             this.dialog.closeAll();
         } else if (!this.chartService.chartAction.value.title && this.mainResult.length === 0) {
@@ -133,7 +146,7 @@ export class BarChartEditorComponent implements OnInit {
             // console.log("clientHeight", this.barEL.clientHeight)
             // console.log("clientWidth", this.barEL.clientWidth)
 
-            while (this.barEL.children.length > 2) {
+            while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
             if (dataSource.length < 15) {
@@ -181,9 +194,9 @@ export class BarChartEditorComponent implements OnInit {
                 .attr("y", (d: any) => this.y(d.count))
                 .attr("width", this.x.bandwidth())
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
-                .attr("fill", "steelblue");
+                .attr("fill", this.barColor);
         } else {
-            while (this.barEL.children.length > 2) {
+            while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
             // this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
