@@ -90,6 +90,7 @@ export class BarChartEditorComponent implements OnInit {
             item.checked = this.allChecked;
         }
         this.updateCheckedItems();
+        this.createChart(this.title, this.mainResult);
     }
 
     onColorChange(color: string): void {
@@ -122,12 +123,11 @@ export class BarChartEditorComponent implements OnInit {
 
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
-        this.chartService.chartAction.value.color = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
             this.updateCheckedItems();
             this.chartService.dataSource.next(this.mainResult);
             var currentValue = this.chartService.chartAction.getValue();
-            var updatedValue = Object.assign({}, currentValue, { title: this.title, color: this.barColor });
+            var updatedValue = Object.assign({}, currentValue, { title: this.title });
             this.chartService.chartAction.next(updatedValue);
             this.dialog.closeAll();
         } else if (!this.chartService.chartAction.value.title && this.mainResult.length === 0) {
