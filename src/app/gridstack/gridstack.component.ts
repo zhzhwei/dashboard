@@ -126,6 +126,9 @@ export class GridStackComponent implements OnInit {
                         tileSerial = this.getMajorTileSerial(chartType);
                         contEl = document.getElementById(tileSerial);
                         console.log(action,tileSerial);
+                        const tempItem = localStorage.getItem("temp");
+                        localStorage.setItem(tileSerial + "-config", tempItem);
+                        localStorage.removeItem("temp");
                         chartCreators[chartType]('create', tileSerial, title, dataSource, 'rgb(0, 0, 0)');
                         this.chartService.savePersistence(chartType, tileSerial, dataSource, title, undefined, 'rgb(0, 0, 0)');
                         this.gridService.saveInfoPosition(tileSerial);
@@ -136,6 +139,9 @@ export class GridStackComponent implements OnInit {
                     contEl = document.getElementById(serial);
                     contEl.innerHTML = '';
                     console.log(action,tileSerial);
+                    const tempItem = localStorage.getItem("temp");
+                    localStorage.setItem(tileSerial + "-config", tempItem);
+                    localStorage.removeItem("temp");
                     chartCreators[chartType]('edit', serial, title, dataSource, 'rgb(0, 0, 0)');
                     this.chartService.savePersistence(chartType, serial, dataSource, title, undefined, 'rgb(0, 0, 0)');
                 },

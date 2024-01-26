@@ -104,6 +104,7 @@ export class ChartService {
 
     public removePersistence(tileSerial: string) {
         localStorage.removeItem(tileSerial);
+        localStorage.removeItem(tileSerial + "-config");
     }
 
     public clearPersistence(gridType: string) {
@@ -112,6 +113,7 @@ export class ChartService {
         keys.forEach(key => {
             if (key.includes(gridType)) {
                 localStorage.removeItem(key);
+                localStorage.removeItem(key + "-config");
             }
         });
     }
