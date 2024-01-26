@@ -29,6 +29,7 @@ export class BarChartEditorComponent implements OnInit {
     public mainResult: any[];
     public initialMainResult: any[];
     public previewImage: boolean = true;
+    public visibilityMapping: boolean[] = [];
     public barColor: string = "#4682B4";
 
     private svg: any;
@@ -63,6 +64,7 @@ export class BarChartEditorComponent implements OnInit {
             });
         } else {
             const storageItem = JSON.parse(localStorage.getItem(this.tileSerial));
+            const visibilityMapping = JSON.parse(localStorage.getItem(this.tileSerial + "-config"));
             this.mainResult = storageItem.dataSource;
             this.initialMainResult = [...this.mainResult];
             console.log("Received updated results:", this.mainResult);
@@ -70,19 +72,11 @@ export class BarChartEditorComponent implements OnInit {
                 return {
                     id: index,
                     title: item.name,
-                    checked: false,
+                    checked: visibilityMapping[index],
                 };
             });
-            var checkedItems = this.list.filter((item) => {
-                return this.mainResult.some((mainItem) => {
-                    return mainItem.name === item.title;
-                });
-            });
-            checkedItems.forEach((item) => {
-                item.checked = true;
-            });
             this.allChecked = this.list.every((item) => item.checked);
-            this.createChart(this.mainResult);
+            this.createChart(this.initialMainResult);
         }
     }
 
@@ -91,14 +85,14 @@ export class BarChartEditorComponent implements OnInit {
             item.checked = this.allChecked;
         }
         this.updateCheckedItems();
-        this.createChart(this.mainResult);
+        this.createChart(this.initialMainResult);
     }
 
     onColorChange(barColor: string): void {
         this.barColor = barColor;
         this.updateCheckedItems();
         if (this.mainResult.length > 0) {
-            this.createChart(this.mainResult);
+            this.createChart(this.initialMainResult);
         }
     }
 
@@ -106,14 +100,14 @@ export class BarChartEditorComponent implements OnInit {
         this.title = title;
         this.updateCheckedItems();
         if (this.mainResult.length > 0) {
-            this.createChart(this.mainResult);
+            this.createChart(this.initialMainResult);
         }
     }
 
     onItemCheckedChange(item: any, isChecked: boolean): void {
         item.checked = isChecked;
         this.updateCheckedItems();
-        this.createChart(this.mainResult);
+        this.createChart(this.initialMainResult);
         this.allChecked = this.list.every((item) => item.checked);
     }
 
@@ -124,6 +118,12 @@ export class BarChartEditorComponent implements OnInit {
                 return checkedItem.title === item.name;
             });
         });
+        this.visibilityMapping = [];
+        for (let item of this.list) {
+            this.visibilityMapping.push(item.checked);
+        }
+        localStorage.setItem("temp", JSON.stringify(this.visibilityMapping));
+        this.createChart(this.initialMainResult);
     }
 
     public addToDashboard(): void {
@@ -131,7 +131,7 @@ export class BarChartEditorComponent implements OnInit {
         this.chartService.chartAction.value.barColor = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
             this.updateCheckedItems();
-            this.chartService.dataSource.next(this.mainResult);
+            this.chartService.dataSource.next(this.initialMainResult);
             var currentValue = this.chartService.chartAction.getValue();
             var updatedValue = Object.assign({}, currentValue, { title: this.title, barColor: this.barColor});
             this.chartService.chartAction.next(updatedValue);
@@ -155,14 +155,15 @@ export class BarChartEditorComponent implements OnInit {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
             // console.log("clientWidth", this.barEL.clientWidth)
+            let filteredDataSource = dataSource.filter((_, index) => this.visibilityMapping[index]);
 
             while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
-            if (dataSource.length < 15) {
+            if (filteredDataSource.length < 15) {
                 this.barEL.style.height = "420px";
             } else {
-                this.barEL.style.height = dataSource.length * 24 + 90 + "px";
+                this.barEL.style.height = filteredDataSource.length * 24 + 90 + "px";
             }
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
@@ -172,7 +173,7 @@ export class BarChartEditorComponent implements OnInit {
             this.x = d3
                 .scaleBand()
                 .range([0, this.barEL.clientWidth - this.margin * 2])
-                .domain(dataSource.map((d) => this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
+                .domain(filteredDataSource.map((d) => (this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name)))
                 .padding(0.2);
 
             // Draw the X-axis on the DOM
@@ -185,7 +186,7 @@ export class BarChartEditorComponent implements OnInit {
                 .style("text-anchor", "middle");
 
             // Create the Y-axis band scale
-            var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
+            var maxCount: number = d3.max(filteredDataSource, (d: any) => Number(d.count));
             console.log("maxCount", maxCount);
             this.y = d3
                 .scaleLinear()
@@ -197,7 +198,7 @@ export class BarChartEditorComponent implements OnInit {
 
             // Create and fill the bars
             g.selectAll("bars")
-                .data(dataSource)
+                .data(filteredDataSource)
                 .enter()
                 .append("rect")
                 .attr("x", (d: any) => this.x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))

@@ -31,6 +31,11 @@ export class BarChartComponent implements OnInit {
     public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], heartColor: any, barColor: any): void {
         // console.log(dataSource);
         var barEL = document.getElementById(tileSerial);
+        var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
+        let filteredDataSource = [];
+        if (dataSource) {
+            filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
+        }
 
         if (action === 'create' || action === 'edit' || action === 'load') {
             this.svg = d3.select('#' + tileSerial)
@@ -66,12 +71,13 @@ export class BarChartComponent implements OnInit {
 
         this.titleIconService.hoverSVG(this.svg);
 
-        var x = d3.scaleBand()
+        var x = d3
+            .scaleBand()
             .range([0, barEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map(d => this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
+            .domain(filteredDataSource.map((d) => (this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name)))
             .padding(0.2);
 
-        var maxCount: number = d3.max(dataSource, (d: any) => Number(d.count));
+        var maxCount: number = d3.max(filteredDataSource, (d: any) => Number(d.count));
         var y = d3.scaleLinear()
             .domain([0, Number(maxCount + 1)])
             .range([barEL.clientHeight - this.margin * 2, 0]);
@@ -93,8 +99,9 @@ export class BarChartComponent implements OnInit {
                 .attr('class', 'y-axis')
                 .call(d3.axisLeft(y))
 
-            this.g.selectAll('bars')
-                .data(dataSource)
+            this.g
+                .selectAll("bars")
+                .data(filteredDataSource)
                 .enter()
                 .append('rect')
                 .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
@@ -107,43 +114,42 @@ export class BarChartComponent implements OnInit {
                     var bar = d3.select(nodes[i]);
 
                     // Create the tooltip element
-                    var tooltip = d3.select('#' + tileSerial)
-                        .append('div')
-                        .attr('class', 'tooltip')
-                        .style('position', 'absolute')
-                        .style('background-color', 'white')
-                        .style('border', 'solid')
-                        .style('border-width', '1px')
-                        .style('border-radius', '5px')
-                        .style('padding', '10px')
-                        .style('opacity', 0);
+                    var tooltip = d3
+                        .select("#" + tileSerial)
+                        .append("div")
+                        .attr("class", "tooltip")
+                        .style("position", "absolute")
+                        .style("background-color", "white")
+                        .style("border", "solid")
+                        .style("border-width", "1px")
+                        .style("border-radius", "5px")
+                        .style("padding", "10px")
+                        .style("opacity", 0);
 
                     // Show the tooltip element
-                    d3.select('.tooltip')
+                    d3.select(".tooltip")
                         // .text(`${d.name}: ${d.count}`)
                         .html(`Name: ${d.name} <br> Count: ${d.count}`)
                         .transition()
                         .duration(200)
-                        .style('opacity', 1);
+                        .style("opacity", 1);
 
                     // Change the color of the bar
-                    bar.style('fill', 'orange');
+                    bar.style("fill", "orange");
 
                     // Add a mousemove event listener to update the position of the tooltip element
-                    d3.select('body')
-                        .on('mousemove', () => {
-                            var [x, y] = d3.mouse(nodes[i]);
-                            // console.log(x, y);
-                            tooltip.style('left', `${x + 30}px`)
-                                .style('top', `${y}px`);
-                        });
+                    d3.select("body").on("mousemove", () => {
+                        var [x, y] = d3.mouse(nodes[i]);
+                        // console.log(x, y);
+                        tooltip.style("left", `${x + 30}px`).style("top", `${y}px`);
+                    });
                 })
-                .on('mouseout', (d, i, nodes) => {
+                .on("mouseout", (d, i, nodes) => {
                     // Get the current bar element
                     var bar = d3.select(nodes[i]);
 
                     // Hide the tooltip element
-                    d3.select('.tooltip').remove();
+                    d3.select(".tooltip").remove();
 
                     // Change the color of the bar back to the original color
                     bar.style('fill', barColor);

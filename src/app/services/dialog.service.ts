@@ -51,8 +51,10 @@ export class DialogService {
                     keys.forEach(key => {
                         if (key.includes('major')) {
                             localStorage.removeItem(key);
+                            localStorage.removeItem(key + "-config");
                         }
                     });
+                    localStorage.removeItem("temp");
                     this.gridService.majorEmpty.next(true);
                 }
             });
