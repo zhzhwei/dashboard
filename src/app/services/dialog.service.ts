@@ -67,7 +67,7 @@ export class DialogService {
         });
     }
 
-    openBarChartEditor(action: string, tileSerial: string, title: string, color: any) {
+    openBarChartEditor(action: string, tileSerial: string, title: string, heartColor: any, barColor: any) {
         this.dialog.open(BarChartEditorComponent, {
             width: '1600px',
             height: '850px',
@@ -75,7 +75,7 @@ export class DialogService {
             autoFocus: false,
             disableClose: true
         });
-        this.chartService.chartAction.next({ action: action, serial: tileSerial, title: title, color: color });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, title: title, heartColor: heartColor, barColor: barColor});
     }
 
     openStackedBarChartEditor() {

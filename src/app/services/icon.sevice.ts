@@ -38,7 +38,7 @@ export class TitleIconService {
             .on('click', clickHandler);
     }
 
-    public createHeart(svg, x, y, color, clickHandler) {
+    public createHeart(svg, x, y, heartColor, clickHandler) {
         svg.append('foreignObject')
             .attr('class', 'heart')
             .attr('x', x)
@@ -46,7 +46,7 @@ export class TitleIconService {
             .attr('width', 24)
             .attr('height', 24)
             .html(`<i class="fas fa-heart"></i>`)
-            .style('color', color)
+            .style('color', heartColor)
             .on('click', clickHandler);
     }
 
@@ -82,16 +82,15 @@ export class TitleIconService {
             .attr('y', 20)
     }
 
-    public updateHeart(svg, barEL, color): void {
+    public updateHeart(svg, barEL, heartColor): void {
         svg.select('foreignObject.heart')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)
             .select('i')
-            .style('color', color)
+            .style('color', heartColor)
     }
 
-    public updateIcons(svg, barEL, color): void {
-        // console.log(color)
+    public updateIcons(svg, barEL, heartColor): void {
         svg.select('foreignObject.pencil')
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 20)
@@ -104,7 +103,7 @@ export class TitleIconService {
             .attr('x', barEL.clientWidth - 38)
             .attr('y', 70)
             .select('i')
-            .style('color', color)
+            .style('color', heartColor)
 
         svg.select('foreignObject.trash')
             .attr('x', barEL.clientWidth - 36)

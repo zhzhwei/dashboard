@@ -30,6 +30,7 @@ export class BarChartEditorComponent implements OnInit {
     public initialMainResult: any[];
     public previewImage: boolean = true;
     public visibilityMapping: boolean[] = [];
+    public barColor: string = "#4682B4";
 
     private svg: any;
     private margin = 60;
@@ -41,6 +42,7 @@ export class BarChartEditorComponent implements OnInit {
         this.chartService.currentChartAction.subscribe((chartAction) => {
             this.title = chartAction.title;
             this.tileSerial = chartAction.serial;
+            this.barColor = chartAction.barColor;
         });
     }
 
@@ -74,7 +76,7 @@ export class BarChartEditorComponent implements OnInit {
                 };
             });
             this.allChecked = this.list.every((item) => item.checked);
-            this.createChart(this.title, this.initialMainResult);
+            this.createChart(this.initialMainResult);
         }
     }
 
@@ -83,11 +85,29 @@ export class BarChartEditorComponent implements OnInit {
             item.checked = this.allChecked;
         }
         this.updateCheckedItems();
+        this.createChart(this.initialMainResult);
+    }
+
+    onColorChange(barColor: string): void {
+        this.barColor = barColor;
+        this.updateCheckedItems();
+        if (this.mainResult.length > 0) {
+            this.createChart(this.initialMainResult);
+        }
+    }
+
+    onTitleChange(title: string): void {
+        this.title = title;
+        this.updateCheckedItems();
+        if (this.mainResult.length > 0) {
+            this.createChart(this.initialMainResult);
+        }
     }
 
     onItemCheckedChange(item: any, isChecked: boolean): void {
         item.checked = isChecked;
         this.updateCheckedItems();
+        this.createChart(this.initialMainResult);
         this.allChecked = this.list.every((item) => item.checked);
     }
 
@@ -103,15 +123,17 @@ export class BarChartEditorComponent implements OnInit {
             this.visibilityMapping.push(item.checked);
         }
         localStorage.setItem("temp", JSON.stringify(this.visibilityMapping));
-        this.createChart(this.title, this.initialMainResult);
+        this.createChart(this.initialMainResult);
     }
 
-    public backToDashboard(): void {
+    public addToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
+        this.chartService.chartAction.value.barColor = this.barColor;
         if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
+            this.updateCheckedItems();
             this.chartService.dataSource.next(this.initialMainResult);
             var currentValue = this.chartService.chartAction.getValue();
-            var updatedValue = Object.assign({}, currentValue, { title: this.title });
+            var updatedValue = Object.assign({}, currentValue, { title: this.title, barColor: this.barColor});
             this.chartService.chartAction.next(updatedValue);
             this.dialog.closeAll();
         } else if (!this.chartService.chartAction.value.title && this.mainResult.length === 0) {
@@ -124,14 +146,18 @@ export class BarChartEditorComponent implements OnInit {
         }
     }
 
-    private createChart(title: string, dataSource: any[]): void {
-        if (title && dataSource.length > 0) {
+    public cancel(): void {
+        this.dialog.closeAll();
+    }
+
+    private createChart(dataSource: any[]): void {
+        if (dataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
             // console.log("clientWidth", this.barEL.clientWidth)
             let filteredDataSource = dataSource.filter((_, index) => this.visibilityMapping[index]);
 
-            while (this.barEL.children.length > 2) {
+            while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
             if (filteredDataSource.length < 15) {
@@ -179,9 +205,9 @@ export class BarChartEditorComponent implements OnInit {
                 .attr("y", (d: any) => this.y(d.count))
                 .attr("width", this.x.bandwidth())
                 .attr("height", (d: any) => this.barEL.clientHeight - this.margin * 2 - this.y(d.count))
-                .attr("fill", "steelblue");
+                .attr("fill", this.barColor);
         } else {
-            while (this.barEL.children.length > 2) {
+            while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
             // this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { color } from 'highcharts';
 import { BehaviorSubject } from 'rxjs';
 
 interface ChartAction {
@@ -7,7 +6,8 @@ interface ChartAction {
     action: string;
     serial: string;
     pieLabel?: string;
-    color?: string;
+    heartColor?: string;
+    barColor?: string;
 }
 
 interface ChartFavorite {
@@ -26,7 +26,7 @@ export class ChartService {
     public dataSource = new BehaviorSubject<any[]>([]);
     currentDataSource = this.dataSource.asObservable();
 
-    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', title: '', color: ''});
+    public chartAction = new BehaviorSubject<ChartAction>({ action: '', serial: '', title: '' });
     currentChartAction = this.chartAction.asObservable();
 
     public chartFavorite = new BehaviorSubject<ChartFavorite>({ type: '', serial: '', favorite: false });
@@ -86,14 +86,15 @@ export class ChartService {
         input.click();
     }
 
-    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], title: string, parameter: any=undefined, color: string) {
+    public savePersistence(chartType: string, tileSerial: string, dataSource: any[], title: string, parameter: any=undefined, heartColor: string, barColor: string) {
         var chartData = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             tileSerial: tileSerial,
             title: title,
-            color: color
+            heartColor: heartColor,
+            barColor: barColor
         };
         if (chartType === 'pie_chart') {
             chartData['pieLabel'] = parameter;
@@ -136,7 +137,8 @@ export class ChartService {
             action: 'load',
             serial: chartData.tileSerial,
             title: chartData.title,
-            color: chartData.color
+            heartColor: chartData.heartColor,
+            barColor: chartData.barColor
         };
     
         if (chartType === 'dash-pie') {

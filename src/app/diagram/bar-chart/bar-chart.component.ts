@@ -28,7 +28,7 @@ export class BarChartComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], color: any): void {
+    public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], heartColor: any, barColor: any): void {
         // console.log(dataSource);
         var barEL = document.getElementById(tileSerial);
         var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
@@ -51,18 +51,18 @@ export class BarChartComponent implements OnInit {
         if (tileSerial.includes('major')) {
             if (action === 'create' || action === 'edit' || action === 'load') {
                 this.addTitle(this.svg, barEL, title);
-                this.addPencil(this.svg, barEL, tileSerial, title, color);
-                this.addDownload(this.svg, barEL, title, dataSource, color);
-                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, color);
+                this.addPencil(this.svg, barEL, tileSerial, title, heartColor, barColor);
+                this.addDownload(this.svg, barEL, title, dataSource, heartColor);
+                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, heartColor, barColor);
                 this.addTrash(this.svg, tileSerial, dataSource, barEL.clientWidth - 36, 95);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
-                this.titleIconService.updateIcons(this.svg, barEL, color);
+                this.titleIconService.updateIcons(this.svg, barEL, heartColor);
             }
         } else {
             if (action === 'create' || action === 'load') {
                 this.addTitle(this.svg, barEL, title);
-                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, color);
+                this.addHeart(this.svg, barEL, tileSerial, title, dataSource, heartColor, barColor);
             } else if (action === 'update') {
                 this.titleIconService.updateTitle(this.svg, barEL, this.margin);
                 this.titleIconService.updateHeart(this.svg, barEL, 'rgb(255, 0, 0)');
@@ -103,13 +103,13 @@ export class BarChartComponent implements OnInit {
                 .selectAll("bars")
                 .data(filteredDataSource)
                 .enter()
-                .append("rect")
-                .attr("x", (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
-                .attr("y", (d: any) => y(d.count))
-                .attr("width", x.bandwidth())
-                .attr("height", (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
-                .attr("fill", "steelblue")
-                .on("mouseover", (d, i, nodes) => {
+                .append('rect')
+                .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
+                .attr('y', (d: any) => y(d.count))
+                .attr('width', x.bandwidth())
+                .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
+                .attr('fill', barColor)
+                .on('mouseover', (d, i, nodes) => {
                     // Get the current bar element
                     var bar = d3.select(nodes[i]);
 
@@ -152,7 +152,7 @@ export class BarChartComponent implements OnInit {
                     d3.select(".tooltip").remove();
 
                     // Change the color of the bar back to the original color
-                    bar.style("fill", "steelblue");
+                    bar.style('fill', barColor);
                 });
         } else if (action === 'update') {
             this.svg.select('g.x-axis')
@@ -177,22 +177,22 @@ export class BarChartComponent implements OnInit {
         this.titleIconService.createTitle(svg, barEL.clientWidth / 2, this.margin / 2, title);
     }
 
-    public addPencil(svg, barEL, tileSerial, title, color): void {
+    public addPencil(svg, barEL, tileSerial, title, heartColor, barColor): void {
         this.titleIconService.createPencil(svg, barEL.clientWidth - 38, 20, () => {
-            this.dialogService.openBarChartEditor('edit', tileSerial, title, color);
+            this.dialogService.openBarChartEditor('edit', tileSerial, title, heartColor, barColor);
             this.chartService.chartType.next('bar_chart');
         });
     }
 
-    public addDownload(svg, barEL, title, dataSource, color): void {
+    public addDownload(svg, barEL, title, dataSource, heartColor): void {
         this.titleIconService.createDownload(svg, barEL.clientWidth - 38, 45, () => {
             this.chartService.saveJsonFile('bar_chart', dataSource, title, undefined);
         });
     }
 
-    public addHeart(svg, barEL, tileSerial, title, dataSource, color): void {
+    public addHeart(svg, barEL, tileSerial, title, dataSource, heartColor, barColor): void {
         const self = this;
-        this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, color, function () {
+        this.titleIconService.createHeart(svg, barEL.clientWidth - 38, 70, heartColor, function () {
             var heart = d3.select(this).select('i');
             var tempTileSerial: string;
             if (heart.style('color') === 'rgb(0, 0, 0)') {
@@ -203,7 +203,7 @@ export class BarChartComponent implements OnInit {
                 // self.chartService.savePersistence('bar_chart', tileSerial, dataSource, title, 'rgb(255, 0, 0)');  
                 tempTileSerial = self.gridService.getMinorTileSerial('bar_chart', tileSerial);
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
-                self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, title: title});
+                self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, title: title, barColor: barColor});
                 self.chartService.chartType.next('bar_chart');
                 self.chartService.dataSource.next(dataSource);  
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
@@ -211,7 +211,7 @@ export class BarChartComponent implements OnInit {
                 heart.style('color', 'rgb(0, 0, 0)');
                 // self.chartService.removePersistence(tileSerial);
                 // self.chartService.savePersistence('bar_chart', tileSerial, dataSource, title, 'rgb(0, 0, 0)');
-                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, title: title});
+                self.chartService.chartAction.next({ action: 'disfavor', serial: tileSerial, title: title, barColor: barColor});
                 self.chartService.chartType.next('bar_chart');
                 self.chartService.dataSource.next(dataSource); 
                 self.dialogService.openSnackBar('You have removed this diagram from your favorites', 'close');
