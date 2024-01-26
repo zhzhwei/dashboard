@@ -108,6 +108,13 @@ export class BarChartEditorComponent implements OnInit {
 
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
+        this.checkedItems = this.list.filter((item) => item.checked === true);
+        this.mainResult = this.initialMainResult.filter((item) => {
+            return this.checkedItems.some((checkedItem) => {
+                return checkedItem.title === item.name;
+            });
+        });
+        console.log("this.mainResult", this.mainResult);
         this.chartService.dataSource.next(this.mainResult);
         var currentValue = this.chartService.chartAction.getValue();
         var updatedValue = Object.assign({}, currentValue, { title: this.title });
