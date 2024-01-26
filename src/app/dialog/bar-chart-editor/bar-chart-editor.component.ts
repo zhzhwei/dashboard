@@ -28,6 +28,7 @@ export class BarChartEditorComponent implements OnInit {
     public skillQueries: string[];
     public mainResult: any[];
     public initialMainResult: any[];
+    public previewImage: boolean = true;
 
     private svg: any;
     private margin = 60;
@@ -103,23 +104,27 @@ export class BarChartEditorComponent implements OnInit {
                 return checkedItem.title === item.name;
             });
         });
-        this.createChart(this.title, this.mainResult);
+        // if (this.title && this.mainResult.length > 0) {
+            this.createChart(this.title, this.mainResult);
+        // }
     }
 
     public backToDashboard(): void {
         this.chartService.chartAction.value.title = this.title;
-        this.checkedItems = this.list.filter((item) => item.checked === true);
-        this.mainResult = this.initialMainResult.filter((item) => {
-            return this.checkedItems.some((checkedItem) => {
-                return checkedItem.title === item.name;
-            });
-        });
-        console.log("this.mainResult", this.mainResult);
-        this.chartService.dataSource.next(this.mainResult);
-        var currentValue = this.chartService.chartAction.getValue();
-        var updatedValue = Object.assign({}, currentValue, { title: this.title });
-        this.chartService.chartAction.next(updatedValue);
-        this.dialog.closeAll();
+        if (this.chartService.chartAction.value.title && this.mainResult.length > 0) {
+            this.chartService.dataSource.next(this.mainResult);
+            var currentValue = this.chartService.chartAction.getValue();
+            var updatedValue = Object.assign({}, currentValue, { title: this.title });
+            this.chartService.chartAction.next(updatedValue);
+            this.dialog.closeAll();
+        } else if (!this.chartService.chartAction.value.title && this.mainResult.length === 0) {
+            // this.previewImage = false;
+            this.dialogService.openSnackBar("Please enter the title and select at least one item", "close");
+        } else if (!this.chartService.chartAction.value.title) {
+            this.dialogService.openSnackBar("Please enter the title above", "close");
+        } else if (this.mainResult.length === 0) {
+            this.dialogService.openSnackBar("Please select at least one item", "close");
+        }
     }
 
     private createChart(title: string, dataSource: any[]): void {
@@ -181,7 +186,7 @@ export class BarChartEditorComponent implements OnInit {
             while (this.barEL.children.length > 2) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
-            this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
+            // this.dialogService.openSnackBar("Please enter the title and select at least one item.", "close");
         }
     }
 }
