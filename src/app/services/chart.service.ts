@@ -122,7 +122,7 @@ export class ChartService {
         if (localStorage.length > 0 && localStorage.length < 100) {
             let keys = Object.keys(localStorage);
             keys.forEach(key => {
-                if (key.includes(gridType)) {
+                if (key.includes(gridType) && !key.includes("-config")) {
                     var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-line';
                     var chartData = JSON.parse(localStorage.getItem(key));
                     this.loadChart(chartType, chartData);
