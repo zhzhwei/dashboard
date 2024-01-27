@@ -123,7 +123,7 @@ export class BarChartEditorComponent implements OnInit {
             this.visibilityMapping.push(item.checked);
         }
         localStorage.setItem("temp", JSON.stringify(this.visibilityMapping));
-        this.createChart(this.initialMainResult);
+        // this.createChart(this.initialMainResult);
     }
 
     public addToDashboard(): void {
@@ -151,11 +151,13 @@ export class BarChartEditorComponent implements OnInit {
     }
 
     private createChart(dataSource: any[]): void {
-        if (dataSource.length > 0) {
+
+        let filteredDataSource = dataSource.filter((_, index) => this.visibilityMapping[index]);
+
+        if (filteredDataSource.length > 0) {
             this.barEL = document.getElementById("editor-bar");
             // console.log("clientHeight", this.barEL.clientHeight)
             // console.log("clientWidth", this.barEL.clientWidth)
-            let filteredDataSource = dataSource.filter((_, index) => this.visibilityMapping[index]);
 
             while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
