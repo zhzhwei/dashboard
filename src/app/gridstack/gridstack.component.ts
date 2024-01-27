@@ -37,8 +37,6 @@ export class GridStackComponent implements OnInit {
     public majorInitImage: boolean = true;
     public minorInitImage: boolean = true;
     private minorGridEl: any;
-    private tempTileData: any;
-    private tempTileConfig: any;
 
     private dataSources = new Map();
     private resizeObservers = new Map();
@@ -497,14 +495,10 @@ export class GridStackComponent implements OnInit {
                 this.resizeObservers.get(serial).disconnect();
             }
             var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
-            this.tempTileData = JSON.parse(localStorage.getItem(serial));
-            this.tempTileConfig = visibilityMapping;
             this.chartService.removePersistence(serial);
             if (serial.includes('bar')) {
-                // var dataSource = this.dataSources.get(serial);
-                var dataSource = this.tempTileData.dataSource;
+                var dataSource = this.dataSources.get(serial);
                 var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                console.log(filteredDataSource);
                 var title = this.chartService.chartAction.value.title;
                 var barColor = this.chartService.chartAction.value.barColor;
                 var contEl = document.getElementById(serial);
@@ -522,14 +516,15 @@ export class GridStackComponent implements OnInit {
             }
             if (this.minorGridEl.style.display === 'block') {
                 var resizeObserver = new ResizeObserver(entries => {
-                    // console.log('update', serial, jobName, filteredDataSource, titleCount, 'rgb(255, 0, 0)', barColor);
+                    // console.log('update', serial, jobName, filteredDataSource, titleCount, 'rgb(255, 0, 0)');
                     this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(255, 0, 0)', barColor);
                 }); 
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(serial, resizeObserver);
-                // this.dataSources.set(serial, filteredDataSource);
+                this.dataSources.set(serial, dataSource);
                 this.compactGridstack(this.minorGrid);
-                this.chartService.savePersistence('bar_chart', serial, filteredDataSource, title, undefined, 'rgb(255, 0, 0)', barColor);
+                localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
+                this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(255, 0, 0)', barColor);
             }
             setTimeout(() => {
                 if (this.majorGrid.getGridItems().length === 0) {
@@ -556,10 +551,11 @@ export class GridStackComponent implements OnInit {
                 if (this.resizeObservers.has(serial)) {
                     this.resizeObservers.get(serial).disconnect();
                 }
+                var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
                 this.chartService.removePersistence(serial);
                 if (serial.includes('bar')) {
-                    // var dataSource = this.dataSources.get(serial);
-                    var dataSource = this.tempTileData.dataSource;
+                    var dataSource = this.dataSources.get(serial);
+                    var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
                     var title = this.chartService.chartAction.value.title;
                     var heartColor = this.chartService.chartAction.value.heartColor;
                     var barColor = this.chartService.chartAction.value.barColor;
@@ -572,21 +568,22 @@ export class GridStackComponent implements OnInit {
                     var svg = d3.select('#' + serial).select('svg')
                         .attr('width', barEL.clientWidth)
                         .attr('height', barEL.clientHeight)
+                    // console.log(barEL, serial, title, color);
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                     this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
-                    this.barChart.addDownload(svg, barEL, title, dataSource, heartColor);
-                    this.barChart.addHeart(svg, barEL, serial, title, dataSource, heartColor, barColor);
-                    this.barChart.addTrash(svg, serial, dataSource, barEL.clientWidth - 36, 95);
+                    this.barChart.addDownload(svg, barEL, title, filteredDataSource, heartColor);
+                    this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, heartColor, barColor);
+                    this.barChart.addTrash(svg, serial, filteredDataSource, barEL.clientWidth - 36, 95);
                 }
                 if (contEl) {
                     var resizeObserver = new ResizeObserver(entries => {
-                        // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)', barColor);
-                        this.barChart.copeChartAction('update', serial, title, dataSource, 'rgb(0, 0, 0)', barColor);
+                        // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
+                        this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(0, 0, 0)', barColor);
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
-                    // this.dataSources.set(serial, dataSource);
-                    localStorage.setItem(serial + "-config", JSON.stringify(this.tempTileConfig));
+                    this.dataSources.set(serial, dataSource);
+                    localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
                     this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)', barColor);
                 }
             }

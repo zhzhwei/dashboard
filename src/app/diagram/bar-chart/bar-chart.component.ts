@@ -33,13 +33,9 @@ export class BarChartComponent implements OnInit {
         var barEL = document.getElementById(tileSerial);
         
         let filteredDataSource = [];
-        if (tileSerial.includes('major')) {
-            var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
-            if (dataSource) {
-                filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-            }
-        } else {
-            filteredDataSource = dataSource;
+        var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
+        if (dataSource) {
+            filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
         }
 
         if (action === 'create' || action === 'edit' || action === 'load') {
@@ -256,8 +252,8 @@ export class BarChartComponent implements OnInit {
                 self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, title: title, barColor: barColor});
                 self.chartService.chartType.next('bar_chart');
                 var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
-                var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                self.chartService.dataSource.next(filteredDataSource);  
+                localStorage.setItem(tempTileSerial + "-config", JSON.stringify(visibilityMapping));
+                self.chartService.dataSource.next(dataSource);  
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');
