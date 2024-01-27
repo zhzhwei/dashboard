@@ -41,6 +41,8 @@ export class GridStackComponent implements OnInit {
     private dataSources = new Map();
     private resizeObservers = new Map();
 
+    private isDragged = false;
+
     private options = {
         margin: 5,
         column: 12,
@@ -536,10 +538,14 @@ export class GridStackComponent implements OnInit {
     }
 
     private moveFromMinorToMajor() {
+        this.minorGrid.on('dragstart', (event, items) => {
+            this.isDragged = true;
+        });
+        this.minorGrid.on('dragstop', (event, items) => {
+            this.isDragged = false;
+        });
         this.minorGrid.on('removed', (event, items) => {
-            // console.log(this.chartService.chartAction.value.action);
-            // console.log(this.minorInitImage)
-            if (this.chartService.chartAction.value.action === 'disfavor' || this.minorInitImage) {
+            if (!this.isDragged || this.minorInitImage) {
                 return;
             }
             if ( this.majorInitImage ) {
