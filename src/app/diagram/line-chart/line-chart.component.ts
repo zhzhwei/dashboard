@@ -68,10 +68,11 @@ export class LineChartComponent implements OnInit {
 
         this.titleIconService.hoverSVG(this.svg);
 
+        const uniqueDates = [...new Set(dataSource.map((item) => item.date))];
         var x = d3
             .scaleTime()
             .range([0, lineEL.clientWidth - this.margin * 2])
-            .domain(dataSource.map((d) => d.date));
+            .domain(d3.extent(uniqueDates));
 
         var y = d3
             .scaleLinear()
@@ -101,6 +102,7 @@ export class LineChartComponent implements OnInit {
                 .attr("cx", (d: any) => x(d.date))
                 .attr("cy", (d: any) => y(d.count))
                 .attr("r", 3)
+                .attr("class", "dot")
                 .attr("fill", barColor)
                 .on("mouseover", (d, i, nodes) => {
                     // Get the current dot element
@@ -120,7 +122,11 @@ export class LineChartComponent implements OnInit {
                         .style("opacity", 0);
 
                     // Show the tooltip element
-                    d3.select(".tooltip").html(`Date: ${d.date} <br> Count: ${d.count}`).transition().duration(200).style("opacity", 1);
+                    d3.select(".tooltip")
+                        .html(`Date: ${new Date(d.date).toLocaleDateString()} <br> Count: ${d.count}`)
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
 
                     // Change the color of the dot
                     dot.style("fill", "orange");
@@ -146,15 +152,7 @@ export class LineChartComponent implements OnInit {
             var valueline = d3
                 .line()
                 .x((d: any) => x(d.date))
-                .y((d: any) => y(d.value));
-
-            var parseTime = d3.timeParse("%Y");
-
-            dataSource.forEach(function (d: any) {
-                d.date = parseTime(d.date);
-                d.value = +d.value;
-            });
-
+                .y((d: any) => y(d.count));
             this.g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
     
         } else if (action === "update") {
@@ -167,11 +165,30 @@ export class LineChartComponent implements OnInit {
 
             this.svg.select("g.y-axis").call(d3.axisLeft(y));
 
-            this.svg
+            var dots = this.g.selectAll(".dot");
+            dots.remove();
+
+            this.g
                 .selectAll("dot")
+                .data(dataSource)
+                .enter()
+                .append("circle")
                 .attr("cx", (d: any) => x(d.date))
                 .attr("cy", (d: any) => y(d.count))
-                .attr("r", 3);
+                .attr("r", 3)
+                .attr("class", "dot")
+                .attr("fill", barColor);
+
+            var valueline = d3
+                .line()
+                .x((d: any) => x(d.date))
+                .y((d: any) => y(d.count));
+
+            // Remove the old line (comment out for a cool effect when resizing the tile)
+            var line = this.g.selectAll(".line");
+            line.remove();
+
+            this.g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
         }
     }
 
