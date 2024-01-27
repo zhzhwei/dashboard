@@ -210,7 +210,9 @@ export class BarChartComponent implements OnInit {
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
                 self.chartService.chartAction.next({ action: 'favor', serial: tempTileSerial, title: title, barColor: barColor});
                 self.chartService.chartType.next('bar_chart');
-                self.chartService.dataSource.next(dataSource);  
+                var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
+                var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
+                self.chartService.dataSource.next(filteredDataSource);  
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');
