@@ -64,7 +64,7 @@ export class BarChartEditorComponent implements OnInit {
             });
         } else {
             const storageItem = JSON.parse(localStorage.getItem(this.tileSerial));
-            const visibilityMapping = JSON.parse(localStorage.getItem(this.tileSerial + "-config"));
+            this.visibilityMapping = JSON.parse(localStorage.getItem(this.tileSerial + "-config"));
             this.mainResult = storageItem.dataSource;
             this.initialMainResult = [...this.mainResult];
             console.log("Received updated results:", this.mainResult);
@@ -72,7 +72,7 @@ export class BarChartEditorComponent implements OnInit {
                 return {
                     id: index,
                     title: item.name,
-                    checked: visibilityMapping[index],
+                    checked: this.visibilityMapping[index],
                 };
             });
             this.allChecked = this.list.every((item) => item.checked);

@@ -84,7 +84,7 @@ export class GridStackComponent implements OnInit {
             this.chartService.currentDataSource
         ]).pipe(
             switchMap(([chartType, dataSource]) => {
-                if (chartType && dataSource.length > 0) {
+                if (chartType && dataSource && dataSource.length > 0) {
                     return this.chartService.chartAction.pipe(
                     map((chartActionFromObservable): { chartType: string, dataSource: any[], action?: string, serial?: string, 
                         title?: string, pieLabel?: string, heartColor?: any, barColor?: any } => {
