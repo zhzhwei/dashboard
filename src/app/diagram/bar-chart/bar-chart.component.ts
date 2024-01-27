@@ -173,7 +173,52 @@ export class BarChartComponent implements OnInit {
                 .attr('x', (d: any) => x(this.systemService.skillAbbr[d.name] ? this.systemService.skillAbbr[d.name] : d.name))
                 .attr('y', (d: any) => y(d.count))
                 .attr('width', x.bandwidth())
-                .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count));
+                .attr('height', (d: any) => barEL.clientHeight - this.margin * 2 - y(d.count))
+                .on('mouseover', (d, i, nodes) => {
+                    // Get the current bar element
+                    var bar = d3.select(nodes[i]);
+
+                    // Create the tooltip element
+                    var tooltip = d3
+                        .select("#" + tileSerial)
+                        .append("div")
+                        .attr("class", "tooltip")
+                        .style("position", "absolute")
+                        .style("background-color", "white")
+                        .style("border", "solid")
+                        .style("border-width", "1px")
+                        .style("border-radius", "5px")
+                        .style("padding", "10px")
+                        .style("opacity", 0);
+
+                    // Show the tooltip element
+                    d3.select(".tooltip")
+                        // .text(`${d.name}: ${d.count}`)
+                        .html(`Name: ${d.name} <br> Count: ${d.count}`)
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+
+                    // Change the color of the bar
+                    bar.style("fill", "orange");
+
+                    // Add a mousemove event listener to update the position of the tooltip element
+                    d3.select("body").on("mousemove", () => {
+                        var [x, y] = d3.mouse(nodes[i]);
+                        // console.log(x, y);
+                        tooltip.style("left", `${x + 30}px`).style("top", `${y}px`);
+                    });
+                })
+                .on("mouseout", (d, i, nodes) => {
+                    // Get the current bar element
+                    var bar = d3.select(nodes[i]);
+
+                    // Hide the tooltip element
+                    d3.select(".tooltip").remove();
+
+                    // Change the color of the bar back to the original color
+                    bar.style('fill', barColor);
+                });
         }
 
     }
