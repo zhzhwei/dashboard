@@ -272,7 +272,7 @@ export class VisGenDialogComponent implements OnInit {
                     this.dialogService.openStarPlotEditor();
                     break;
                 case "line_chart":
-                    this.dialogService.openLineChartEditor();
+                    this.dialogService.openLineChartEditor("create", "", "", "", "#4682B4");
                     break;
                 default:
                     console.log("Invalid Chart Type");

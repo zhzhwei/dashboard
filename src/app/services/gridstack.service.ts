@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class GridStackService {
     public majorChartTypeNum = {
-        'Line Chart': 0,
+        'line_chart': 0,
         'Stacked Line Chart': 0,
         'bar_chart': 0,
         'Stacked Bar Chart': 0,
@@ -17,7 +17,7 @@ export class GridStackService {
     };
 
     public minorChartTypeNum = {
-        'Line Chart': 0,
+        'line_chart': 0,
         'Stacked Line Chart': 0,
         'bar_chart': 0,
         'Stacked Bar Chart': 0,
