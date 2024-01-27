@@ -68,7 +68,7 @@ export class LineChartComponent implements OnInit {
 
         this.titleIconService.hoverSVG(this.svg);
 
-        const uniqueDates = [...new Set(dataSource.map((item) => item.date))];
+        const uniqueDates = [...new Set(dataSource.map((item) => new Date(item.date)))];
         var x = d3
             .scaleTime()
             .range([0, lineEL.clientWidth - this.margin * 2])
@@ -99,7 +99,7 @@ export class LineChartComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append("circle")
-                .attr("cx", (d: any) => x(d.date))
+                .attr("cx", (d: any) => x(new Date(d.date)))
                 .attr("cy", (d: any) => y(d.count))
                 .attr("r", 3)
                 .attr("class", "dot")
@@ -151,7 +151,7 @@ export class LineChartComponent implements OnInit {
 
             var valueline = d3
                 .line()
-                .x((d: any) => x(d.date))
+                .x((d: any) => x(new Date(d.date)))
                 .y((d: any) => y(d.count));
             this.g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
     
@@ -173,7 +173,7 @@ export class LineChartComponent implements OnInit {
                 .data(dataSource)
                 .enter()
                 .append("circle")
-                .attr("cx", (d: any) => x(d.date))
+                .attr("cx", (d: any) => x(new Date(d.date)))
                 .attr("cy", (d: any) => y(d.count))
                 .attr("r", 3)
                 .attr("class", "dot")
@@ -181,7 +181,7 @@ export class LineChartComponent implements OnInit {
 
             var valueline = d3
                 .line()
-                .x((d: any) => x(d.date))
+                .x((d: any) => x(new Date(d.date)))
                 .y((d: any) => y(d.count));
 
             // Remove the old line (comment out for a cool effect when resizing the tile)
@@ -272,7 +272,7 @@ export class LineChartComponent implements OnInit {
 
     public addPencil(svg, lineEL, tileSerial, title, heartColor, barColor): void {
         this.titleIconService.createPencil(svg, lineEL.clientWidth - 38, 20, () => {
-            this.dialogService.openBarChartEditor("edit", tileSerial, title, heartColor, barColor);
+            this.dialogService.openLineChartEditor("edit", tileSerial, title, heartColor, barColor);
             this.chartService.chartType.next("line_chart");
         });
     }

@@ -103,7 +103,7 @@ export class LineChartEditorComponent implements OnInit {
             var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin - 20) + ")");
 
             // Create the X-axis band scale
-            const uniqueDates = [...new Set(this.mainResult.map((item) => item.date))];
+            const uniqueDates = [...new Set(this.mainResult.map((item) => new Date(item.date)))];
             this.x = d3
                 .scaleTime()
                 .range([0, this.lineEL.clientWidth - this.margin * 2])
@@ -126,21 +126,23 @@ export class LineChartEditorComponent implements OnInit {
             // Draw the Y-axis on the DOM
             g.append("g").attr("class", "y-axis").call(d3.axisLeft(this.y));
 
-            // Create and fill the bars
+            // Create and fill the dots
             g.selectAll("dot")
                 .data(dataSource)
                 .enter()
                 .append("circle")
-                .attr("cx", (d: any) => this.x(d.date))
+                .attr("cx", (d: any) => this.x(new Date(d.date)))
                 .attr("cy", (d: any) => this.y(d.count))
                 .attr("r", 3)
+                .attr("class", "dot")
                 .attr("fill", this.barColor);
 
             // Add line
             var valueline = d3
                 .line()
-                .x((d: any) => this.x(d.date))
+                .x((d: any) => this.x(new Date(d.date)))
                 .y((d: any) => this.y(d.count));
+
             g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", this.barColor);
 
         } else {
