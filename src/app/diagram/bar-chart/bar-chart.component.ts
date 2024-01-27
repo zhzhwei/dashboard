@@ -31,10 +31,15 @@ export class BarChartComponent implements OnInit {
     public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], heartColor: any, barColor: any): void {
         // console.log(dataSource);
         var barEL = document.getElementById(tileSerial);
-        var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
+        
         let filteredDataSource = [];
-        if (dataSource) {
-            filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
+        if (tileSerial.includes('major')) {
+            var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
+            if (dataSource) {
+                filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
+            }
+        } else {
+            filteredDataSource = dataSource;
         }
 
         if (action === 'create' || action === 'edit' || action === 'load') {
