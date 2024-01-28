@@ -50,7 +50,7 @@ export class AppComponent {
     }
 
     loadChart() {
-        // this.chartService.loadJsonFile();
+        this.chartService.loadJsonFile();
     }
 
     removeAllCharts() {

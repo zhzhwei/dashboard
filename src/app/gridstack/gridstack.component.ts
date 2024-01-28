@@ -127,10 +127,10 @@ export class GridStackComponent implements OnInit {
                     if (conditions[chartType]) {
                         tileSerial = this.getMajorTileSerial(chartType);
                         contEl = document.getElementById(tileSerial);
-                        console.log(action,tileSerial);
                         const tempItem = localStorage.getItem("temp");
                         localStorage.setItem(tileSerial + "-config", tempItem);
                         localStorage.removeItem("temp");
+                        console.log('create', tileSerial, title, dataSource, 'rgb(0, 0, 0)', barColor);
                         chartCreators[chartType]('create', tileSerial, title, dataSource, 'rgb(0, 0, 0)', barColor);
                         this.chartService.savePersistence(chartType, tileSerial, dataSource, title, undefined, 'rgb(0, 0, 0)', barColor);
                         this.gridService.saveInfoPosition(tileSerial);
@@ -149,7 +149,6 @@ export class GridStackComponent implements OnInit {
                 },
                 'load': () => {
                     tileSerial = serial;
-                    // console.log(action,tileSerial);
                     if (serial.includes('major')) {
                         if (this.majorInitImage) {
                             this.majorGrid.removeAll();
@@ -173,6 +172,7 @@ export class GridStackComponent implements OnInit {
                     }
                     contEl = itemEl.querySelector('.grid-stack-item-content');
                     contEl.setAttribute('id', tileSerial);
+                    console.log('load', serial, title, dataSource, heartColor, barColor);
                     chartCreators[chartType]('load', serial, title, dataSource, heartColor, barColor);
                 },
                 'favor': () => {
@@ -622,7 +622,7 @@ export class GridStackComponent implements OnInit {
                     
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                     this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
-                    this.barChart.addDownload(svg, barEL, title, filteredDataSource, heartColor);
+                    this.barChart.addDownload(svg, barEL, serial, title, filteredDataSource, heartColor);
                     this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, heartColor, barColor);
                     this.barChart.addTrash(svg, serial, filteredDataSource, barEL.clientWidth - 36, 95);
                 }

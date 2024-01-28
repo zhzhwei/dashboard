@@ -35,17 +35,16 @@ export class ChartService {
     public pieLabel = new BehaviorSubject<string>('');
     currentPieLabel = this.pieLabel.asObservable();
 
-    public saveJsonFile(chartType: string, dataSource: any[], title: string, parameter: any) {
+    public saveJsonFile(chartType: string, dataSource: any[], tileConfig: any, title: string, barColor: string) {
         let exportObj = {
             chartType: chartType,
             dataSource: dataSource,
             action: '',
             serial: '',
-            title: title
+            title: title,
+            barColor: barColor,
+            tileConfig: tileConfig
         };
-        if (chartType === 'pie_chart') {
-            exportObj['pieLabel'] = parameter;
-        }
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
@@ -63,11 +62,13 @@ export class ChartService {
             var reader = new FileReader();
             reader.onload = (event: any) => {
                 var exportObj = JSON.parse(event.target.result);
+                localStorage.setItem("temp", JSON.stringify(exportObj.tileConfig));
                 if (exportObj.chartType === 'bar_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        title: exportObj.title
+                        title: exportObj.title,
+                        barColor: exportObj.barColor
                     });
                 }
                 else if (exportObj.chartType === 'pie_chart') {
