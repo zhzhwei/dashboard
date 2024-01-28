@@ -253,7 +253,7 @@ export class BarChartComponent implements OnInit {
                 self.chartService.chartType.next('bar_chart');
                 var visibilityMapping = JSON.parse(localStorage.getItem(tileSerial + "-config"));
                 localStorage.setItem(tempTileSerial + "-config", JSON.stringify(visibilityMapping));
-                self.chartService.dataSource.next(dataSource);  
+                self.chartService.dataSource.next(JSON.parse(localStorage.getItem(tileSerial)).dataSource);  
                 self.dialogService.openSnackBar('You have added this diagram into your favorites', 'close');
             } else {
                 heart.style('color', 'rgb(0, 0, 0)');

@@ -268,6 +268,7 @@ export class GridStackComponent implements OnInit {
                 'remove': () => {
                     console.log(action, serial);
                     this.removeOneChart(serial);
+                    // this.compactGridstack(this.majorGrid);
                     if (this.majorGrid.getGridItems().length === 0) {
                         this.gridService.majorEmpty.next(true);
                     }
@@ -606,6 +607,7 @@ export class GridStackComponent implements OnInit {
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
                     this.dataSources.set(serial, dataSource);
+                    // this.compactGridstack(this.majorGrid);
                     localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
                     this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)', barColor);
                 }
