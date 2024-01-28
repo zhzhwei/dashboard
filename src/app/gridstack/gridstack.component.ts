@@ -41,7 +41,7 @@ export class GridStackComponent implements OnInit {
     private dataSources = new Map();
     private resizeObservers = new Map();
 
-    private isDragged = false;
+    private dragFromMajorToMinor = false;
     private dragFromMinorToMajor = false;
 
     private options = {
@@ -483,16 +483,16 @@ export class GridStackComponent implements OnInit {
 
     private moveFromMajorToMinor() {
         this.majorGrid.on('dragstart', (event, items) => {
-            this.isDragged = true;
+            this.dragFromMajorToMinor = true;
         });
     
         this.majorGrid.on('dragstop', (event, items) => {
-            this.isDragged = false;
+            this.dragFromMajorToMinor = false;
         });
         this.majorGrid.on('removed', (event, items) => {
             // console.log(this.chartService.chartAction.value.action);
             // console.log(this.majorInitImage);
-            if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage || !this.isDragged) {
+            if (!this.dragFromMajorToMinor || this.majorInitImage || this.chartService.chartAction.value.action === 'remove') {
                 return;
             }
             if ( this.minorInitImage ) {
@@ -552,7 +552,7 @@ export class GridStackComponent implements OnInit {
             this.dragFromMinorToMajor = false;
         });
         this.minorGrid.on('removed', (event, items) => {
-            if (!this.dragFromMinorToMajor || this.minorInitImage) {
+            if (!this.dragFromMinorToMajor || this.minorInitImage || this.chartService.chartAction.value.action === 'disfavor') {
                 return;
             }
             if ( this.majorInitImage ) {
@@ -576,15 +576,22 @@ export class GridStackComponent implements OnInit {
                     this.gridService.majorChartTypeNum['bar_chart']++;
                     var contEl = document.getElementById(serial);
                     
-                    serial = serial.replace('minor', 'major');
-                    if (this.resizeObservers.has(serial)) {
-                        this.resizeObservers.get(serial).disconnect();
+                    let serialFound: string;
+                    for (let [key, value] of this.gridService.tileSerialMap.entries()) {
+                        if (value === serial) {
+                            serialFound = key;
+                            break;
+                        }
                     }
-                    this.chartService.removePersistence(serial);
-                    let element = document.getElementById(serial);
+                    if (this.resizeObservers.has(serialFound)) {
+                        this.resizeObservers.get(serialFound).disconnect();
+                    }
+                    this.chartService.removePersistence(serialFound);
+                    let element = document.getElementById(serialFound);
                     let gridItemElement = element.closest('.grid-stack-item');
                     this.majorGrid.removeWidget(gridItemElement as GridStackElement);
 
+                    serial = serial.replace('minor', 'major');
                     serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['bar_chart']);
                     contEl.setAttribute('id', serial);
                     var barEL = document.getElementById(serial);
