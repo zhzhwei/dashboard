@@ -42,6 +42,7 @@ export class GridStackComponent implements OnInit {
     private resizeObservers = new Map();
 
     private isDragged = false;
+    private dragFromMinorToMajor = false;
 
     private options = {
         margin: 5,
@@ -333,10 +334,8 @@ export class GridStackComponent implements OnInit {
                     if (latestAction != 'remove' && latestAction != 'disfavor') {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
-                            // console.log('11111');
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
                         } else {    
-                            // console.log('22222');
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
                     }
@@ -482,10 +481,17 @@ export class GridStackComponent implements OnInit {
     
 
     private moveFromMajorToMinor() {
+        this.majorGrid.on('dragstart', (event, items) => {
+            this.isDragged = true;
+        });
+    
+        this.majorGrid.on('dragstop', (event, items) => {
+            this.isDragged = false;
+        });
         this.majorGrid.on('removed', (event, items) => {
             // console.log(this.chartService.chartAction.value.action);
             // console.log(this.majorInitImage);
-            if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage) {
+            if (this.chartService.chartAction.value.action === 'remove' || this.majorInitImage || !this.isDragged) {
                 return;
             }
             if ( this.minorInitImage ) {
@@ -539,13 +545,13 @@ export class GridStackComponent implements OnInit {
 
     private moveFromMinorToMajor() {
         this.minorGrid.on('dragstart', (event, items) => {
-            this.isDragged = true;
+            this.dragFromMinorToMajor = true;
         });
         this.minorGrid.on('dragstop', (event, items) => {
-            this.isDragged = false;
+            this.dragFromMinorToMajor = false;
         });
         this.minorGrid.on('removed', (event, items) => {
-            if (!this.isDragged || this.minorInitImage) {
+            if (!this.dragFromMinorToMajor || this.minorInitImage) {
                 return;
             }
             if ( this.majorInitImage ) {
@@ -565,9 +571,19 @@ export class GridStackComponent implements OnInit {
                     var title = this.chartService.chartAction.value.title;
                     var heartColor = this.chartService.chartAction.value.heartColor;
                     var barColor = this.chartService.chartAction.value.barColor;
+                    
                     this.gridService.majorChartTypeNum['bar_chart']++;
                     var contEl = document.getElementById(serial);
+                    
                     serial = serial.replace('minor', 'major');
+                    if (this.resizeObservers.has(serial)) {
+                        this.resizeObservers.get(serial).disconnect();
+                    }
+                    this.chartService.removePersistence(serial);
+                    let element = document.getElementById(serial);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+
                     serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['bar_chart']);
                     contEl.setAttribute('id', serial);
                     var barEL = document.getElementById(serial);
@@ -575,6 +591,7 @@ export class GridStackComponent implements OnInit {
                         .attr('width', barEL.clientWidth)
                         .attr('height', barEL.clientHeight)
                     // console.log(barEL, serial, title, color);
+                    
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                     this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
                     this.barChart.addDownload(svg, barEL, title, filteredDataSource, heartColor);
