@@ -491,8 +491,6 @@ export class GridStackComponent implements OnInit {
             this.dragFromMajorToMinor = false;
         });
         this.majorGrid.on('removed', (event, items) => {
-            // console.log(this.chartService.chartAction.value.action);
-            // console.log(this.majorInitImage);
             if (!this.dragFromMajorToMinor || this.majorInitImage || this.chartService.chartAction.value.action === 'remove') {
                 return;
             }
@@ -500,18 +498,34 @@ export class GridStackComponent implements OnInit {
                 this.minorGrid.removeWidget(this.minorGrid.getGridItems()[0] as HTMLElement);
                 this.minorInitImage = false;
             }
+
             var serial = items[0].el.querySelector('.grid-stack-item-content').id;
             if (this.resizeObservers.has(serial)) {
                 this.resizeObservers.get(serial).disconnect();
             }
+
             var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
             var title = JSON.parse(localStorage.getItem(serial)).title;
             var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
             this.chartService.removePersistence(serial);
+            
             if (serial.includes('bar')) {
                 var dataSource = this.dataSources.get(serial);
                 var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
                 var contEl = document.getElementById(serial);
+                
+                let serialFound = this.gridService.tileSerialMap.get(serial);
+                if (serialFound) {
+                    if (this.resizeObservers.has(serialFound)) {
+                        this.resizeObservers.get(serialFound).disconnect();
+                    }
+                    this.chartService.removePersistence(serialFound);
+                    let element = document.getElementById(serialFound);
+                    let gridItemElement = element.closest('.grid-stack-item');
+                    this.minorGrid.removeWidget(gridItemElement as GridStackElement);
+                    this.gridService.tileSerialMap.delete(serial);
+                }
+                
                 serial = this.gridService.getMinorTileSerial('bar_chart', serial);
                 contEl.setAttribute('id', serial);
                 var barEL = document.getElementById(serial);
@@ -565,12 +579,14 @@ export class GridStackComponent implements OnInit {
                 if (this.resizeObservers.has(serial)) {
                     this.resizeObservers.get(serial).disconnect();
                 }
+
                 var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
                 var title = JSON.parse(localStorage.getItem(serial)).title;
                 var heartColor = JSON.parse(localStorage.getItem(serial)).heartColor;
                 var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
                 console.log(serial, title, heartColor, barColor);
                 this.chartService.removePersistence(serial);
+                
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
                     var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
