@@ -268,6 +268,7 @@ export class GridStackComponent implements OnInit {
                 'remove': () => {
                     console.log(action, serial);
                     this.removeOneChart(serial);
+                    this.gridService.tileSerialMap.delete(serial);
                     // this.compactGridstack(this.majorGrid);
                     if (this.majorGrid.getGridItems().length === 0) {
                         this.gridService.majorEmpty.next(true);
@@ -504,12 +505,12 @@ export class GridStackComponent implements OnInit {
                 this.resizeObservers.get(serial).disconnect();
             }
             var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
+            var title = JSON.parse(localStorage.getItem(serial)).title;
+            var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
             this.chartService.removePersistence(serial);
             if (serial.includes('bar')) {
                 var dataSource = this.dataSources.get(serial);
                 var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                var title = this.chartService.chartAction.value.title;
-                var barColor = this.chartService.chartAction.value.barColor;
                 var contEl = document.getElementById(serial);
                 serial = this.gridService.getMinorTileSerial('bar_chart', serial);
                 contEl.setAttribute('id', serial);
@@ -565,14 +566,14 @@ export class GridStackComponent implements OnInit {
                     this.resizeObservers.get(serial).disconnect();
                 }
                 var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
+                var title = JSON.parse(localStorage.getItem(serial)).title;
+                var heartColor = JSON.parse(localStorage.getItem(serial)).heartColor;
+                var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
+                console.log(serial, title, heartColor, barColor);
                 this.chartService.removePersistence(serial);
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
                     var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                    var title = this.chartService.chartAction.value.title;
-                    var heartColor = this.chartService.chartAction.value.heartColor;
-                    var barColor = this.chartService.chartAction.value.barColor;
-                    
                     this.gridService.majorChartTypeNum['bar_chart']++;
                     var contEl = document.getElementById(serial);
                     
@@ -583,13 +584,16 @@ export class GridStackComponent implements OnInit {
                             break;
                         }
                     }
-                    if (this.resizeObservers.has(serialFound)) {
-                        this.resizeObservers.get(serialFound).disconnect();
+                    if (serialFound) {
+                        if (this.resizeObservers.has(serialFound)) {
+                            this.resizeObservers.get(serialFound).disconnect();
+                        }
+                        this.chartService.removePersistence(serialFound);
+                        let element = document.getElementById(serialFound);
+                        let gridItemElement = element.closest('.grid-stack-item');
+                        this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+                        this.gridService.tileSerialMap.delete(serialFound);
                     }
-                    this.chartService.removePersistence(serialFound);
-                    let element = document.getElementById(serialFound);
-                    let gridItemElement = element.closest('.grid-stack-item');
-                    this.majorGrid.removeWidget(gridItemElement as GridStackElement);
 
                     serial = serial.replace('minor', 'major');
                     serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['bar_chart']);

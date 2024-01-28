@@ -51,8 +51,7 @@ export class BarChartEditorComponent implements OnInit {
             this.sharedService.results$.subscribe((results) => {
                 this.mainResult = results;
                 this.initialMainResult = [...results];
-                // localStorage.setItem(this.tileSerial, JSON.stringify({ dataSource: this.initialMainResult }));
-                console.log("Received updated results:", this.mainResult);
+                // console.log("Received updated results:", this.mainResult);
 
                 this.list = this.mainResult.map((item, index) => {
                     return {
@@ -67,7 +66,7 @@ export class BarChartEditorComponent implements OnInit {
             this.visibilityMapping = JSON.parse(localStorage.getItem(this.tileSerial + "-config"));
             this.mainResult = storageItem.dataSource;
             this.initialMainResult = [...this.mainResult];
-            console.log("Received updated results:", this.mainResult);
+            // console.log("Received updated results:", this.mainResult);
             this.list = this.mainResult.map((item, index) => {
                 return {
                     id: index,
@@ -189,7 +188,7 @@ export class BarChartEditorComponent implements OnInit {
 
             // Create the Y-axis band scale
             var maxCount: number = d3.max(filteredDataSource, (d: any) => Number(d.count));
-            console.log("maxCount", maxCount);
+            // console.log("maxCount", maxCount);
             this.y = d3
                 .scaleLinear()
                 .domain([0, maxCount + 1])

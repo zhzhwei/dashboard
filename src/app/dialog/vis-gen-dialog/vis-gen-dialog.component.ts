@@ -147,7 +147,7 @@ export class VisGenDialogComponent implements OnInit {
             delete this.queryParameters["skill"];
         }
 
-        console.log("Updated queryParameters:", this.queryParameters);
+        // console.log("Updated queryParameters:", this.queryParameters);
     }
 
     generateQuery(): string {
@@ -179,7 +179,7 @@ export class VisGenDialogComponent implements OnInit {
 
     onSearch() {
         let previewQuery = this.generateQuery();
-        console.log(previewQuery);
+        // console.log(previewQuery);
 
         this.rdfDataService.getQueryResults(previewQuery).then((data) => {
             this.previewResults = data.results.bindings.map((item) => {
@@ -191,7 +191,7 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     chartTypeSelect(event: any) {
-        console.log(event.target.id);
+        // console.log(event.target.id);
         this.chartType = event.target.id;
         const cardBody = document.querySelector(".preview-content");
 
@@ -242,7 +242,7 @@ export class VisGenDialogComponent implements OnInit {
     updateProperties() {
         this.selectProperties = this.propertyCheckboxes.filter((checkbox) => checkbox.nativeElement.checked).map((checkbox) => checkbox.nativeElement.name);
 
-        console.log("Selected Properties:", this.selectProperties);
+        // console.log("Selected Properties:", this.selectProperties);
         if (this.currentPreviewContent !== undefined) {
             this.currentPreviewContent.selectProperties = this.selectProperties;
             this.currentPreviewContentRef.changeDetectorRef.detectChanges();

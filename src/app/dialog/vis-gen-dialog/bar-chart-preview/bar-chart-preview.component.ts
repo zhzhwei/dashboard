@@ -78,12 +78,12 @@ export class BarChartPreviewComponent implements OnInit {
                 for (const item of data.results.bindings) {
                     skillList.push(`"${item.skillName.value}"@de`);
                 }
-                console.log(skillList);
+                // console.log(skillList);
                 if (skillList.length > 40) {
                     this.dialogService.openSnackBar("Too many different values to visualize in a bar chart.", "close");
                 } else {
                     let skillListString = skillList.join(", ");
-                    console.log(skillListString);
+                    // console.log(skillListString);
                     let actualCountQuery =
                         this.rdfDataService.prefixes +
                         `SELECT ?skillName (COUNT(DISTINCT ?s) AS ?occurrences) WHERE {
@@ -96,13 +96,13 @@ export class BarChartPreviewComponent implements OnInit {
                         FILTER (?skillName IN (${skillListString})).
                     }
                     GROUP BY ?skillName`;
-                    console.log(actualCountQuery);
+                    // console.log(actualCountQuery);
                     this.rdfDataService.getQueryResults(actualCountQuery).then((data) => {
                         this.mainResult =  data.results.bindings.map((item) => {
                             return { name: item.skillName.value, count: item.occurrences.value };
                         });
-                        console.log("this.mainResult")
-                        console.log(this.mainResult)
+                        // console.log("this.mainResult")
+                        // console.log(this.mainResult)
                         this.sharedService.updateResults(this.mainResult);
                     })
                 }
@@ -131,13 +131,13 @@ export class BarChartPreviewComponent implements OnInit {
         }
 
         query += `} GROUP BY ?${this.xProperty}`;
-        console.log(query);
+        // console.log(query);
         this.rdfDataService.getQueryResults(query).then((data) => {
             this.mainResult =  data.results.bindings.map((item) => {
                 return { name: item[this.xProperty].value, count: item.occurrences.value };
             });
-            console.log("this.mainResult")
-            console.log(this.mainResult)
+            // console.log("this.mainResult")
+            // console.log(this.mainResult)
             this.sharedService.updateResults(this.mainResult);
         })
 
