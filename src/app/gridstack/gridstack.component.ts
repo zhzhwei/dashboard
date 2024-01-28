@@ -196,6 +196,7 @@ export class GridStackComponent implements OnInit {
                         this.gridService.tileSerialFavor.delete(serial);
                         tileSerial = serial;
                         var tempTileSerial = this.gridService.tileSerialMap.get(serial);
+                        this.gridService.tileSerialMap.delete(serial);
                         console.log(action, tempTileSerial);
                         this.chartService.removePersistence(tempTileSerial);
                         this.gridService.minorChartTypeNum[chartType] = this.gridService.majorChartTypeNum[chartType];
