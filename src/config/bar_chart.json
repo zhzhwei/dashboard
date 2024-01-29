@@ -1,1 +1,86 @@
-{"chartType":"bar_chart","dataSource":[{"name":"Analytische Fähigkeiten","count":"4"},{"name":"Bewerbungsmanagement","count":"4"},{"name":"CNC-Schleifen","count":"4"},{"name":"Flexibilität","count":"8"},{"name":"Kommunikationsfähigkeit","count":"8"},{"name":"Kundenorientierung","count":"8"},{"name":"Leitungsbereitschaft","count":"4"},{"name":"Organisationsfähigkeit","count":"8"},{"name":"Polymechanik","count":"4"},{"name":"Problemlösungsfähigkeit","count":"4"},{"name":"Qualitätsbewusstsein","count":"4"},{"name":"Selbstständigkeit","count":"4"},{"name":"Steuerungskenntnisse","count":"4"},{"name":"Teamfähigkeit","count":"8"},{"name":"Unternehmerisches Denken","count":"4"}],"action":"","serial":"","title":"2","barColor":"#4682B4","tileConfig":[true,false,false,false,false,false,false,false,false,false,false,false,false,false,false]}
+{
+    "chartType": "bar_chart",
+    "dataSource": [
+        {
+            "name": "Analytische Fähigkeiten",
+            "count": "4"
+        },
+        {
+            "name": "Bewerbungsmanagement",
+            "count": "4"
+        },
+        {
+            "name": "CNC-Schleifen",
+            "count": "4"
+        },
+        {
+            "name": "Flexibilität",
+            "count": "8"
+        },
+        {
+            "name": "Kommunikationsfähigkeit",
+            "count": "8"
+        },
+        {
+            "name": "Kundenorientierung",
+            "count": "8"
+        },
+        {
+            "name": "Leitungsbereitschaft",
+            "count": "4"
+        },
+        {
+            "name": "Organisationsfähigkeit",
+            "count": "8"
+        },
+        {
+            "name": "Polymechanik",
+            "count": "4"
+        },
+        {
+            "name": "Problemlösungsfähigkeit",
+            "count": "4"
+        },
+        {
+            "name": "Qualitätsbewusstsein",
+            "count": "4"
+        },
+        {
+            "name": "Selbstständigkeit",
+            "count": "4"
+        },
+        {
+            "name": "Steuerungskenntnisse",
+            "count": "4"
+        },
+        {
+            "name": "Teamfähigkeit",
+            "count": "8"
+        },
+        {
+            "name": "Unternehmerisches Denken",
+            "count": "4"
+        }
+    ],
+    "action": "",
+    "serial": "",
+    "title": "2",
+    "barColor": "#4682B4",
+    "tileConfig": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ]
+}

@@ -101,53 +101,9 @@ export class LineChartComponent implements OnInit {
                 .append("circle")
                 .attr("cx", (d: any) => x(new Date(d.date)))
                 .attr("cy", (d: any) => y(d.count))
-                .attr("r", 3)
+                .attr("r", 5)
                 .attr("class", "dot")
-                .attr("fill", barColor)
-                .on("mouseover", (d, i, nodes) => {
-                    // Get the current dot element
-                    var dot = d3.select(nodes[i]);
-
-                    // Create the tooltip element
-                    var tooltip = d3
-                        .select("#" + tileSerial)
-                        .append("div")
-                        .attr("class", "tooltip")
-                        .style("position", "absolute")
-                        .style("background-color", "white")
-                        .style("border", "solid")
-                        .style("border-width", "1px")
-                        .style("border-radius", "5px")
-                        .style("padding", "10px")
-                        .style("opacity", 0);
-
-                    // Show the tooltip element
-                    d3.select(".tooltip")
-                        .html(`Date: ${new Date(d.date).toLocaleDateString()} <br> Count: ${d.count}`)
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 1);
-
-                    // Change the color of the dot
-                    dot.style("fill", "orange");
-
-                    // Add a mousemove event listener to update the position of the tooltip element
-                    d3.select("body").on("mousemove", () => {
-                        var [x, y] = d3.mouse(nodes[i]);
-                        // console.log(x, y);
-                        tooltip.style("left", `${x + 30}px`).style("top", `${y}px`);
-                    });
-                })
-                .on("mouseout", (d, i, nodes) => {
-                    // Get the current dot element
-                    var dot = d3.select(nodes[i]);
-
-                    // Hide the tooltip element
-                    d3.select(".tooltip").remove();
-
-                    // Change the color of the dot back to the original color
-                    dot.style("fill", barColor);
-                });
+                .attr("fill", barColor);
 
             var valueline = d3
                 .line()
@@ -175,9 +131,39 @@ export class LineChartComponent implements OnInit {
                 .append("circle")
                 .attr("cx", (d: any) => x(new Date(d.date)))
                 .attr("cy", (d: any) => y(d.count))
-                .attr("r", 3)
+                .attr("r",4)
                 .attr("class", "dot")
-                .attr("fill", barColor);
+                .attr("fill", barColor)
+                .on("mouseover", function(d, i, nodes) {
+                    var tooltip = d3
+                        .select("#" + tileSerial)
+                        .append("div")
+                        .attr("class", "tooltip")
+                        .style("position", "absolute")
+                        .style("background-color", "white")
+                        .style("border", "solid")
+                        .style("border-width", "1px")
+                        .style("border-radius", "5px")
+                        .style("padding", "10px")
+                        .style("opacity", 0);
+
+                    d3.select(".tooltip")
+                        .html(`Date: ${new Date(d.date).toLocaleDateString()} <br> Count: ${d.count}`)
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    
+                    d3.select("body").on("mousemove", () => {
+                        var [x, y] = d3.mouse(nodes[i]);
+                        tooltip.style("left", `${x + 30}px`).style("top", `${y}px`);
+                    });
+
+                    d3.select(this).attr("fill", "orange").attr("r", 10);
+                })
+                .on("mouseout", function(d) {
+                    d3.select(this).attr("fill", barColor).attr("r", 4);
+                    d3.select(".tooltip").remove();
+                });
 
             var valueline = d3
                 .line()
