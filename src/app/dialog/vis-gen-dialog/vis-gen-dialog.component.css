@@ -43,8 +43,11 @@
 input {
     height: 34px;
     border-radius: 5px;
-    border: 1px solid rgb(68, 68, 133);
     width: 350px;
+}
+
+input:enabled {
+    border: 1px solid rgb(68, 68, 133);
 }
 
 table {
@@ -109,7 +112,7 @@ label[for="jobNameCheckbox"],
 }
 
 #checkbox_2 {
-    width: 232px;
+    width: 140px;
 }
 
 label[for="createdBeforeCheckbox"],
@@ -118,7 +121,7 @@ label[for="createdBeforeCheckbox"],
 }
 
 #checkbox_3 {
-    width: 244px;
+    width: 140px;
 }
 
 label[for="createdAfterCheckbox"],
@@ -127,7 +130,7 @@ label[for="createdAfterCheckbox"],
 }
 
 #checkbox_4 {
-    width: 190px;
+    width: 60px;
 }
 
 label[for="applicantNumberCheckbox"],
@@ -135,7 +138,11 @@ label[for="applicantNumberCheckbox"],
     margin-top: -1px;
 }
 
-#checkbox_5, #checkbox_6, #checkbox_7 {
+#checkbox_5, #checkbox_6 {
+    width: 140px;
+}
+
+#checkbox_7 {
     width: 268px;
 }
 
