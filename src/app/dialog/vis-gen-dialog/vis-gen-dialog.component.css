@@ -163,3 +163,8 @@ label[for="fulltimeJobCheckbox, limitedJobCheckbox, listsSkillCheckbox"],
 .table-container i {
     margin-left: 5px;
 }
+
+.img-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
