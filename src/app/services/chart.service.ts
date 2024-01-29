@@ -71,12 +71,11 @@ export class ChartService {
                         barColor: exportObj.barColor
                     });
                 }
-                else if (exportObj.chartType === 'pie_chart') {
+                else if (exportObj.chartType === 'line_chart') {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        title: exportObj.title,
-                        pieLabel: exportObj.pieLabel
+                        title: exportObj.title
                     });
                 };
                 this.chartType.next(exportObj.chartType);
@@ -124,8 +123,8 @@ export class ChartService {
         if (localStorage.length > 0 && localStorage.length < 100) {
             let keys = Object.keys(localStorage);
             keys.forEach(key => {
-                if (key.includes(gridType)) {
-                    var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-pie';
+                if (key.includes(gridType) && !key.includes("-config")) {
+                    var chartType = key.includes('dash-bar') ? 'dash-bar' : 'dash-line';
                     var chartData = JSON.parse(localStorage.getItem(key));
                     this.loadChart(chartType, chartData);
                 }
@@ -141,10 +140,6 @@ export class ChartService {
             heartColor: chartData.heartColor,
             barColor: chartData.barColor
         };
-    
-        if (chartType === 'dash-pie') {
-            actionData.pieLabel = chartData.pieLabel;
-        }
     
         this.chartAction.next(actionData);
         this.chartType.next(chartData.chartType);

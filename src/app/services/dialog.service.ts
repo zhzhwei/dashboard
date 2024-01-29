@@ -15,7 +15,7 @@ import { GridStackService } from './gridstack.service';
     providedIn: 'root'
 })
 export class DialogService {
-    constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar, private gridService: GridStackService) { }
+    constructor(private dialog: MatDialog, private chartService: ChartService, private snackBar: MatSnackBar, private gridService: GridStackService) {}
 
     openDeleteConfirmation(action: string, tileSerial, dataSource, message: string) {
         var dialogRef = this.dialog.open(DeleteConfirmationComponent, {
@@ -32,7 +32,7 @@ export class DialogService {
                 }
             }
         });
-        
+
         if (message === 'Are you sure to delete this widget?') {
             dialogRef.afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
@@ -73,9 +73,9 @@ export class DialogService {
             height: '850px',
             backdropClass: "hello",
             autoFocus: false,
-            disableClose: true
+            disableClose: true,
         });
-        this.chartService.chartAction.next({ action: action, serial: tileSerial, title: title, heartColor: heartColor, barColor: barColor});
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, title: title, heartColor: heartColor, barColor: barColor });
     }
 
     openStackedBarChartEditor() {
@@ -119,13 +119,14 @@ export class DialogService {
         });
     }
 
-    openLineChartEditor() {
+    openLineChartEditor(action: string, tileSerial: string, title: string, heartColor: any, barColor: any) {
         this.dialog.open(LineChartEditorComponent, {
-            width: '1600px',
-            height: '850px',
+            width: "1600px",
+            height: "850px",
             backdropClass: "hello",
             autoFocus: false,
-            disableClose: true
+            disableClose: true,
         });
+        this.chartService.chartAction.next({ action: action, serial: tileSerial, title: title, heartColor: heartColor, barColor: barColor });
     }
 }
