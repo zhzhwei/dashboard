@@ -49,7 +49,7 @@ export class LineChartComponent implements OnInit {
             if (action === "create" || action === "edit" || action === "load") {
                 this.addTitle(this.svg, lineEL, title);
                 this.addPencil(this.svg, lineEL, tileSerial, title, heartColor, barColor);
-                this.addDownload(this.svg, lineEL, title, dataSource, heartColor);
+                this.addDownload(this.svg, lineEL, tileSerial, title, dataSource, barColor);
                 this.addHeart(this.svg, lineEL, tileSerial, title, dataSource, heartColor, barColor);
                 this.addTrash(this.svg, tileSerial, dataSource, lineEL.clientWidth - 36, 95);
             } else if (action === "update") {
@@ -192,80 +192,6 @@ export class LineChartComponent implements OnInit {
         }
     }
 
-    // public createChart(): void {
-    //     this.svg = d3.select("#dash-line").append("svg").attr("width", this.lineEL.clientWidth).attr("height", this.lineEL.clientHeight);
-
-    //     var parseTime = d3.timeParse("%Y");
-
-    //     data.forEach(function (d: any) {
-    //         d.date = parseTime(d.date);
-    //         d.value = +d.value;
-    //     });
-
-
-    //     var valueline = d3
-    //         .line()
-    //         .x((d: any) => this.x(d.date))
-    //         .y((d: any) => this.y(d.value));
-
-    //     g.append("path").data([data]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", "steelblue");
-    // }
-
-    // public updateChart(): void {
-    //     // Update the SVG element size
-    //     this.svg.attr("width", this.lineEL.clientWidth).attr("height", this.lineEL.clientHeight);
-
-    //     this.svg
-    //         .select("text.title")
-    //         .attr("x", this.lineEL.clientWidth / 2)
-    //         .attr("y", this.margin / 2 + 5);
-
-    //     this.svg
-    //         .select("foreignObject.pencil")
-    //         .attr("x", this.lineEL.clientWidth - 38)
-    //         .attr("y", 20);
-
-    //     this.svg
-    //         .select("foreignObject.download")
-    //         .attr("x", this.lineEL.clientWidth - 38)
-    //         .attr("y", 45);
-
-    //     this.svg
-    //         .select("foreignObject.heart")
-    //         .attr("x", this.lineEL.clientWidth - 38)
-    //         .attr("y", 70);
-
-    //     this.svg
-    //         .select("foreignObject.trash")
-    //         .attr("x", this.lineEL.clientWidth - 36)
-    //         .attr("y", 95);
-
-    //     this.x.range([0, this.lineEL.clientWidth - this.margin * 2]);
-    //     this.y.range([this.lineEL.clientHeight - this.margin * 2, 0]);
-
-    //     this.svg
-    //         .selectAll("g.x-axis")
-    //         .attr("transform", "translate(0," + (this.lineEL.clientHeight - this.margin * 2) + ")")
-    //         .call(d3.axisBottom(this.x))
-    //         .selectAll("text")
-    //         .style("text-anchor", "middle");
-
-    //     this.svg.selectAll("g.y-axis").call(d3.axisLeft(this.y));
-
-    //     this.svg
-    //         .selectAll("circle")
-    //         .attr("cx", (d: any) => this.x(d.date))
-    //         .attr("cy", (d: any) => this.y(d.value));
-
-    //     this.svg.selectAll(".line").attr(
-    //         "d",
-    //         d3
-    //             .line()
-    //             .x((d: any) => this.x(d.date))
-    //             .y((d: any) => this.y(d.value))
-    //     );
-    // }
-
     private addTitle(svg, lineEL, title): void {
         this.titleIconService.createTitle(svg, lineEL.clientWidth / 2, this.margin / 2, title);
     }
@@ -277,9 +203,9 @@ export class LineChartComponent implements OnInit {
         });
     }
 
-    public addDownload(svg, lineEL, title, dataSource, heartColor): void {
+    public addDownload(svg, lineEL, tileSerial, title, dataSource, barColor): void {
         this.titleIconService.createDownload(svg, lineEL.clientWidth - 38, 45, () => {
-            // this.chartService.saveJsonFile("line_chart", dataSource, title, undefined);
+            // this.chartService.saveJsonFile("line_chart", dataSource, undefined, title, barColor);
         });
     }
 
@@ -298,7 +224,7 @@ export class LineChartComponent implements OnInit {
                 self.gridService.tileSerialMap.set(tileSerial, tempTileSerial);
                 self.chartService.chartAction.next({ action: "favor", serial: tempTileSerial, title: title, barColor: barColor });
                 self.chartService.chartType.next("line_chart");
-                self.chartService.dataSource.next(dataSource);
+                self.chartService.dataSource.next(JSON.parse(localStorage.getItem(tileSerial)).dataSource);
                 self.dialogService.openSnackBar("You have added this diagram into your favorites", "close");
             } else {
                 heart.style("color", "rgb(0, 0, 0)");

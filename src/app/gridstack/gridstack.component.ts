@@ -283,7 +283,6 @@ export class GridStackComponent implements OnInit {
             // console.log(this.gridService.tileSerialFavor);
             if (action === 'create') {
                 console.log(chartType, conditions[chartType]);
-                // if (conditions[chartType]) {
                 this.gridService.tileSerialFavor.delete(tileSerial);
                 this.dataSources.set(tileSerial, dataSource);
                 if (this.resizeObservers.has(tileSerial)) {
@@ -304,7 +303,6 @@ export class GridStackComponent implements OnInit {
                 });
                 resizeObserver.observe(contEl);
                 this.resizeObservers.set(tileSerial, resizeObserver);
-                // }
             } else if (action === 'edit') {
                 this.gridService.tileSerialFavor.delete(tileSerial);
                 this.dataSources.set(tileSerial, dataSource);
@@ -672,14 +670,11 @@ export class GridStackComponent implements OnInit {
                         
                         d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
                         this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
-                        this.barChart.addDownload(svg, barEL, serial, title, filteredDataSource, heartColor);
+                        this.barChart.addDownload(svg, barEL, serial, title, filteredDataSource, barColor);
                         this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, heartColor, barColor);
                         this.barChart.addTrash(svg, serial, filteredDataSource, barEL.clientWidth - 36, 95);
                     } else if (serial.includes("line")) {
                         var dataSource = this.dataSources.get(serial);
-                        // var title = JSON.parse(localStorage.getItem(serial)).title;
-                        // var heartColor = JSON.parse(localStorage.getItem(serial)).heartColor;
-                        // var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
                         this.gridService.majorChartTypeNum["line_chart"]++;
                         var contEl = document.getElementById(serial);
 
@@ -714,7 +709,7 @@ export class GridStackComponent implements OnInit {
 
                         d3.select("#" + serial).select("svg").select("foreignObject.heart").remove();
                         this.lineChart.addPencil(svg, lineEL, serial, title, heartColor, barColor);
-                        this.lineChart.addDownload(svg, lineEL, title, dataSource, heartColor);
+                        this.lineChart.addDownload(svg, lineEL, serial, title, dataSource, barColor);
                         this.lineChart.addHeart(svg, lineEL, serial, title, dataSource, heartColor, barColor);
                         this.lineChart.addTrash(svg, serial, dataSource, lineEL.clientWidth - 36, 95);
                     }
