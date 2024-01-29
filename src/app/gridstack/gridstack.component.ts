@@ -41,9 +41,6 @@ export class GridStackComponent implements OnInit {
     private dataSources = new Map();
     private resizeObservers = new Map();
 
-    private dragFromMajorToMinor = false;
-    private dragFromMinorToMajor = false;
-
     private options = {
         margin: 5,
         column: 12,
@@ -89,9 +86,11 @@ export class GridStackComponent implements OnInit {
             switchMap(([chartType, dataSource]) => {
                 if (chartType && dataSource && dataSource.length > 0) {
                     return this.chartService.chartAction.pipe(
-                    map((chartActionFromObservable): { chartType: string, dataSource: any[], action?: string, serial?: string, 
-                        title?: string, pieLabel?: string, heartColor?: any, barColor?: any } => {
-                        if (chartActionFromObservable && typeof chartActionFromObservable === 'object') {
+                        map((chartActionFromObservable): {
+                            chartType: string, dataSource: any[], action?: string, serial?: string,
+                            title?: string, pieLabel?: string, heartColor?: any, barColor?: any
+                        } => {
+                            if (chartActionFromObservable && typeof chartActionFromObservable === 'object') {
                                 return { chartType, dataSource, ...chartActionFromObservable };
                             } else {
                                 return { chartType, dataSource };
@@ -113,7 +112,7 @@ export class GridStackComponent implements OnInit {
 
             var conditions = {
                 'bar_chart': title,
-                'pie_chart':  pieLabel
+                'pie_chart': pieLabel
             };
 
             var contEl, tileSerial;
@@ -140,7 +139,7 @@ export class GridStackComponent implements OnInit {
                     tileSerial = serial;
                     contEl = document.getElementById(serial);
                     contEl.innerHTML = '';
-                    console.log(action,tileSerial);
+                    console.log(action, tileSerial);
                     const tempItem = localStorage.getItem("temp");
                     localStorage.setItem(tileSerial + "-config", tempItem);
                     localStorage.removeItem("temp");
@@ -285,26 +284,26 @@ export class GridStackComponent implements OnInit {
             if (action === 'create') {
                 console.log(chartType, conditions[chartType]);
                 // if (conditions[chartType]) {
-                    this.gridService.tileSerialFavor.delete(tileSerial);
-                    this.dataSources.set(tileSerial, dataSource);
-                    if (this.resizeObservers.has(tileSerial)) {
-                        this.resizeObservers.get(tileSerial).disconnect();
-                    }
-                    var resizeObserver = new ResizeObserver(entries => {
-                        var latestAction = this.chartService.chartAction.value.action;
-                        console.log(action, latestAction, tileSerial);
-                        title = this.chartService.chartAction.value.title
-                        if (latestAction != 'remove' && latestAction != 'disfavor') {
-                            var latestDataSource = this.dataSources.get(tileSerial);
-                            if (this.gridService.tileSerialFavor.has(tileSerial)) {
-                                chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
-                            } else {    
-                                chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
-                            }
+                this.gridService.tileSerialFavor.delete(tileSerial);
+                this.dataSources.set(tileSerial, dataSource);
+                if (this.resizeObservers.has(tileSerial)) {
+                    this.resizeObservers.get(tileSerial).disconnect();
+                }
+                var resizeObserver = new ResizeObserver(entries => {
+                    var latestAction = this.chartService.chartAction.value.action;
+                    console.log(action, latestAction, tileSerial);
+                    title = this.chartService.chartAction.value.title
+                    if (latestAction != 'remove' && latestAction != 'disfavor') {
+                        var latestDataSource = this.dataSources.get(tileSerial);
+                        if (this.gridService.tileSerialFavor.has(tileSerial)) {
+                            chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
+                        } else {
+                            chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
-                    });
-                    resizeObserver.observe(contEl);
-                    this.resizeObservers.set(tileSerial, resizeObserver);
+                    }
+                });
+                resizeObserver.observe(contEl);
+                this.resizeObservers.set(tileSerial, resizeObserver);
                 // }
             } else if (action === 'edit') {
                 this.gridService.tileSerialFavor.delete(tileSerial);
@@ -319,7 +318,7 @@ export class GridStackComponent implements OnInit {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
-                        } else {    
+                        } else {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
                     }
@@ -338,7 +337,7 @@ export class GridStackComponent implements OnInit {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
-                        } else {    
+                        } else {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
                     }
@@ -374,7 +373,7 @@ export class GridStackComponent implements OnInit {
                         var latestDataSource = this.dataSources.get(tileSerial);
                         if (this.gridService.tileSerialFavor.has(tileSerial)) {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(255, 0, 0)', barColor);
-                        } else {    
+                        } else {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
                     });
@@ -388,7 +387,7 @@ export class GridStackComponent implements OnInit {
         });
 
         this.gridService.currentMinorGridEl.subscribe((minorGridEl: any) => {
-            if ( minorGridEl ) {
+            if (minorGridEl) {
                 let minorFound = false;
                 let keys = Object.keys(localStorage);
                 keys.forEach(key => {
@@ -397,7 +396,7 @@ export class GridStackComponent implements OnInit {
                         minorFound = true;
                     }
                 });
-                if ( !minorFound ) {
+                if (!minorFound) {
                     // console.log('minor is not found');
                     this.gridService.minorEmpty.next(true);
                 } else {
@@ -405,7 +404,7 @@ export class GridStackComponent implements OnInit {
                     this.minorGrid.removeAll();
                     // this.minorInitImage = false;
                     this.chartService.loadPersistence('minor');
-                }   
+                }
             } else {
                 let keys = Object.keys(localStorage);
                 keys.forEach(key => {
@@ -427,7 +426,6 @@ export class GridStackComponent implements OnInit {
 
         this.moveFromMajorToMinor();
         this.moveFromMinorToMajor();
-
         // this.majorGrid.on('change', (event, items) => this.mergeItem(event, items));
 
     }
@@ -481,126 +479,46 @@ export class GridStackComponent implements OnInit {
         // End the batch update
         gridstack.commit();
     }
-    
 
     private moveFromMajorToMinor() {
-        this.majorGrid.on('dragstart', (event, items) => {
-            this.dragFromMajorToMinor = true;
-        });
-    
-        this.majorGrid.on('dragstop', (event, items) => {
-            this.dragFromMajorToMinor = false;
-        });
-        this.majorGrid.on('removed', (event, items) => {
-            if (!this.dragFromMajorToMinor || this.majorInitImage || this.chartService.chartAction.value.action === 'remove') {
-                return;
-            }
-            if ( this.minorInitImage ) {
-                this.minorGrid.removeWidget(this.minorGrid.getGridItems()[0] as HTMLElement);
-                this.minorInitImage = false;
-            }
+        let isDragging = false;
+        let originalGrid = null;
 
-            var serial = items[0].el.querySelector('.grid-stack-item-content').id;
-            if (this.resizeObservers.has(serial)) {
-                this.resizeObservers.get(serial).disconnect();
-            }
+        // listen on dragstart event
+        this.majorGrid.on('dragstart', function (event, el) {
+            isDragging = true;
+            originalGrid = this; // this refers to the grid where the drag started
+        });
 
-            var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
-            var title = JSON.parse(localStorage.getItem(serial)).title;
-            var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
-            this.chartService.removePersistence(serial);
-            
-            if (serial.includes('bar')) {
-                var dataSource = this.dataSources.get(serial);
-                var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                var contEl = document.getElementById(serial);
-                
-                let serialFound = this.gridService.tileSerialMap.get(serial);
-                if (serialFound) {
-                    if (this.resizeObservers.has(serialFound)) {
-                        this.resizeObservers.get(serialFound).disconnect();
-                    }
-                    this.chartService.removePersistence(serialFound);
-                    let element = document.getElementById(serialFound);
-                    let gridItemElement = element.closest('.grid-stack-item');
-                    this.minorGrid.removeWidget(gridItemElement as GridStackElement);
-                    this.gridService.tileSerialMap.delete(serial);
+        // listen on dropped event
+        this.minorGrid.on('dropped', (event, previousWidget, newWidget) => {
+            if (originalGrid !== this) {
+                console.log('An item has moved from majorGrid to minorGrid ');
+                if (this.majorInitImage) {
+                    return;
                 }
-                
-                serial = this.gridService.getMinorTileSerial('bar_chart', serial);
-                contEl.setAttribute('id', serial);
-                var barEL = document.getElementById(serial);
-                var svg = d3.select('#' + serial).select('svg')
-                    .attr('width', barEL.clientWidth)
-                    .attr('height', barEL.clientHeight)
-                d3.select('#' + serial).select('svg').select('foreignObject.pencil').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.download').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
-                d3.select('#' + serial).select('svg').select('foreignObject.trash').remove();
-                this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, 'rgb(255, 0, 0)', barColor);
-            }
-            if (this.minorGridEl.style.display === 'block') {
-                var resizeObserver = new ResizeObserver(entries => {
-                    // console.log('update', serial, jobName, filteredDataSource, titleCount, 'rgb(255, 0, 0)');
-                    this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(255, 0, 0)', barColor);
-                }); 
-                resizeObserver.observe(contEl);
-                this.resizeObservers.set(serial, resizeObserver);
-                this.dataSources.set(serial, dataSource);
-                this.compactGridstack(this.minorGrid);
-                localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
-                this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(255, 0, 0)', barColor);
-            }
-            setTimeout(() => {
-                if (this.majorGrid.getGridItems().length === 0) {
-                    // console.log('minorGrid is empty');
-                    this.gridService.majorEmpty.next(true);
+                if (this.minorInitImage) {
+                    this.minorGrid.removeWidget(this.minorGrid.getGridItems()[0] as HTMLElement);
+                    this.minorInitImage = false;
                 }
-            }, 0);
-        });
-    }
 
-    private moveFromMinorToMajor() {
-        this.minorGrid.on('dragstart', (event, items) => {
-            this.dragFromMinorToMajor = true;
-        });
-        this.minorGrid.on('dragstop', (event, items) => {
-            this.dragFromMinorToMajor = false;
-        });
-        this.minorGrid.on('removed', (event, items) => {
-            if (!this.dragFromMinorToMajor || this.minorInitImage || this.chartService.chartAction.value.action === 'disfavor') {
-                return;
-            }
-            if ( this.majorInitImage ) {
-                this.majorGrid.removeWidget(this.majorGrid.getGridItems()[0] as HTMLElement);
-                this.majorInitImage = false;
-            }
-            if ( this.minorGridEl.style.display === 'block' ) {
-                var serial = items[0].el.querySelector('.grid-stack-item-content').id;
+                var serial = newWidget.el.querySelector('.grid-stack-item-content').id;
+                console.log('serial', serial);
                 if (this.resizeObservers.has(serial)) {
                     this.resizeObservers.get(serial).disconnect();
                 }
 
                 var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
                 var title = JSON.parse(localStorage.getItem(serial)).title;
-                var heartColor = JSON.parse(localStorage.getItem(serial)).heartColor;
                 var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
-                console.log(serial, title, heartColor, barColor);
                 this.chartService.removePersistence(serial);
-                
+
                 if (serial.includes('bar')) {
                     var dataSource = this.dataSources.get(serial);
                     var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
-                    this.gridService.majorChartTypeNum['bar_chart']++;
                     var contEl = document.getElementById(serial);
-                    
-                    let serialFound: string;
-                    for (let [key, value] of this.gridService.tileSerialMap.entries()) {
-                        if (value === serial) {
-                            serialFound = key;
-                            break;
-                        }
-                    }
+
+                    let serialFound = this.gridService.tileSerialMap.get(serial);
                     if (serialFound) {
                         if (this.resizeObservers.has(serialFound)) {
                             this.resizeObservers.get(serialFound).disconnect();
@@ -608,44 +526,142 @@ export class GridStackComponent implements OnInit {
                         this.chartService.removePersistence(serialFound);
                         let element = document.getElementById(serialFound);
                         let gridItemElement = element.closest('.grid-stack-item');
-                        this.majorGrid.removeWidget(gridItemElement as GridStackElement);
-                        this.gridService.tileSerialMap.delete(serialFound);
+                        this.minorGrid.removeWidget(gridItemElement as GridStackElement);
+                        this.gridService.tileSerialMap.delete(serial);
                     }
 
-                    serial = serial.replace('minor', 'major');
-                    serial = serial.replace(serial.split('-')[3], this.gridService.majorChartTypeNum['bar_chart']);
+                    serial = this.gridService.getMinorTileSerial('bar_chart', serial);
                     contEl.setAttribute('id', serial);
                     var barEL = document.getElementById(serial);
                     var svg = d3.select('#' + serial).select('svg')
                         .attr('width', barEL.clientWidth)
                         .attr('height', barEL.clientHeight)
-                    // console.log(barEL, serial, title, color);
-                    
+                    d3.select('#' + serial).select('svg').select('foreignObject.pencil').remove();
+                    d3.select('#' + serial).select('svg').select('foreignObject.download').remove();
                     d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
-                    this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
-                    this.barChart.addDownload(svg, barEL, serial, title, filteredDataSource, heartColor);
-                    this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, heartColor, barColor);
-                    this.barChart.addTrash(svg, serial, filteredDataSource, barEL.clientWidth - 36, 95);
+                    d3.select('#' + serial).select('svg').select('foreignObject.trash').remove();
+                    this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, 'rgb(255, 0, 0)', barColor);
                 }
-                if (contEl) {
+                if (this.minorGridEl.style.display === 'block') {
                     var resizeObserver = new ResizeObserver(entries => {
-                        // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
-                        this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(0, 0, 0)', barColor);
+                        // console.log('update', serial, jobName, filteredDataSource, titleCount, 'rgb(255, 0, 0)');
+                        this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(255, 0, 0)', barColor);
                     });
                     resizeObserver.observe(contEl);
                     this.resizeObservers.set(serial, resizeObserver);
                     this.dataSources.set(serial, dataSource);
-                    // this.compactGridstack(this.majorGrid);
+                    this.compactGridstack(this.minorGrid);
                     localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
-                    this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)', barColor);
+                    this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(255, 0, 0)', barColor);
                 }
+                setTimeout(() => {
+                    if (this.majorGrid.getGridItems().length === 0) {
+                        // console.log('minorGrid is empty');
+                        this.gridService.majorEmpty.next(true);
+                    }
+                }, 0);
             }
-            setTimeout(() => {
-                if (this.minorGrid.getGridItems().length === 0) {
-                    // console.log('minorGrid is empty');
-                    this.gridService.minorEmpty.next(true);
+            isDragging = false;
+            originalGrid = null;
+        });
+    }
+
+    private moveFromMinorToMajor() {
+        let isDragging = false;
+        let originalGrid = null;
+
+        // listen on dragstart event
+        this.minorGrid.on('dragstart', function (event, el) {
+            isDragging = true;
+            originalGrid = this; // this refers to the grid where the drag started
+        });
+
+        // listen on dropped event
+        this.majorGrid.on('dropped', (event, previousWidget, newWidget) => {
+            if (originalGrid !== this) {
+                console.log('An item has moved from minorGrid to majorGrid ');
+                if (this.minorInitImage) {
+                    return;
                 }
-            }, 0);
+                if ( this.majorInitImage ) {
+                    this.majorGrid.removeWidget(this.majorGrid.getGridItems()[0] as HTMLElement);
+                    this.majorInitImage = false;
+                }
+                if ( this.minorGridEl.style.display === 'block' ) {
+                    // var serial = items[0].el.querySelector('.grid-stack-item-content').id;
+                    var serial = newWidget.el.querySelector('.grid-stack-item-content').id;
+                    if (this.resizeObservers.has(serial)) {
+                        this.resizeObservers.get(serial).disconnect();
+                    }
+    
+                    var visibilityMapping = JSON.parse(localStorage.getItem(serial + "-config"));
+                    var title = JSON.parse(localStorage.getItem(serial)).title;
+                    var heartColor = JSON.parse(localStorage.getItem(serial)).heartColor;
+                    var barColor = JSON.parse(localStorage.getItem(serial)).barColor;
+                    console.log(serial, title, heartColor, barColor);
+                    this.chartService.removePersistence(serial);
+                    
+                    if (serial.includes('bar')) {
+                        var dataSource = this.dataSources.get(serial);
+                        var filteredDataSource = dataSource.filter((_, index) => visibilityMapping[index]);
+                        this.gridService.majorChartTypeNum['bar_chart']++;
+                        var contEl = document.getElementById(serial);
+                        
+                        let serialFound: string;
+                        for (let [key, value] of this.gridService.tileSerialMap.entries()) {
+                            if (value === serial) {
+                                serialFound = key;
+                                break;
+                            }
+                        }
+                        if (serialFound) {
+                            if (this.resizeObservers.has(serialFound)) {
+                                this.resizeObservers.get(serialFound).disconnect();
+                            }
+                            this.chartService.removePersistence(serialFound);
+                            let element = document.getElementById(serialFound);
+                            let gridItemElement = element.closest('.grid-stack-item');
+                            this.majorGrid.removeWidget(gridItemElement as GridStackElement);
+                            this.gridService.tileSerialMap.delete(serialFound);
+                        }
+    
+                        serial = serial.replace('minor', 'major');
+                        serial = serial.replace(serial.split('-')[3], String(this.gridService.majorChartTypeNum['bar_chart']));
+                        contEl.setAttribute('id', serial);
+                        var barEL = document.getElementById(serial);
+                        var svg = d3.select('#' + serial).select('svg')
+                            .attr('width', barEL.clientWidth)
+                            .attr('height', barEL.clientHeight)
+                        // console.log(barEL, serial, title, color);
+                        
+                        d3.select('#' + serial).select('svg').select('foreignObject.heart').remove();
+                        this.barChart.addPencil(svg, barEL, serial, title, heartColor, barColor);
+                        this.barChart.addDownload(svg, barEL, serial, title, filteredDataSource, heartColor);
+                        this.barChart.addHeart(svg, barEL, serial, title, filteredDataSource, heartColor, barColor);
+                        this.barChart.addTrash(svg, serial, filteredDataSource, barEL.clientWidth - 36, 95);
+                    }
+                    if (contEl) {
+                        var resizeObserver = new ResizeObserver(entries => {
+                            // console.log('update', serial, jobName, dataSource, titleCount, 'rgb(0, 0, 0)');
+                            this.barChart.copeChartAction('update', serial, title, filteredDataSource, 'rgb(0, 0, 0)', barColor);
+                        });
+                        resizeObserver.observe(contEl);
+                        this.resizeObservers.set(serial, resizeObserver);
+                        this.dataSources.set(serial, dataSource);
+                        // this.compactGridstack(this.majorGrid);
+                        localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
+                        this.chartService.savePersistence('bar_chart', serial, dataSource, title, undefined, 'rgb(0, 0, 0)', barColor);
+                    }
+                }
+                setTimeout(() => {
+                    if (this.minorGrid.getGridItems().length === 0) {
+                        // console.log('minorGrid is empty');
+                        this.gridService.minorEmpty.next(true);
+                    }
+                }, 0);
+            }
+            isDragging = false;
+            originalGrid = null;
         });
     }
 
