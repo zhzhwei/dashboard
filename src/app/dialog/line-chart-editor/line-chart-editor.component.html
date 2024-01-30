@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <button mat-raised-button mat-dialog-close *ngIf="!tileSerial">Back to Visualization Generator</button>
+            <button mat-raised-button mat-dialog-close *ngIf="!tileSerial" style="background-color:steelblue; color: white;">Back to Visualization Generator</button>
         </div>
         <h2 mat-dialog-title align="center">Line Chart Editor</h2>
     </div>
@@ -14,8 +14,8 @@
                     <input type="color" id="bar-color" [(ngModel)]="barColor" (ngModelChange)="onColorChange($event)" style="margin-left: 5px; vertical-align: middle;">
                 </div>
                 <div class="col-md-3" style="margin-top: 10px;">
-                    <button mat-raised-button (click)="addToDashboard()" style="margin-top: 5px; width: 100%; display: block">Add to Dashboard</button>
-                    <button mat-raised-button (click)="cancel()" style="margin-top: 5px; width: 100%; display: block">Cancel</button>
+                    <button mat-raised-button (click)="addToDashboard()" color="primary" style="margin-top: 5px; width: 100%; display: block">Add to Dashboard</button>
+                    <button mat-raised-button (click)="cancel()" style="margin-top: 5px; width: 100%; display: block; background-color:steelblue; color: white;">Cancel</button>
                 </div>
             </div>
         </div>

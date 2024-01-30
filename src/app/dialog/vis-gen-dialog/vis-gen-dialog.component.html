@@ -61,7 +61,7 @@
 
                     <div class="row">
                         <div class="search-container">
-                            <button mat-raised-button id="preview button" (click)="onSearch()">Preview</button>
+                            <button mat-raised-button id="preview button" color="primary" (click)="onSearch()">Preview</button>
                             <!-- preview button to not absolutely spam the GraphDB with queries -->
                             <!-- <input
                                 [(ngModel)]="searchTerm"
@@ -168,7 +168,7 @@
             </div>
             <div class="col-md-12 text-center"> 
                 <button mat-raised-button mat-dialog-close class="to-dashboard-btn">Back to Dashboard</button>
-                <button mat-raised-button class="to-editor-btn" (click)="forwardToEditor()" cdkFocusInitial>Forward to Editor</button>
+                <button mat-raised-button class="to-editor-btn" color="primary" (click)="forwardToEditor()" cdkFocusInitial>Forward to Editor</button>
             </div>
         </div>
     </div>

@@ -5,6 +5,8 @@
 
 .to-dashboard-btn{
     font-size: 16px;
+    background-color: steelblue;
+    color: white;
 }
 
 .to-editor-btn {
