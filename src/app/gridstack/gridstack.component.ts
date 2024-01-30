@@ -375,8 +375,10 @@ export class GridStackComponent implements OnInit {
                             chartCreators[chartType]('update', tileSerial, title, latestDataSource, 'rgb(0, 0, 0)', barColor);
                         }
                     });
-                    resizeObserver.observe(contEl);
-                    this.resizeObservers.set(tileSerial, resizeObserver);
+                    if (contEl) {
+                        resizeObserver.observe(contEl);
+                        this.resizeObservers.set(tileSerial, resizeObserver);
+                    }
                     this.compactGridstack(this.minorGrid);
                 }
             }
