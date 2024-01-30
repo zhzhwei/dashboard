@@ -161,14 +161,10 @@ export class BarChartEditorComponent implements OnInit {
             while (this.barEL.children.length > 3) {
                 this.barEL.removeChild(this.barEL.lastChild);
             }
-            if (filteredDataSource.length < 15) {
-                this.barEL.style.height = "420px";
-            } else {
-                this.barEL.style.height = filteredDataSource.length * 24 + 90 + "px";
-            }
+            this.barEL.style.height = this.initialMainResult.length * 24 + 90 + "px";
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
-            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin) + ")");
+            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin + 22) + ")");
 
             // Create the X-axis band scale
             this.x = d3
