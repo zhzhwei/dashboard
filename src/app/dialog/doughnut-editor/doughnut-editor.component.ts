@@ -6,9 +6,18 @@ import * as d3 from 'd3';
 
 @Component({
     selector: 'app-doughnut-editor',
+    templateUrl: './doughnut-editor.component.html',
 })
 export class DoughnutEditorComponent implements OnInit {
+
+    constructor(private dialog: MatDialog, private chartService: ChartService) { }
+
     ngOnInit(): void {
 
+    }
+
+    backToDashboard(): void {
+        this.dialog.closeAll();
+        this.chartService.doughnut.next(true);
     }
 }

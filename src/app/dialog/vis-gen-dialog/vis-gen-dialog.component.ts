@@ -241,8 +241,11 @@ export class VisGenDialogComponent implements OnInit {
     }
 
     selectStarPlot() {
-        // this.starPlot.createChart();
         this.dialogService.openStarPlotEditor();
+    }
+
+    selectDoughnut() {
+        this.dialogService.openDoughnutChartEditor();
     }
 
     updateProperties() {

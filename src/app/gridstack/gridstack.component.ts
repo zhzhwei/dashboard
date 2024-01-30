@@ -77,6 +77,20 @@ export class GridStackComponent implements OnInit {
                 resizeObserver.observe(contStarPlotEl);
             }
         });
+        this.chartService.currentDoughnut.subscribe((doughnut: boolean) => {
+            if (doughnut) {
+                var itemEl = this.majorGrid.addWidget(this.gridService.newTile);
+                var contDoughnutEl = itemEl.querySelector(".grid-stack-item-content");
+                contDoughnutEl.setAttribute("id", 'dash-doughnut');
+                this.donutChart.createChart(this.donutChart.data);
+                
+                const resizeObserver = new ResizeObserver(entries => {
+                    this.donutChart.updateChart();
+                });
+        
+                resizeObserver.observe(contDoughnutEl);
+            }
+        });
         this.gridService.currentMajorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
                 this.majorGrid.removeAll();

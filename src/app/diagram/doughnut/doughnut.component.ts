@@ -48,13 +48,13 @@ export class DoughnutComponent implements OnInit {
             .attr('width', this.donutEl.clientWidth)
             .attr('height', this.donutEl.clientHeight)
 
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.donutEl.clientWidth / 2))
-            .attr("y", this.margin / 2 + 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("Beruf - Stellenausschreibungen");
+        // this.svg.append("text")
+        //     .attr("class", "title")
+        //     .attr("x", (this.donutEl.clientWidth / 2))
+        //     .attr("y", this.margin / 2 + 2)
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", "16px")
+        //     .text("Beruf - Stellenausschreibungen");
 
             this.svg.append('foreignObject')
             .attr('class', 'pencil')
@@ -101,7 +101,13 @@ export class DoughnutComponent implements OnInit {
                 // this.pieRemove = true;
                 // this.chartService.pieRemove.next(this.pieRemove);
             });
-
+        
+        this.svg.on('mouseover', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'block');
+            })
+            .on('mouseout', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'none');
+            });
 
         this.outerRadius = Math.min(this.donutEl.clientWidth, this.donutEl.clientHeight) / 2 - this.margin;
         this.innerRadius1 = this.outerRadius - 30;

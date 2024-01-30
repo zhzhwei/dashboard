@@ -20,6 +20,7 @@ import { StackedBarEditorComponent } from './dialog/stacked-bar-editor/stacked-b
 import { PieChartEditorComponent } from './dialog/pie-chart-editor/pie-chart-editor.component';
 import { StarPlotEditorComponent } from './dialog/star-plot-editor/star-plot-editor.component';
 import { LineChartEditorComponent } from './dialog/line-chart-editor/line-chart-editor.component';
+import { DoughnutEditorComponent } from './dialog/doughnut-editor/doughnut-editor.component';
 import { DeleteConfirmationComponent } from './dialog/delete-confirmation/delete-confirmation.component';
 
 @NgModule({
@@ -46,6 +47,7 @@ import { DeleteConfirmationComponent } from './dialog/delete-confirmation/delete
         PieChartEditorComponent,
         StarPlotEditorComponent,
         LineChartEditorComponent,
+        DoughnutEditorComponent,
         DeleteConfirmationComponent
     ],
     bootstrap: [
