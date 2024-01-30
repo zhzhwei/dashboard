@@ -63,6 +63,20 @@ export class GridStackComponent implements OnInit {
 
     ngAfterViewInit() {
         console.log(localStorage.length);
+        this.chartService.currentStarPlot.subscribe((starPlot: boolean) => {
+            if (starPlot) {
+                var itemEl = this.majorGrid.addWidget(this.gridService.newTile);
+                var contStarPlotEl = itemEl.querySelector(".grid-stack-item-content");
+                contStarPlotEl.setAttribute("id", 'dash-star');
+                this.starPlot.createChart();
+                
+                const resizeObserver = new ResizeObserver(entries => {
+                    this.starPlot.updateChart();
+                });
+        
+                resizeObserver.observe(contStarPlotEl);
+            }
+        });
         this.gridService.currentMajorEmpty.subscribe((isEmpty: boolean) => {
             if (isEmpty) {
                 this.majorGrid.removeAll();
