@@ -75,7 +75,8 @@ export class ChartService {
                     this.chartAction.next({
                         action: 'create',
                         serial: '',
-                        title: exportObj.title
+                        title: exportObj.title,
+                        barColor: exportObj.barColor
                     });
                 };
                 this.chartType.next(exportObj.chartType);

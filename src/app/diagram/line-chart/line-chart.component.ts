@@ -191,7 +191,7 @@ export class LineChartComponent implements OnInit {
 
     public addDownload(svg, lineEL, tileSerial, title, dataSource, barColor): void {
         this.titleIconService.createDownload(svg, lineEL.clientWidth - 38, 45, () => {
-            // this.chartService.saveJsonFile("line_chart", dataSource, undefined, title, barColor);
+            this.chartService.saveJsonFile("line_chart", dataSource, null, title, barColor);
         });
     }
 
