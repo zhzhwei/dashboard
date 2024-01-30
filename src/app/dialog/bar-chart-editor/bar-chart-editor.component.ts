@@ -168,7 +168,7 @@ export class BarChartEditorComponent implements OnInit {
             }
             this.svg = d3.select("#editor-bar").append("svg").attr("width", this.barEL.clientWidth).attr("height", this.barEL.clientHeight);
 
-            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin - 20) + ")");
+            var g = this.svg.append("g").attr("transform", "translate(" + (this.margin + 10) + "," + (this.margin) + ")");
 
             // Create the X-axis band scale
             this.x = d3
