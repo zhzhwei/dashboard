@@ -18,29 +18,24 @@ export class LineChartComponent implements OnInit {
         private titleIconService: TitleIconService,
         private gridService: GridStackService,
         private systemService: SystemService
-    ) {}
+    ) { }
 
     private svg: any;
     private g: any;
     private margin = 70;
     public barRemove = false;
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     public copeChartAction(action: string, tileSerial: string, title: string, dataSource: any[], heartColor: any, barColor: any): void {
         // console.log(dataSource);
         var lineEL = document.getElementById(tileSerial);
-
         if (action === "create" || action === "edit" || action === "load") {
-            this.svg = d3
-                .select("#" + tileSerial)
-                .append("svg")
+            this.svg = d3.select("#" + tileSerial).append("svg")
                 .attr("width", lineEL.clientWidth)
                 .attr("height", lineEL.clientHeight);
         } else if (action === "update") {
-            this.svg = d3
-                .select("#" + tileSerial)
-                .select("svg")
+            this.svg = d3.select("#" + tileSerial).select("svg")
                 .attr("width", lineEL.clientWidth)
                 .attr("height", lineEL.clientHeight);
         }
@@ -69,13 +64,11 @@ export class LineChartComponent implements OnInit {
         this.titleIconService.hoverSVG(this.svg);
 
         const uniqueDates = [...new Set(dataSource.map((item) => new Date(item.date)))];
-        var x = d3
-            .scaleTime()
+        var x = d3.scaleTime()
             .range([0, lineEL.clientWidth - this.margin * 2])
             .domain(d3.extent(uniqueDates));
 
-        var y = d3
-            .scaleLinear()
+        var y = d3.scaleLinear()
             .range([lineEL.clientHeight - this.margin * 2, 0])
             .domain([0, d3.max(dataSource, (d: any) => d.count)]);
 
@@ -84,8 +77,7 @@ export class LineChartComponent implements OnInit {
         }
 
         if (action === "create" || action === "edit" || action === "load") {
-            this.g
-                .append("g")
+            this.g.append("g")
                 .attr("class", "x-axis")
                 .attr("transform", "translate(0," + (lineEL.clientHeight - this.margin * 2) + ")")
                 .call(d3.axisBottom(x))
@@ -110,7 +102,7 @@ export class LineChartComponent implements OnInit {
                 .x((d: any) => x(new Date(d.date)))
                 .y((d: any) => y(d.count));
             this.g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
-    
+
         } else if (action === "update") {
             this.svg
                 .select("g.x-axis")
@@ -120,19 +112,11 @@ export class LineChartComponent implements OnInit {
                 .style("text-anchor", "middle");
 
             this.svg.select("g.y-axis").call(d3.axisLeft(y));
-
-            var dots = this.g.selectAll(".dot");
-            dots.remove();
-
-            this.g
-                .selectAll("dot")
+            this.svg
+                .selectAll("circle")
                 .data(dataSource)
-                .enter()
-                .append("circle")
                 .attr("cx", (d: any) => x(new Date(d.date)))
                 .attr("cy", (d: any) => y(d.count))
-                .attr("r",4)
-                .attr("class", "dot")
                 .attr("fill", barColor)
                 .on("mouseover", function(d, i, nodes) {
                     var tooltip = d3
@@ -169,12 +153,7 @@ export class LineChartComponent implements OnInit {
                 .line()
                 .x((d: any) => x(new Date(d.date)))
                 .y((d: any) => y(d.count));
-
-            // Remove the old line (comment out for a cool effect when resizing the tile)
-            var line = this.g.selectAll(".line");
-            line.remove();
-
-            this.g.append("path").data([dataSource]).attr("class", "line").attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
+            this.svg.select("path.line").data([dataSource]).attr("d", valueline).attr("fill", "none").attr("stroke", barColor);
         }
     }
 
