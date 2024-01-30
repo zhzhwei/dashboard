@@ -1,6 +1,7 @@
 .card {
     margin: 20px;
     border-width: 2px !important;
+    border-color: rgb(117, 113, 113) !important;
 }
 
 .to-dashboard-btn{
