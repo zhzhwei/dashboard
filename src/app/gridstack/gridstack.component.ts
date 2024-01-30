@@ -583,6 +583,7 @@ export class GridStackComponent implements OnInit {
                     this.resizeObservers.set(serial, resizeObserver);
                     this.dataSources.set(serial, dataSource);
                     this.compactGridstack(this.minorGrid);
+                    this.compactGridstack(this.majorGrid);
                     localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
                     if (serial.includes("bar")) {
                         this.chartService.savePersistence("bar_chart", serial, dataSource, title, undefined, "rgb(255, 0, 0)", barColor);
@@ -727,6 +728,7 @@ export class GridStackComponent implements OnInit {
                         resizeObserver.observe(contEl);
                         this.resizeObservers.set(serial, resizeObserver);
                         this.dataSources.set(serial, dataSource);
+                        this.compactGridstack(this.minorGrid);
                         this.compactGridstack(this.majorGrid);
                         localStorage.setItem(serial + "-config", JSON.stringify(visibilityMapping));
                         if (serial.includes("bar")) {
