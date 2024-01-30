@@ -17,7 +17,7 @@ export class AppComponent {
 
     @ViewChild(GridStackComponent) gridStack: GridStackComponent;
 
-    selectedId: string = '';
+    heartClicked = false;
 
     constructor(public dialog: MatDialog, private chartService: ChartService, 
         private gridService: GridStackService, private dialogService: DialogService) { }
@@ -39,6 +39,7 @@ export class AppComponent {
     }
 
     toggleShowCharts() {
+        this.heartClicked = !this.heartClicked;
         let minorGridEl= document.querySelector('#minor-grid') as GridHTMLElement;
         if (minorGridEl.style.display === 'none') {
             minorGridEl.style.display = 'block';
@@ -55,14 +56,6 @@ export class AppComponent {
 
     removeAllCharts() {
         this.dialogService.openDeleteConfirmation('','','', 'Are you sure to delete all widgets?');
-    }
-
-    toggleSelected(id: string) {
-        this.selectedId = this.selectedId === id ? '' : id;
-    }
-
-    isSelected(id: string) {
-        return this.selectedId === id;
     }
 
 }

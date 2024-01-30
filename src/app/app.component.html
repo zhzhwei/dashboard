@@ -25,7 +25,7 @@
         </div>
         <div fxFlex="25" class="text-center card text-white grid-stack-item function-button">
             <div id="heart" style="padding: 15px; margin-bottom: 15px;" class="logo-button text-center text-white"
-                (click)="toggleShowCharts(); toggleSelected('heart')" [ngClass]="{'selected': isSelected('heart')}">
+                (click)="toggleShowCharts();" [style.opacity]="heartClicked ? '0.5' : '1'">
                 <div>
                     <ion-icon name="heart" style="font-size: 400%"></ion-icon>
                 </div>
