@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef, ComponentFactoryResolver, Injector } from "@angular/core";
+import { Component, OnInit, ViewChildren, ViewChild, QueryList, ElementRef, ComponentFactoryResolver, Injector } from "@angular/core";
 import { BarChartPreviewComponent } from "./bar-chart-preview/bar-chart-preview.component";
 import { LineChartPreviewComponent } from "./line-chart-preview/line-chart-preview.component";
 import { HttpClient } from "@angular/common/http";
@@ -10,6 +10,7 @@ import { RdfDataService } from "../../services/rdf-data.service";
 
 import * as d3 from "d3";
 import { SystemService } from "src/app/services/system.service";
+import { StarPlotComponent } from "../../diagram/star-plot/star-plot.component";
 
 @Component({
     selector: "app-vis-gen-dialog",
@@ -21,7 +22,7 @@ export class VisGenDialogComponent implements OnInit {
     public queryParameters: any = {};
     currentPreviewContent: any = undefined;
     currentPreviewContentRef: any = undefined;
-
+    @ViewChild(StarPlotComponent) starPlot: StarPlotComponent;
     constructor(
         private chartService: ChartService,
         private dialogService: DialogService,
@@ -237,6 +238,14 @@ export class VisGenDialogComponent implements OnInit {
         contentComponent.selectProperties = this.selectProperties;
         contentComponentRef.changeDetectorRef.detectChanges();
         cardBody.appendChild(contentComponentRef.location.nativeElement);
+    }
+
+    selectStarPlot() {
+        this.dialogService.openStarPlotEditor();
+    }
+
+    selectDoughnut() {
+        this.dialogService.openDoughnutChartEditor();
     }
 
     updateProperties() {

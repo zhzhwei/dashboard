@@ -1,0 +1,365 @@
+# baseURI: http://ai4bd.com/resource/ddm/mp/shape
+# imports: http://ai4bd.com/resource/ddm/mp/
+# imports: http://datashapes.org/dash
+
+@prefix : <http://ai4bd.com/resource/ddm/mp/shape#> .
+@prefix edm: <http://ai4bd.com/resource/edm/> .
+@prefix mp: <http://ai4bd.com/resource/ddm/mp/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+mp:shape
+  rdf:type owl:Ontology ;
+  owl:imports mp: ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:CurriculumVitaeShape
+  rdf:type edm:ResourceShape ;
+  rdf:type edm:RootResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Lebenslauf"@de ;
+  sh:labelTemplate "Lebenslauf"@de ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:address ;
+      sh:class edm:PostalAddress ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Adresse" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:birthday ;
+      sh:datatype xsd:date ;
+      sh:maxCount 1 ;
+      sh:name "Geburtstag" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:dateCreated ;
+      sh:datatype xsd:dateTime ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "erstellt"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:email ;
+      sh:datatype xsd:string ;
+      sh:name "E-Mail" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:hasEducation ;
+      sh:class edm:Education ;
+      sh:name "Ausbildung" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:hasSkill ;
+      sh:class edm:Skill ;
+      sh:name "Fertigkeit" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:hasWorkExperience ;
+      sh:class edm:WorkExperience ;
+      sh:name "Berufserfahrung" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:name ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Name" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:phoneNumber ;
+      sh:datatype xsd:string ;
+      sh:name "Telefon" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:relatedCreativeWork ;
+      sh:class edm:Document ;
+      sh:maxCount 1 ;
+      sh:name "Dokument"@de ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:targetClass edm:CurriculumVitae ;
+.
+:EducationShape
+  rdf:type edm:ResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Ausbildung"@de ;
+  sh:labelTemplate "Ausbildung"@de ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:address ;
+      sh:class edm:PostalAddress ;
+      sh:maxCount 1 ;
+      sh:name "Adresse" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:isActive ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:name "aktuell" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:organizationName ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:name "Organisation" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:validFrom ;
+      sh:datatype xsd:date ;
+      sh:maxCount 1 ;
+      sh:name "von"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:validTo ;
+      sh:datatype xsd:date ;
+      sh:maxCount 1 ;
+      sh:name "bis"@de ;
+    ] ;
+  sh:targetClass edm:Education ;
+.
+:JobPostingShape
+  rdf:type edm:ResourceShape ;
+  rdf:type edm:RootResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Stellenausschreibung"@de ;
+  sh:labelTemplate "Stellenausschreibung"@de ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path mp:isFulltimeJob ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:name "ist Vollzeitjob"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path mp:isLimitedJob ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:name "ist befristeter Job"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:address ;
+      sh:class edm:PostalAddress ;
+      sh:maxCount 1 ;
+      sh:name "Adresse" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:dateCreated ;
+      sh:datatype xsd:dateTime ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "erstellt"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:hasSkill ;
+      sh:class edm:Skill ;
+      sh:name "Fertigkeit" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:referenceNumber ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Referenz" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:text ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Text"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:title ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Titel"@de ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path <http://ai4bd.com/resource/gdm/uses> ;
+      sh:class edm:Occupation ;
+      sh:name "Beruf"@de ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:targetClass edm:JobPosting ;
+.
+:OccupationShape
+  rdf:type edm:ResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Beruf"@de ;
+  sh:labelTemplate "Beruf"@de ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:jobTitle ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Jobtitel" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:mean ;
+      sh:class edm:Term ;
+      sh:name "Bedeutung" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:targetClass edm:Occupation ;
+.
+:SkillShape
+  rdf:type edm:ResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Fertigkeit"@de ;
+  sh:labelTemplate "Fertigkeit" ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:mean ;
+      sh:class edm:Term ;
+      sh:name "Bedeutung"@de ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:proficiencyLevel ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:name "Kompetenzniveau" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:textField ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Bezeichnung"@de ;
+    ] ;
+  sh:targetClass edm:Skill ;
+.
+:TermShape
+  rdf:type edm:ResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Begriff"@de ;
+  sh:labelTemplate "Begriff" ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:externalId ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "externe ID" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:title ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Bezeichnung" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:url ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:name "weitere Informationen" ;
+    ] ;
+  sh:targetClass edm:Term ;
+.
+:WorkExperienceShape
+  rdf:type edm:ResourceShape ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Berufserfahrung"@de ;
+  sh:labelTemplate "Berufserfahrung" ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:address ;
+      sh:class edm:PostalAddress ;
+      sh:name "Anschrift" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:isActive ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "aktuell" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:jobTitle ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "Jobtitel" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:organizationName ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:name "Organisation" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:quantityOfMonths ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+      sh:name "Anzahl Monate" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:validFrom ;
+      sh:datatype xsd:date ;
+      sh:maxCount 1 ;
+      sh:name "von" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path edm:validTo ;
+      sh:datatype xsd:date ;
+      sh:maxCount 1 ;
+      sh:name "bis" ;
+    ] ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path <http://ai4bd.com/resource/gdm/uses> ;
+      sh:class edm:Occupation ;
+      sh:name "Beruf" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:targetClass edm:WorkExperience ;
+.

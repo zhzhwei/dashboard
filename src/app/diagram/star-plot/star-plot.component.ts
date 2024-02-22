@@ -44,20 +44,20 @@ export class StarPlotComponent implements OnInit {
         var g = this.svg.append('g')
             .attr('transform', 'translate(' + (this.starEL.clientWidth / 2) + ',' + (this.starEL.clientHeight / 2 + 20) + ')');
 
-        this.svg.append("text")
-            .attr("class", "title")
-            .attr("x", (this.starEL.clientWidth / 2))
-            .attr("y", this.margin / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .text("Stellenausschreibungen - Fertigkeiten");
+        // this.svg.append("text")
+        //     .attr("class", "title")
+        //     .attr("x", (this.starEL.clientWidth / 2))
+        //     .attr("y", this.margin / 2)
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", "16px")
+        //     .text("Stellenausschreibungen - Fertigkeiten");
 
         this.svg.append('foreignObject')
             .attr('class', 'pencil')
             .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 20)
-            .attr('width', 20)
-            .attr('height', 20)
+            .attr('width', 24)
+            .attr('height', 24)
             .html('<i class="fas fa-pencil"></i>')
             .on('click', () => {
                 this.dialogService.openStarPlotEditor();
@@ -67,8 +67,8 @@ export class StarPlotComponent implements OnInit {
             .attr('class', 'download')
             .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 45)
-            .attr('width', 25)
-            .attr('height', 25)
+            .attr('width', 24)
+            .attr('height', 24)
             .html('<i class="fas fa-download"></i>')
             .on('click', () => {
                 // this.dialogService.openBarChartEditor();
@@ -78,8 +78,8 @@ export class StarPlotComponent implements OnInit {
             .attr('class', 'heart')
             .attr('x', this.starEL.clientWidth - 38)
             .attr('y', 70)
-            .attr('width', 25)
-            .attr('height', 25)
+            .attr('width', 24)
+            .attr('height', 24)
             .html('<i class="fas fa-heart"></i>')
             .on('click', () => {
                 // this.chartService.saveJsonFile('Bar Chart', jobName, dataSource, titleCount);
@@ -89,12 +89,19 @@ export class StarPlotComponent implements OnInit {
             .attr('class', 'trash')
             .attr('x', this.starEL.clientWidth - 36)
             .attr('y', 95)
-            .attr('width', 25)
-            .attr('height', 25)
+            .attr('width', 24)
+            .attr('height', 24)
             .html('<i class="fas fa-trash"></i>')
             .on('click', () => {
                 // this.barRemove = true;
                 // this.chartService.barRemove.next(this.barRemove);
+            });
+        
+        this.svg.on('mouseover', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'block');
+            })
+            .on('mouseout', function() {
+                d3.select(this).selectAll('foreignObject').style('display', 'none');
             });
 
         this.x = d3.scaleBand()

@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 })
 export class StarPlotEditorComponent implements OnInit {
 
-    constructor(private dialog: MatDialog) { }
+    constructor(private dialog: MatDialog, private chartService: ChartService) { }
 
     ngOnInit(): void {
 
@@ -18,5 +18,6 @@ export class StarPlotEditorComponent implements OnInit {
     
     backToDashboard(): void {
         this.dialog.closeAll();
+        this.chartService.starPlot.next(true);
     }
 }

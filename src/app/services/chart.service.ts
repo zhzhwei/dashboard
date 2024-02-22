@@ -20,6 +20,12 @@ interface ChartFavorite {
     providedIn: 'root'
 })
 export class ChartService {
+    public starPlot = new BehaviorSubject<boolean>(false);
+    currentStarPlot = this.starPlot.asObservable();
+
+    public doughnut = new BehaviorSubject<boolean>(false);
+    currentDoughnut = this.doughnut.asObservable();
+
     public chartType = new BehaviorSubject<string>('');
     currentChartType = this.chartType.asObservable();
 
